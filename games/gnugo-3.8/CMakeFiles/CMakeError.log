@@ -1,0 +1,653 @@
+Determining if files sys/times.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_95ddc.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:29.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_95ddc.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_95ddc.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_95ddc.dir\Debug\cmTC_95ddc.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_95ddc.dir\Debug\cmTC_95ddc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_95ddc.dir\Debug\\" /Fd"cmTC_95ddc.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_95ddc.dir\Debug\\" /Fd"cmTC_95ddc.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'sys/times.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_95ddc.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_95ddc.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_95ddc.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'sys/times.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_95ddc.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.52
+
+Source:
+/* */
+#include <sys/times.h>
+
+
+int main(void){return 0;}
+
+Determining if files sys/time.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_efd81.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:30.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_efd81.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_efd81.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_efd81.dir\Debug\cmTC_efd81.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_efd81.dir\Debug\cmTC_efd81.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_efd81.dir\Debug\\" /Fd"cmTC_efd81.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_efd81.dir\Debug\\" /Fd"cmTC_efd81.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'sys/time.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_efd81.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_efd81.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_efd81.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'sys/time.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_efd81.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.53
+
+Source:
+/* */
+#include <sys/time.h>
+
+
+int main(void){return 0;}
+
+Determining if files sys/time.h;time.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_28de1.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:31.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_28de1.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_28de1.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_28de1.dir\Debug\cmTC_28de1.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_28de1.dir\Debug\cmTC_28de1.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_28de1.dir\Debug\\" /Fd"cmTC_28de1.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_28de1.dir\Debug\\" /Fd"cmTC_28de1.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'sys/time.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_28de1.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_28de1.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_28de1.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'sys/time.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_28de1.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.53
+
+Source:
+/* */
+#include <sys/time.h>
+#include <time.h>
+
+
+int main(void){return 0;}
+
+Determining if files unistd.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_cf86a.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:31.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cf86a.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_cf86a.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_cf86a.dir\Debug\cmTC_cf86a.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_cf86a.dir\Debug\cmTC_cf86a.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_cf86a.dir\Debug\\" /Fd"cmTC_cf86a.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_cf86a.dir\Debug\\" /Fd"cmTC_cf86a.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cf86a.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cf86a.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cf86a.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cf86a.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.57
+
+Source:
+/* */
+#include <unistd.h>
+
+
+int main(void){return 0;}
+
+Determining if files curses.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_24139.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:32.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_24139.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_24139.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_24139.dir\Debug\cmTC_24139.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_24139.dir\Debug\cmTC_24139.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_24139.dir\Debug\\" /Fd"cmTC_24139.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_24139.dir\Debug\\" /Fd"cmTC_24139.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'curses.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_24139.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_24139.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_24139.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'curses.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_24139.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.53
+
+Source:
+/* */
+#include <curses.h>
+
+
+int main(void){return 0;}
+
+Determining if files glib.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_c3fff.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:33.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_c3fff.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_c3fff.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_c3fff.dir\Debug\cmTC_c3fff.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_c3fff.dir\Debug\cmTC_c3fff.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c3fff.dir\Debug\\" /Fd"cmTC_c3fff.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_c3fff.dir\Debug\\" /Fd"cmTC_c3fff.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'glib.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_c3fff.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_c3fff.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_c3fff.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'glib.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_c3fff.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.57
+
+Source:
+/* */
+#include <glib.h>
+
+
+int main(void){return 0;}
+
+Determining if files ncurses/curses.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_16e41.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:34.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_16e41.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_16e41.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_16e41.dir\Debug\cmTC_16e41.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_16e41.dir\Debug\cmTC_16e41.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_16e41.dir\Debug\\" /Fd"cmTC_16e41.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_16e41.dir\Debug\\" /Fd"cmTC_16e41.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'ncurses/curses.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_16e41.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_16e41.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_16e41.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'ncurses/curses.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_16e41.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.52
+
+Source:
+/* */
+#include <ncurses/curses.h>
+
+
+int main(void){return 0;}
+
+Determining if files ncurses/term.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_f2df5.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:35.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f2df5.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_f2df5.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_f2df5.dir\Debug\cmTC_f2df5.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_f2df5.dir\Debug\cmTC_f2df5.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f2df5.dir\Debug\\" /Fd"cmTC_f2df5.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f2df5.dir\Debug\\" /Fd"cmTC_f2df5.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'ncurses/term.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f2df5.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f2df5.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f2df5.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'ncurses/term.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f2df5.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.52
+
+Source:
+/* */
+#include <ncurses/term.h>
+
+
+int main(void){return 0;}
+
+Determining if files term.h exist failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_3a284.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:37.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_3a284.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_3a284.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_3a284.dir\Debug\cmTC_3a284.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_3a284.dir\Debug\cmTC_3a284.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_3a284.dir\Debug\\" /Fd"cmTC_3a284.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_3a284.dir\Debug\\" /Fd"cmTC_3a284.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c"
+  CheckIncludeFiles.c
+  
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'term.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_3a284.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_3a284.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_3a284.vcxproj" (default target) (1) ->
+(ClCompile target) -> 
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\CheckIncludeFiles.c(2): fatal error C1083: Cannot open include file: 'term.h': No such file or directory [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_3a284.vcxproj]
+
+    0 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.55
+
+Source:
+/* */
+#include <term.h>
+
+
+int main(void){return 0;}
+
+Determining if the function times exists failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_8992f.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:44.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_8992f.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_8992f.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_8992f.dir\Debug\cmTC_8992f.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_8992f.dir\Debug\cmTC_8992f.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=times /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_8992f.dir\Debug\\" /Fd"cmTC_8992f.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=times /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_8992f.dir\Debug\\" /Fd"cmTC_8992f.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  CheckFunctionExists.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_8992f.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_8992f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_8992f.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_8992f.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol _times referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_8992f.vcxproj]
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_8992f.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_8992f.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_8992f.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_8992f.vcxproj" (default target) (1) ->
+(Link target) -> 
+  CheckFunctionExists.obj : error LNK2019: unresolved external symbol _times referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_8992f.vcxproj]
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_8992f.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_8992f.vcxproj]
+
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:00.77
+
+
+Determining if the function usleep exists failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_5c7bc.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:45.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_5c7bc.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_5c7bc.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_5c7bc.dir\Debug\cmTC_5c7bc.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_5c7bc.dir\Debug\cmTC_5c7bc.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=usleep /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_5c7bc.dir\Debug\\" /Fd"cmTC_5c7bc.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=usleep /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_5c7bc.dir\Debug\\" /Fd"cmTC_5c7bc.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  CheckFunctionExists.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_5c7bc.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_5c7bc.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_5c7bc.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_5c7bc.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol _usleep referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_5c7bc.vcxproj]
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_5c7bc.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_5c7bc.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_5c7bc.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_5c7bc.vcxproj" (default target) (1) ->
+(Link target) -> 
+  CheckFunctionExists.obj : error LNK2019: unresolved external symbol _usleep referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_5c7bc.vcxproj]
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_5c7bc.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_5c7bc.vcxproj]
+
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:00.76
+
+
+Determining if the function gettimeofday exists failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_f008f.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:46.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f008f.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_f008f.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_f008f.dir\Debug\cmTC_f008f.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_f008f.dir\Debug\cmTC_f008f.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=gettimeofday /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f008f.dir\Debug\\" /Fd"cmTC_f008f.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=gettimeofday /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_f008f.dir\Debug\\" /Fd"cmTC_f008f.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  CheckFunctionExists.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_f008f.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_f008f.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_f008f.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_f008f.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol _gettimeofday referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f008f.vcxproj]
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_f008f.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f008f.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f008f.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f008f.vcxproj" (default target) (1) ->
+(Link target) -> 
+  CheckFunctionExists.obj : error LNK2019: unresolved external symbol _gettimeofday referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f008f.vcxproj]
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_f008f.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_f008f.vcxproj]
+
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:00.77
+
+
+Determining if the function vsnprintf exists failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_18bdf.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:47.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_18bdf.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_18bdf.dir\Debug\cmTC_18bdf.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_18bdf.dir\Debug\cmTC_18bdf.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=vsnprintf /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_18bdf.dir\Debug\\" /Fd"cmTC_18bdf.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=vsnprintf /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_18bdf.dir\Debug\\" /Fd"cmTC_18bdf.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  CheckFunctionExists.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_18bdf.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_18bdf.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_18bdf.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_18bdf.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol _vsnprintf referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+MSVCRTD.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol _vsnprintf [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+MSVCRTD.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol __vsnprintf [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_18bdf.exe : fatal error LNK1120: 2 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj" (default target) (1) ->
+(Link target) -> 
+  CheckFunctionExists.obj : error LNK2019: unresolved external symbol _vsnprintf referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+  MSVCRTD.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol _vsnprintf [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+  MSVCRTD.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol __vsnprintf [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_18bdf.exe : fatal error LNK1120: 2 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_18bdf.vcxproj]
+
+    0 Warning(s)
+    4 Error(s)
+
+Time Elapsed 00:00:00.76
+
+
+Determining if the function _vsnprintf exists failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_a3d83.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:48.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_a3d83.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_a3d83.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_a3d83.dir\Debug\cmTC_a3d83.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_a3d83.dir\Debug\cmTC_a3d83.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=_vsnprintf /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a3d83.dir\Debug\\" /Fd"cmTC_a3d83.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=_vsnprintf /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_a3d83.dir\Debug\\" /Fd"cmTC_a3d83.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  CheckFunctionExists.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_a3d83.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_a3d83.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_a3d83.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_a3d83.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol __vsnprintf referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_a3d83.vcxproj]
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_a3d83.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_a3d83.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_a3d83.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_a3d83.vcxproj" (default target) (1) ->
+(Link target) -> 
+  CheckFunctionExists.obj : error LNK2019: unresolved external symbol __vsnprintf referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_a3d83.vcxproj]
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_a3d83.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_a3d83.vcxproj]
+
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:00.79
+
+
+Determining if the function g_vsnprintf exists failed with the following output:
+Change Dir: C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin/MSBuild.exe" "cmTC_cad7a.vcxproj" "/p:Configuration=Debug" "/p:VisualStudioVersion=15.0"
+Microsoft (R) Build Engine version 15.1.1012.6693
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 2017/7/10 15:53:49.
+Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cad7a.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "cmTC_cad7a.dir\Debug\".
+  Creating directory "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\".
+  Creating directory "cmTC_cad7a.dir\Debug\cmTC_cad7a.tlog\".
+InitializeBuildStatus:
+  Creating "cmTC_cad7a.dir\Debug\cmTC_cad7a.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\CL.exe /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=g_vsnprintf /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_cad7a.dir\Debug\\" /Fd"cmTC_cad7a.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.10.25019 for x86
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  
+  cl /c /Zi /W3 /WX- /diagnostics:classic /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=g_vsnprintf /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_cad7a.dir\Debug\\" /Fd"cmTC_cad7a.dir\Debug\vc141.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\Robot\Documents\tools\cmake-3.7.1-win64-x64\share\cmake-3.7\Modules\CheckFunctionExists.c"
+  CheckFunctionExists.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_cad7a.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_cad7a.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Caffe/games/gnugo-3.8/CMakeFiles/CMakeTmp/Debug/cmTC_cad7a.lib" /MACHINE:X86 /SAFESEH  /machine:X86 cmTC_cad7a.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol _g_vsnprintf referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cad7a.vcxproj]
+C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_cad7a.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cad7a.vcxproj]
+Done Building Project "C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cad7a.vcxproj" (default targets) -- FAILED.
+
+Build FAILED.
+
+"C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cad7a.vcxproj" (default target) (1) ->
+(Link target) -> 
+  CheckFunctionExists.obj : error LNK2019: unresolved external symbol _g_vsnprintf referenced in function _main [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cad7a.vcxproj]
+  C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\Debug\cmTC_cad7a.exe : fatal error LNK1120: 1 unresolved externals [C:\Caffe\games\gnugo-3.8\CMakeFiles\CMakeTmp\cmTC_cad7a.vcxproj]
+
+    0 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:00.77
+
+

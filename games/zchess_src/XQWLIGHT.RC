@@ -1,0 +1,202 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+#include "winres.h"
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_APPICON             ICON                    "RES\\zchess.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BOARD               BITMAP                  "RES\\BG.BMP"
+IDB_SELECTED            BITMAP                  "RES\\SE.BMP"
+IDB_RK                  BITMAP                  "RES\\RK.BMP"
+IDB_RA                  BITMAP                  "RES\\RA.BMP"
+IDB_RB                  BITMAP                  "RES\\RB.BMP"
+IDB_RN                  BITMAP                  "RES\\RN.BMP"
+IDB_RR                  BITMAP                  "RES\\RR.BMP"
+IDB_RC                  BITMAP                  "RES\\RC.BMP"
+IDB_RP                  BITMAP                  "RES\\RP.BMP"
+IDB_BK                  BITMAP                  "RES\\BK.BMP"
+IDB_BA                  BITMAP                  "RES\\BA.BMP"
+IDB_BB                  BITMAP                  "RES\\BB.BMP"
+IDB_BN                  BITMAP                  "RES\\BN.BMP"
+IDB_BR                  BITMAP                  "RES\\BR.BMP"
+IDB_BC                  BITMAP                  "RES\\BC.BMP"
+IDB_BP                  BITMAP                  "RES\\BP.BMP"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// WAVE
+//
+
+IDR_CLICK               WAVE                    "RES\\CLICK.WAV"
+IDR_ILLEGAL             WAVE                    "RES\\ILLEGAL.WAV"
+IDR_MOVE                WAVE                    "RES\\MOVE.WAV"
+IDR_MOVE2               WAVE                    "RES\\MOVE2.WAV"
+IDR_CAPTURE             WAVE                    "RES\\CAPTURE.WAV"
+IDR_CAPTURE2            WAVE                    "RES\\CAPTURE2.WAV"
+IDR_CHECK               WAVE                    "RES\\CHECK.WAV"
+IDR_CHECK2              WAVE                    "RES\\CHECK2.WAV"
+IDR_WIN                 WAVE                    "RES\\WIN.WAV"
+IDR_DRAW                WAVE                    "RES\\DRAW.WAV"
+IDR_LOSS                WAVE                    "RES\\LOSS.WAV"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RCDATA
+//
+
+BOOK_DATA               RCDATA                  "BOOK.DAT"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDM_MAINMENU MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "Begin from &User",            IDM_FILE_RED
+        MENUITEM "Begin from &Computer",        IDM_FILE_BLACK
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Reset a step",                ID_OPTIONS_RESETASTEP
+        MENUITEM "Exchange with Computer",      ID_EDIT_EXCHANGEWITHCOMPUTER
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 6,0,0,0
+ PRODUCTVERSION 6,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName", "Zivsoft"
+            VALUE "FileDescription", "zchess is designed by zivsoft"
+            VALUE "FileVersion", "0.x"
+            VALUE "InternalName", "zchess"
+            VALUE "LegalCopyright", "Copyright belongs to Lihua Zhou"
+            VALUE "LegalTrademarks", "www.zivsoft.com"
+            VALUE "OriginalFilename", "zchess"
+            VALUE "ProductName", "zchess"
+            VALUE "ProductVersion", "0.x"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+2 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

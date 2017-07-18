@@ -1,0 +1,5 @@
+﻿  zchess.CPP
+c:\caffe\games\zchess_src\zchess.h(421): warning C4302: 'type cast': truncation from 'LPSTR' to 'WORD'
+zchess.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  zchess.vcxproj -> C:\Caffe\games\zchess_src\Debug\zchess.exe
+  zchess.vcxproj -> C:\Caffe\games\zchess_src\Debug\zchess.pdb (Full PDB)

@@ -1,0 +1,37 @@
+﻿Build started 6/30/2009 4:27:29 PM.
+     1>Project "D:\zchess\zchess\src\zchess.vcxproj" on node 16 (rebuild target(s)).
+         Deleting file "Debug\lastbuild.timestamp".
+         Deleting file "Debug\lastsuccessfulbuild.timestamp".
+     1>ValidateArchitecture_Clean:
+         Directory "Debug\VA_zchess\" doesn't exist. Skipping.
+       _PrepareForBuild:
+         Creating "Debug\lastbuild.timestamp" because "AlwaysCreate" was specified.
+       ClCompile:
+         zchess.CPP
+       ResourceCompile:
+         Microsoft (R) Windows (R) Resource Compiler Version 6.1.7000.0
+         
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         
+       ManifestResourceCompile:
+         Microsoft (R) Windows (R) Resource Compiler Version 6.1.7000.0
+         
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         
+       Manifest:
+         Microsoft (R) Windows (R) Resource Compiler Version 6.1.7000.0
+         
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         
+       LinkEmbedManifest:
+         zchess.vcxproj -> D:\zchess\zchess\Debug\zchess.exe
+       _AfterBuild:
+         Creating "Debug\LastSuccessfulBuild.timestamp" because "AlwaysCreate" was specified.
+     1>Done Building Project "D:\zchess\zchess\src\zchess.vcxproj" (rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.35

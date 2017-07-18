@@ -1,0 +1,125 @@
+﻿Build started 2017/6/5 14:43:51.
+     1>Project "C:\Caffe\caffe-windows\windows\MyTest\ft\ft28\ft28\freetype-2.8\builds\windows\vc2010\freetype.vcxproj" on node 2 (rebuild target(s)).
+     1>InitializeBuildStatus:
+         Creating ".\..\..\..\objs\vc2010\x64\Release\freetype.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /I..\..\..\include /nologo /W4 /WX- /MP /Ox /Ob2 /Oi /Oy /GT /D NDEBUG /D WIN32 /D _LIB /D _CRT_SECURE_NO_WARNINGS /D FT2_BUILD_LIBRARY /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /fp:except- /Za /Zc:wchar_t /Zc:forScope /Fo".\..\..\..\objs\vc2010\x64\Release\\" /Gd /TC /wd4001 /errorReport:prompt ..\..\..\src\autofit\autofit.c ..\..\..\src\base\ftbitmap.c ..\..\..\src\base\ftfstype.c ..\..\..\src\base\ftgasp.c ..\..\..\src\base\ftstroke.c ..\..\..\src\base\ftbbox.c ..\..\..\src\base\ftfntfmt.c ..\..\..\src\base\ftpfr.c ..\..\..\src\base\ftsynth.c ..\..\..\src\base\fttype1.c ..\..\..\src\base\ftwinfnt.c ..\..\..\src\base\ftlcdfil.c ..\..\..\src\base\ftgxval.c ..\..\..\src\base\ftotval.c ..\..\..\src\base\ftpatent.c
+         autofit.c
+         ftbitmap.c
+         ftfstype.c
+         ftgasp.c
+         ftstroke.c
+         ftbbox.c
+         ftfntfmt.c
+         ftpfr.c
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afblue.c : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afblue.c(249): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\autofit\afscript.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+         ftsynth.c
+         fttype1.c
+         ftwinfnt.c
+         ftlcdfil.c
+         ftgxval.c
+         ftotval.c
+         ftpatent.c
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /I..\..\..\include /nologo /W4 /WX- /MP /O2 /Ob2 /Oi /Oy /GT /D NDEBUG /D WIN32 /D _LIB /D _CRT_SECURE_NO_WARNINGS /D FT2_BUILD_LIBRARY /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /fp:except- /Za /Zc:wchar_t /Zc:forScope /Fo".\..\..\..\objs\vc2010\x64\Release\\" /Gd /TC /wd4001 /errorReport:prompt ..\..\..\src\bdf\bdf.c ..\..\..\src\cff\cff.c ..\..\..\src\base\ftbase.c ..\..\..\src\cache\ftcache.c ..\..\..\src\base\ftglyph.c ..\..\..\src\gzip\ftgzip.c ..\..\..\src\base\ftinit.c ..\..\..\src\lzw\ftlzw.c ..\..\..\src\base\ftsystem.c ..\..\..\src\smooth\smooth.c ..\..\..\src\base\ftmm.c ..\..\..\src\pcf\pcf.c ..\..\..\src\pfr\pfr.c ..\..\..\src\psaux\psaux.c ..\..\..\src\pshinter\pshinter.c ..\..\..\src\psnames\psmodule.c ..\..\..\src\raster\raster.c ..\..\..\src\sfnt\sfnt.c ..\..\..\src\truetype\truetype.c ..\..\..\src\type1\type1.c ..\..\..\src\cid\type1cid.c ..\..\..\src\type42\type42.c ..\..\..\src\winfonts\winfnt.c
+         bdf.c
+         cff.c
+         ftbase.c
+         ftcache.c
+         ftglyph.c
+         ftgzip.c
+         ftinit.c
+         ftlzw.c
+         ftsystem.c
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\cff\cffload.c(1368): warning C4244: '=' : conversion from 'FT_UInt32' to 'FT_Byte', possible loss of data
+         smooth.c
+         ftmm.c
+         pcf.c
+         pfr.c
+         psaux.c
+         pshinter.c
+         psmodule.c
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\psaux\t1decode.c(1356): warning C4267: '=' : conversion from 'size_t' to 'FT_Int', possible loss of data
+         raster.c
+         sfnt.c
+         truetype.c
+         type1.c
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\sfnt\sfdriver.c(838): warning C4267: '=' : conversion from 'size_t' to 'FT_UInt', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\sfnt\sfdriver.c(988): warning C4244: 'function' : conversion from '__int64' to 'const unsigned int', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\base\ftobjs.c(4995): warning C4702: unreachable code
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\base\ftobjs.c(4996): warning C4702: unreachable code
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\sfnt\ttload.c : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(269): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(289): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(321): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(351): warning C4267: '=' : conversion from 'size_t' to 'FT_UInt', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(558): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(564): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(570): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(576): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1driver.c(582): warning C4267: '=' : conversion from 'size_t' to 'FT_ULong', possible loss of data
+         type1cid.c
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1load.c(1528): warning C4244: '=' : conversion from '__int64' to 'FT_Int', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type1\t1load.c(1689): warning C4244: '=' : conversion from '__int64' to 'FT_Int', possible loss of data
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\truetype\ttgload.c(1711): warning C4306: 'type cast' : conversion from 'unsigned long' to 'void *' of greater size
+         type42.c
+         winfnt.c
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\truetype\ttobjs.c(789): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+     1>c:\caffe\caffe-windows\windows\mytest\ft\ft28\ft28\freetype-2.8\src\type42\t42parse.c(821): warning C4244: '=' : conversion from '__int64' to 'FT_Int', possible loss of data
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /I..\..\..\include /nologo /W4 /WX- /MP /O2 /Ob2 /Oi /Oy /GT /D NDEBUG /D WIN32 /D _LIB /D _CRT_SECURE_NO_WARNINGS /D FT2_BUILD_LIBRARY /D _MBCS /GF /Gm- /EHsc /MD /GS /Gy /fp:precise /fp:except- /Zc:wchar_t /Zc:forScope /Fo".\..\..\..\objs\vc2010\x64\Release\\" /Gd /TC /wd4001 /errorReport:prompt ..\ftdebug.c
+         ftdebug.c
+       Lib:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\Lib.exe /OUT:".\..\..\..\objs\vc2010\x64\freetype28.lib" /NOLOGO /MACHINE:X64 /LTCG .\..\..\..\objs\vc2010\x64\Release\autofit.obj
+         .\..\..\..\objs\vc2010\x64\Release\bdf.obj
+         .\..\..\..\objs\vc2010\x64\Release\cff.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftbase.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftbitmap.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftcache.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftdebug.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftfstype.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftgasp.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftglyph.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftgzip.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftinit.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftlzw.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftstroke.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftsystem.obj
+         .\..\..\..\objs\vc2010\x64\Release\smooth.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftbbox.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftfntfmt.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftmm.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftpfr.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftsynth.obj
+         .\..\..\..\objs\vc2010\x64\Release\fttype1.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftwinfnt.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftlcdfil.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftgxval.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftotval.obj
+         .\..\..\..\objs\vc2010\x64\Release\ftpatent.obj
+         .\..\..\..\objs\vc2010\x64\Release\pcf.obj
+         .\..\..\..\objs\vc2010\x64\Release\pfr.obj
+         .\..\..\..\objs\vc2010\x64\Release\psaux.obj
+         .\..\..\..\objs\vc2010\x64\Release\pshinter.obj
+         .\..\..\..\objs\vc2010\x64\Release\psmodule.obj
+         .\..\..\..\objs\vc2010\x64\Release\raster.obj
+         .\..\..\..\objs\vc2010\x64\Release\sfnt.obj
+         .\..\..\..\objs\vc2010\x64\Release\truetype.obj
+         .\..\..\..\objs\vc2010\x64\Release\type1.obj
+         .\..\..\..\objs\vc2010\x64\Release\type1cid.obj
+         .\..\..\..\objs\vc2010\x64\Release\type42.obj
+         .\..\..\..\objs\vc2010\x64\Release\winfnt.obj
+         freetype.vcxproj -> C:\Caffe\caffe-windows\windows\MyTest\ft\ft28\ft28\freetype-2.8\builds\windows\vc2010\.\..\..\..\objs\vc2010\x64\freetype28.lib
+       FinalizeBuildStatus:
+         Deleting file ".\..\..\..\objs\vc2010\x64\Release\freetype.unsuccessfulbuild".
+         Touching ".\..\..\..\objs\vc2010\x64\Release\freetype.lastbuildstate".
+     1>Done Building Project "C:\Caffe\caffe-windows\windows\MyTest\ft\ft28\ft28\freetype-2.8\builds\windows\vc2010\freetype.vcxproj" (rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:03.48

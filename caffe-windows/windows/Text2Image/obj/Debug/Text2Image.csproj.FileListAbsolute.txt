@@ -1,0 +1,9 @@
+C:\Caffe\caffe-windows\windows\Text2Image\bin\Debug\Text2Image.exe.config
+C:\Caffe\caffe-windows\windows\Text2Image\bin\Debug\Text2Image.exe
+C:\Caffe\caffe-windows\windows\Text2Image\bin\Debug\Text2Image.pdb
+C:\Caffe\caffe-windows\windows\Text2Image\obj\Debug\Text2Image.Form1.resources
+C:\Caffe\caffe-windows\windows\Text2Image\obj\Debug\Text2Image.Properties.Resources.resources
+C:\Caffe\caffe-windows\windows\Text2Image\obj\Debug\Text2Image.csproj.GenerateResource.Cache
+C:\Caffe\caffe-windows\windows\Text2Image\obj\Debug\Text2Image.exe
+C:\Caffe\caffe-windows\windows\Text2Image\obj\Debug\Text2Image.pdb
+C:\Caffe\caffe-windows\windows\Text2Image\obj\Debug\Text2Image.csprojResolveAssemblyReference.cache

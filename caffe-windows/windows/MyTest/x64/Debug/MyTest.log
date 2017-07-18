@@ -1,0 +1,20 @@
+﻿  MyTest.cpp
+c:\caffe\caffe-windows\windows\thirdparty\opencv\include\opencv2\core\mat.hpp(1965): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\caffe\caffe-windows\windows\thirdparty\opencv\include\opencv2\core\persistence.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\caffe\caffe-windows\windows\thirdparty\opencv\include\opencv2\core\utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\caffe\caffe-windows\windows\thirdparty\opencv\include\opencv2\core\utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(155): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(156): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(159): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(161): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(187): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: 参见“sprintf”的声明
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(193): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h(1769): note: 参见“sprintf”的声明
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(453): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(454): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(467): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(488): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+c:\caffe\caffe-windows\windows\mytest\mytest.cpp(489): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  MyTest.vcxproj -> C:\Caffe\caffe-windows\windows\x64\Debug\MyTest.exe
+  MyTest.vcxproj -> C:\Caffe\caffe-windows\windows\x64\Debug\MyTest.pdb (Full PDB)

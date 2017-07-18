@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://www.cnblogs.com/codingmengmeng/p/6225337.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/bundle-MountainInk.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/bundle-MountainInk-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/codingmengmeng/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/codingmengmeng/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/codingmengmeng/wlwmanifest.xml">
+<script async="" src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/encoder.js.下载"></script><script src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'codingmengmeng', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/codingmengmeng/"><img id="blogLogo" src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/codingmengmeng/">阿玛尼迪迪</a></h1>
+<h2>我这半世未算赶 何妨迷路看风景.</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/codingmengmeng/">首页</a></li>
+<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/%E9%98%BF%E7%8E%9B%E5%B0%BC%E8%BF%AA%E8%BF%AA">联系</a></li>
+<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/codingmengmeng/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/codingmengmeng/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<span id="stats_post_count">随笔 - 180&nbsp; </span>
+<span id="stats_article_count">文章 - 0&nbsp; </span>
+<span id="stats-comment_count">评论 - 3</span>
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/codingmengmeng/p/6225337.html">Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>&nbsp;</p>
+<p><span style="font-size: 15px;">由于我涉及一个车牌识别系统的项目，计划使用深度学习库caffe对车牌字符进行识别。刚开始接触caffe，打算先将示例中的每个网络模型都拿出来用用，当然这样暴力的使用是不会有好结果的- -||| ，所以这里只是记录一下示例的网络模型使用的步骤，最终测试的准确率就暂且不论了！</span></p>
+<h2>一、图片数据库</h2>
+<h3>来源</h3>
+<p><span style="font-size: 15px;">我使用的图像是在项目的字符分割模块中分割出来的字符图像，灰度化并归一化至32*64，字符图片样本示例如下：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227094434101-240984909.png" alt="" style="width: 690px;"></p>
+<p>&nbsp;</p>
+<h3>建立自己的数据文件夹</h3>
+<p><span style="font-size: 15px;">在./caffe/data/目录下建立自己的数据文件夹mine,并且在mine文件夹下建立train文件夹和test文件夹（由于只是为了熟悉cifar10网络模型，为减少训练时长，所以只选取了A,B,C三个字符样本进行训练和测试）。train文件夹用于存放训练样本，test文件夹用于存放测试样本。</span></p>
+<p><span style="font-size: 15px;">然后，将你处理好的训练样本图片放在./caffe/data/mine/train/这个文件夹下面，测试样本放在./caffe/data/mine/test/这个文件夹下面。</span></p>
+<p><span style="font-size: 15px; color: #0000ff;">train</span>:</p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227095831836-233196652.png" alt="" style="width: 690px;"></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px; color: #0000ff;">test</span>:</p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227095905242-120254949.png" alt="" style="width: 690px;"></p>
+<p>&nbsp;</p>
+<h3>&nbsp;编写train.txt和test.txt文本</h3>
+<p><span style="font-size: 15px;">（1）--<strong>train.txt</strong>　　：存放训练图片的路径名（相对于./caffe/data/mine/train/）和类别标签，一行一张图片，如下所示：</span></p>
+<p>&nbsp;<img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227100142820-1320797196.png" alt=""></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">（2）--<strong>test.txt</strong>　　:存放测试样本的路径名（相对于./caffe/data/mine/test/）和类别标签，一行代表一张图片，如下图所示：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227101136570-2065195748.png" alt=""></p>
+<p>&nbsp;</p>
+<h2>二、将图片数据转换为LEVELDB格式的数据</h2>
+<p><span style="font-size: 15px;">在原caffe工程中将caffe.cpp从工程中移除，将tools文件夹中的convert_imageset.cpp添加到工程中，编译后在./caffe/bin/下生成.exe，将其改名为convert_imageset.exe。</span></p>
+<p><span style="font-size: 15px;">然后，在根目录下（我的是F:\caffe\）写一个批处理bat文件，命名为converttrain2ldb.bat，旨在将训练集中的数据格式转换为leveldb格式：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227102712554-1318185524.png" alt=""></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">运行后，在data/mine/下生成mtrainldb文件夹，文件夹的内容如下所示：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227102853867-556511844.png" alt="" style="width: 690px;"></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">当你生成的.ldb文件的大小为0KB或很小很小，那应该就是你的bat文件出错了。</span></p>
+<p><span style="font-size: 15px;">同理将测试集转换为leveldb文件：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227103112617-373573385.png" alt=""></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2>三、计算图像的均值</h2>
+<p><span style="font-size: 15px;">在原caffe工程中将caffe.cpp从工程中移除，将tools文件夹中的compute_image_mean.cpp添加到工程中，编译后在./caffe/bin/下生成.exe，将其改名为compute_image_mean.cpp.exe。</span></p>
+<p><span style="font-size: 15px;">在根目录下写一个批处理bat文件，命名为computeMean.bat，旨在计算图像的均值，生成均值文件：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227103709757-1868908941.png" alt=""></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">运行后，在data/mine/下生成均值文件。如下所示：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227103825117-436601425.png" alt="" style="width: 690px;"></p>
+<p>&nbsp;</p>
+<h2>四、创建网络模型，编写配置文件，编写训练脚本，验证测试集</h2>
+<h3>创建网络模型</h3>
+<p><span style="font-size: 15px;">在./data/mine下建立文件夹train-val，将./examples/cifar10/文件夹下的cifar10_quick_train_test.prototxt网络模型配置文件copy至该文件夹下面，如下所示：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227104932757-7857238.png" alt="" style="width: 690px;"></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">并且进行如下的修改：</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>name: <span style="color: #800000;">"</span><span style="color: #800000;">CIFAR10_quick</span><span style="color: #800000;">"</span><span style="color: #000000;">
+layer {
+  name: </span><span style="color: #800000;">"</span><span style="color: #800000;">cifar</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  type: </span><span style="color: #800000;">"</span><span style="color: #800000;">Data</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">data</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">label</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  include {
+    phase: TRAIN
+  }
+  transform_param {        </span><span style="color: #008000;">//</span><span style="color: #008000;">【第1块修改的地方】下面是均值文件所在的路径,改为你自己的均值文件所在的路径</span>
+    mean_file: <span style="color: #800000;">"</span><span style="color: #800000;">data/mine/train_mean.binaryproto</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  }
+  data_param {            </span><span style="color: #008000;">//</span><span style="color: #008000;">【第2块修改的地方】下面改为训练样本生成的数据库所在的目录[注意:是训练样本数据库]</span>
+    source: <span style="color: #800000;">"</span><span style="color: #800000;">data/mine/mtrainldb</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    batch_size: </span><span style="color: #800080;">50</span>    <span style="color: #008000;">//</span><span style="color: #008000;">【第3块修改的地方】由于我们的训练样本不多,所以我们一次读入50张图片就好</span>
+<span style="color: #000000;">    backend: LEVELDB
+  }
+}
+layer {
+  name: </span><span style="color: #800000;">"</span><span style="color: #800000;">cifar</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  type: </span><span style="color: #800000;">"</span><span style="color: #800000;">Data</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">data</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">label</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  include {
+    phase: TEST
+  }
+  transform_param {    </span><span style="color: #008000;">//</span><span style="color: #008000;">【第4块修改的地方】下面是均值文件所在的路径,改为你自己的均值文件所在的路径</span>
+    mean_file: <span style="color: #800000;">"</span><span style="color: #800000;">data/mine/train_mean.binaryproto</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  }
+  data_param {      </span><span style="color: #008000;">//</span><span style="color: #008000;">【第5块修改的地方】下面改为测试样本生成的数据库所在的目录[注意:是测试样本数据库]</span>
+    source: <span style="color: #800000;">"</span><span style="color: #800000;">data/mine/mtestldb</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    batch_size: </span><span style="color: #800080;">50</span><span style="color: #008000;">//</span><span style="color: #008000;">【第6块修改的地方】由于我们的测试样本只有150张,所以我们一次读入50张图片就好</span>
+<span style="color: #000000;">    backend: LEVELDB
+  }
+}
+layer {
+  name: </span><span style="color: #800000;">"</span><span style="color: #800000;">conv1</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  type: </span><span style="color: #800000;">"</span><span style="color: #800000;">Convolution</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  bottom: </span><span style="color: #800000;">"</span><span style="color: #800000;">data</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">conv1</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  param {
+    lr_mult: </span><span style="color: #800080;">1</span><span style="color: #000000;">
+  }
+  param {
+    lr_mult: </span><span style="color: #800080;">2</span><span style="color: #000000;">
+  }
+
+   中间的省略......
+layer {
+  name: </span><span style="color: #800000;">"</span><span style="color: #800000;">ip2</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  type: </span><span style="color: #800000;">"</span><span style="color: #800000;">InnerProduct</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  bottom: </span><span style="color: #800000;">"</span><span style="color: #800000;">ip1</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">ip2</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  param {
+    lr_mult: </span><span style="color: #800080;">1</span><span style="color: #000000;">
+  }
+  param {
+    lr_mult: </span><span style="color: #800080;">2</span><span style="color: #000000;">
+  }
+  inner_product_param {
+    num_output: </span><span style="color: #800080;">3</span>         <span style="color: #008000;">//</span><span style="color: #008000;">【第7块修改的地方】我们现在是3分类问题,所以将第二个全连接层改为3</span>
+<span style="color: #000000;">    weight_filler {
+      type: </span><span style="color: #800000;">"</span><span style="color: #800000;">gaussian</span><span style="color: #800000;">"</span><span style="color: #000000;">
+      std: </span><span style="color: #800080;">0.1</span><span style="color: #000000;">
+    }
+    bias_filler {
+      type: </span><span style="color: #800000;">"</span><span style="color: #800000;">constant</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    }
+  }
+}
+layer {
+  name: </span><span style="color: #800000;">"</span><span style="color: #800000;">accuracy</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  type: </span><span style="color: #800000;">"</span><span style="color: #800000;">Accuracy</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  bottom: </span><span style="color: #800000;">"</span><span style="color: #800000;">ip2</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  bottom: </span><span style="color: #800000;">"</span><span style="color: #800000;">label</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">accuracy</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: </span><span style="color: #800000;">"</span><span style="color: #800000;">loss</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  type: </span><span style="color: #800000;">"</span><span style="color: #800000;">SoftmaxWithLoss</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  bottom: </span><span style="color: #800000;">"</span><span style="color: #800000;">ip2</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  bottom: </span><span style="color: #800000;">"</span><span style="color: #800000;">label</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  top: </span><span style="color: #800000;">"</span><span style="color: #800000;">loss</span><span style="color: #800000;">"</span><span style="color: #000000;">
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<h3>编写超参数配置文件</h3>
+<p><span style="font-size: 15px;">同样的，将cifar10_quick_solver.prototxt超参数配置文件copy至./data/mine/train-val下，进行下面的修改：</span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">【1】改为你自己的网络模型配置文件的目录</span>
+net: <span style="color: #800000;">"</span><span style="color: #800000;">data/mine/train-val/cifar10_quick_train_test.prototxt</span><span style="color: #800000;">"</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【2】预测阶段迭代次数，设为3，因为batch_size设为50，这样就可以覆盖150张测试集图片</span>
+test_iter: <span style="color: #800080;">3</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【3】每迭代50次， 进行一次测试</span>
+test_interval: <span style="color: #800080;">50</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【4】权值学习率,其实就是在反向传播阶段,权值每次的调整量的程度</span>
+base_lr: <span style="color: #800080;">0.001</span><span style="color: #000000;">
+momentum: </span><span style="color: #800080;">0.9</span><span style="color: #000000;">
+weight_decay: </span><span style="color: #800080;">0.004</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【5】在整个过程中,我们使用固定的学习率，也可尝试使用可变学习率</span>
+lr_policy: <span style="color: #800000;">"</span><span style="color: #800000;">fixed</span><span style="color: #800000;">"</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【6】因为想观察每一次训练的变化，所以设置迭代一次显示一次内容</span>
+display: <span style="color: #800080;">1</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【7】将最大迭代次数设为4000</span>
+max_iter: <span style="color: #800080;">4000</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【8】每迭代1000次输出一次结果</span>
+snapshot: <span style="color: #800080;">1000</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【9】输出格式</span>
+<span style="color: #000000;">snapshot_format: HDF5
+</span><span style="color: #008000;">//</span><span style="color: #008000;">【10】输出文件的前缀</span>
+snapshot_prefix: <span style="color: #800000;">"</span><span style="color: #800000;">data/mine/cifar10_quick</span><span style="color: #800000;">"</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">【11】用的是CPU</span>
+solver_mode: CPU</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<h3>编写训练脚本</h3>
+<p><span style="font-size: 15px;">在根目录下新建批处理bat文件，命名为trainMine_useCifar10.bat，内容如下所示：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227111327867-1351078136.png" alt=""></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">运行后，即调用train-val文件夹下的cifar10_quick_solver.prototxt开始训练，训练过程如下图所示：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227113839867-54168160.png" alt="" style="width: 690px;"></p>
+<p><span style="font-size: 15px;">...</span></p>
+<p><span style="font-size: 15px;">训练完成后，在指定目录下生成了HDF5格式的训练模型：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227114201179-58087990.png" alt="" style="width: 690px;"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>验证测试集</h3>
+<p><span style="font-size: 15px;">在根目录下编写批处理bat文件，命名为testMine_useCifar10.bat：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227114355539-1611133831.png" alt=""></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">双击运行后，开始对测试集中的数据进行测试，输出结果如下所示：</span></p>
+<p><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/763943-20161227114449711-1197924678.png" alt="" style="width: 690px;"></p>
+<p><span style="text-decoration: underline;"><span style="font-size: 15px; color: #ff0000; text-decoration: underline;">可以看到，有些测试batch的准确率为1，有些batch的准确率为0，accuracy部分除了这两个数字，未出现其它数字，所以我估摸着必有蹊跷，但还不知道问题出在哪，待日后再弄明白！</span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;">以上。</span></p></div><div id="MySignature" style="display: block;">それでも私の大好きな人</div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/codingmengmeng/category/922671.html" target="_blank">Caffe</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6225337,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;c3319041-3707-e511-b908-9dcfd8948a71&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/codingmengmeng/" target="_blank"><img src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/20151019224749.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/codingmengmeng/">阿玛尼迪迪</a><br>
+            <a href="http://home.cnblogs.com/u/codingmengmeng/followees">关注 - 6</a><br>
+            <a href="http://home.cnblogs.com/u/codingmengmeng/followers">粉丝 - 18</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;c3319041-3707-e511-b908-9dcfd8948a71&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6225337,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(6225337,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/codingmengmeng/p/6215320.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/codingmengmeng/p/6215320.html" title="发布于2016-12-23 16:38">caffe下训练时遇到的一些问题汇总</a><br><a href="http://www.cnblogs.com/codingmengmeng/p/6231056.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/codingmengmeng/p/6231056.html" title="发布于2016-12-28 22:00">caffe初试（一）happynear的caffe-windows版本的配置及遇到的问题</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2016-12-27 11:51</span> <a href="http://www.cnblogs.com/codingmengmeng/">阿玛尼迪迪</a> 阅读(<span id="post_view_count">675</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=6225337" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/codingmengmeng/p/6225337.html#" onclick="AddToWz(6225337);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=249910,cb_entryId=6225337,cb_blogApp=currentBlogApp,cb_blogUserGuid='c3319041-3707-e511-b908-9dcfd8948a71',cb_entryCreatedDate='2016/12/27 11:51:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/codingmengmeng/p/6225337.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/codingmengmeng/p/6225337.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://wijmo.gcpowertools.com.cn/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=wijmo&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/24442-20170531232714852-1660032846.gif" alt="huozige"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/570722/" target="_blank">想要申请赴美签证？请准备交出你的社交媒体账号</a><br> ·  <a href="http://news.cnblogs.com/n/570738/" target="_blank">“海淘货”造假，谁该为造假利益链负责？</a><br> ·  <a href="http://news.cnblogs.com/n/570747/" target="_blank">天猫日薪1万招临时工：找到一款比京东贵商品 加奖6180元</a><br> ·  <a href="http://news.cnblogs.com/n/570746/" target="_blank">菜鸟回应顺丰：从未要求提供非淘系数据</a><br> ·  <a href="http://news.cnblogs.com/n/570745/" target="_blank">顺丰菜鸟掐架：腾讯京东迅速站队 旁观者各怀心思</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/17215/" target="_blank"><img width="468" height="60" src="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/24442-20170417123605337-535991337.jpg" alt="阿里云E4"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news">
+<div id="myTime">
+ <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="180" height="80" id="honehoneclock" align="middle">
+ <param name="allowScriptAccess" value="always">
+ <param name="movie" value="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_wh.swf">
+ <param name="quality" value="high">
+ <param name="bgcolor" value="#ffffff">
+ <param name="wmode" value="transparent">
+ <embed wmode="transparent" src="http://chabudai.sakura.ne.jp/blogparts/honehoneclock/honehone_clock_wh.swf" quality="high" bgcolor="#ffffff" width="180" height="80" name="honehoneclock" align="middle" allowscriptaccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+ </object>
+ </div>
+
+
+<div>
+<object type="application/x-shockwave-flash" style="outline:none;" data="./Caffe初试（三）使用caffe的cifar10网络模型训练自己的图片数据 - 阿玛尼迪迪 - 博客园_files/hamster.swf.下载" width="180" height="150">
+<param name="movie" value="http://cdn.abowman.com/widgets/hamster/hamster.swf?up_bodyColor=f0e9cc&amp;up_feetColor=D4C898&amp;up_eyeColor=000567&amp;up_wheelSpokeColor=DEDEDE&amp;up_wheelColor=FFFFFF&amp;up_waterColor=E0EFFF&amp;up_earColor=b0c4de&amp;up_wheelOuterColor=FF4D4D&amp;up_snoutColor=F7F4E9&amp;up_bgColor=F0E4E4&amp;up_foodColor=cba920&amp;up_wheelCenterColor=E4EB2E&amp;up_tailColor=E6DEBE&amp;">
+<param name="AllowScriptAccess" value="always">
+<param name="wmode" value="opaque">
+</object>
+</div><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/codingmengmeng/">阿玛尼迪迪</a><br>园龄：<a href="http://home.cnblogs.com/u/codingmengmeng/" title="入园时间：2015-05-31">2年</a><br>粉丝：<a href="http://home.cnblogs.com/u/codingmengmeng/followers/">18</a><br>关注：<a href="http://home.cnblogs.com/u/codingmengmeng/followees/">6</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;c3319041-3707-e511-b908-9dcfd8948a71&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="日历">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td class="CalTodayDay" align="center">2</td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/codingmengmeng/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/codingmengmeng/tag/python/">python</a>(34)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/opencv/">opencv</a>(10)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/stm32/">stm32</a>(5)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/">支持向量机</a>(3)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/%E6%8E%92%E5%BA%8F/">排序</a>(2)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">优先队列</a>(2)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/%E6%A0%88/">栈</a>(2)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84/">最短路径</a>(2)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/%E5%86%B3%E7%AD%96%E6%A0%91/">决策树</a>(2)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF/">朴素贝叶斯</a>(2)</li><li><a href="http://www.cnblogs.com/codingmengmeng/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+<div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/codingmengmeng/category/750432.html">C++(50)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/codingmengmeng/category/922671.html">Caffe(12)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/codingmengmeng/category/953955.html">Java Web(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/codingmengmeng/category/818699.html">OpenCv(16)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/codingmengmeng/category/850385.html">python(36)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/codingmengmeng/category/818668.html">Stanford大学机器学习公开课(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/codingmengmeng/category/818712.html">stm32学习笔记(15)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/codingmengmeng/category/922697.html">vs2013(7)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/codingmengmeng/category/888044.html">编程思想(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/codingmengmeng/category/750434.html">分布式计算</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/codingmengmeng/category/826733.html">国密(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_11" href="http://www.cnblogs.com/codingmengmeng/category/750433.html">机器学习(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_12" href="http://www.cnblogs.com/codingmengmeng/category/923621.html">计算机菜鸟(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_13" href="http://www.cnblogs.com/codingmengmeng/category/880240.html">剑指Offer(7)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_14" href="http://www.cnblogs.com/codingmengmeng/category/886251.html">设计模式(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_15" href="http://www.cnblogs.com/codingmengmeng/category/750431.html">数据结构(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_16" href="http://www.cnblogs.com/codingmengmeng/category/846172.html">算法(17)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_17" href="http://www.cnblogs.com/codingmengmeng/category/818700.html">图像处理(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_18" href="http://www.cnblogs.com/codingmengmeng/category/888587.html">网络编程(1)</a> </li>
+
+</ul>
+
+</div>
+
+<div id="sidebar_postarchive" class="catListPostArchive sidebar-block">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/codingmengmeng/archive/2017/04.html">2017年4月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/codingmengmeng/archive/2017/03.html">2017年3月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/codingmengmeng/archive/2017/02.html">2017年2月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/codingmengmeng/archive/2017/01.html">2017年1月 (13)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/codingmengmeng/archive/2016/12.html">2016年12月 (19)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/codingmengmeng/archive/2016/11.html">2016年11月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/codingmengmeng/archive/2016/10.html">2016年10月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/codingmengmeng/archive/2016/09.html">2016年9月 (31)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/codingmengmeng/archive/2016/08.html">2016年8月 (33)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/codingmengmeng/archive/2016/07.html">2016年7月 (10)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/codingmengmeng/archive/2016/06.html">2016年6月 (11)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/codingmengmeng/archive/2016/05.html">2016年5月 (13)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/codingmengmeng/archive/2016/04.html">2016年4月 (25)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_13" href="http://www.cnblogs.com/codingmengmeng/archive/2015/11.html">2015年11月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_14" href="http://www.cnblogs.com/codingmengmeng/archive/2015/10.html">2015年10月 (1)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/codingmengmeng/p/6258020.html#3702049">1. Re:C++根据图片url下载图片</a></li>
+        <li class="recent_comment_body">直接运行成功，感谢分享！</li>
+        <li class="recent_comment_author">--fy_ios</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/codingmengmeng/p/5808537.html#3627673">2. Re:python基础——sorted()函数</a></li>
+        <li class="recent_comment_body">真是超级棒的文章</li>
+        <li class="recent_comment_author">--落花盈香</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/codingmengmeng/p/5805558.html#3570396">3. Re:python基础——map/reduce</a></li>
+        <li class="recent_comment_body">{'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9}[s]请问下这个到底是什么意思？...</li>
+        <li class="recent_comment_author">--yusp</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/codingmengmeng/p/5913068.html">1. C++多线程编程（入门实例）(9981)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/5467609.html">2. stm32——NFC芯片--PN532的使用(2401)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/5857217.html">3. 题目：在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。(2288)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/5871254.html">4. c++中有些重载运算符为什么要返回引用(1992)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/6215320.html">5. caffe下训练时遇到的一些问题汇总(1873)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/codingmengmeng/p/5808537.html">1. python基础——sorted()函数(1)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/5805558.html">2. python基础——map/reduce(1)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/6258020.html">3. C++根据图片url下载图片(1)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/codingmengmeng/p/5913068.html">1. C++多线程编程（入门实例）(7)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/6258020.html">2. C++根据图片url下载图片(1)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/5415081.html">3. Stanford大学机器学习公开课（六）：朴素贝叶斯多项式模型、神经网络、SVM初步(1)</a></li><li><a href="http://www.cnblogs.com/codingmengmeng/p/5790113.html">4. python基础——递归函数(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 阿玛尼迪迪
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

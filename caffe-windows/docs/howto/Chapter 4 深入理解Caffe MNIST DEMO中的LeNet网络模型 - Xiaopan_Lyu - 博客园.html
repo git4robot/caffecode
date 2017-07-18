@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)http://www.cnblogs.com/xiaopanlyu/p/5793280.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/style2.css">
+<link type="text/css" rel="stylesheet" href="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/109153.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/bundle-BOOK-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/xiaopanlyu/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/xiaopanlyu/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/xiaopanlyu/wlwmanifest.xml">
+<script async="" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/analytics.js.下载"></script><script src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'xiaopanlyu', cb_enable_mathjax=true;var isLogined=false;</script>
+<script src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+<script type="text/x-mathjax-config;executed=true">MathJax.Hub.Config({
+  tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] },
+  TeX: { equationNumbers: { autoNumber: ['AMS'], useLabelIds: true }, extensions: ['extpfeil.js'] },
+  'HTML-CSS': { linebreaks: { automatic: true } },
+  SVG: { linebreaks: { automatic: true } }});</script><script type="text/javascript" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/MathJax.js.下载"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div>
+<a name="top"></a>
+
+<script type="text/javascript">
+	try {
+		if (screen.availWidth > 1200) {
+			document.getElementById("MainCss").href = '/Skins/BOOK/style2.css';
+		}
+	} catch (e) { }
+</script>
+
+<div id="header">
+<div id="HeaderTitle">
+<div id="Title">
+<a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/xiaopanlyu/">Xiaopan Lyu</a>
+</div>
+<div id="subTitle"></div>
+</div>
+</div>
+
+<div id="main">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html">Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型</a>
+		</h2>
+		<div id="cnblogs_post_body"><a name="_labelTop"></a><div id="navCategory"><p style="font-size:200%;font-weight:normal;"><b>目录</b></p><ul class="first_class_ul"><li style="font-size:130%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_label0">1. 初见LeNet原始模型</a></li><li style="font-size:130%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_label1">2. Caffe LeNet的网络结构</a></li><li style="font-size:130%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_label2">3. 逐层理解Caffe LeNet</a></li><ul class="second_class_ul"><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_0">3.1 Data Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_1">3.2 Conv1 Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_2">3.3 Pool1 Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_3">3.4 Conv2 Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_4">3.5 Pool2 Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_5">3.6 Ip1 Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_6">3.7 Relu1 Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_7">3.8 Ip2 Layer</a></li><li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_lab2_2_8">3.9 Loss Layer</a></li></ul><li style="font-size:130%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_label3">4. Caffe LeNet的完整定义</a></li></ul></div><p><font size="4">明代思想家王阳明提出了“知行合一”，谓认识事物的道理与在现实中运用此道理，是密不可分的一回事。我以为这样的中国哲学话语，对于学习者来说，极具启发意义，要细细体会。中华文明源远流长，很多做人做事的道理，孕育其中，需用心体会，并学以致用。</font></p> <p><font size="4">以“知”促“行”、以“行”促“知”、知行合一。——The unity of Inner knowledge and action.</font></p> <p><font size="4">在chapter 3 中提供了一个很好的实践样例，这个样例在windows下运行了Caffe源代码的MNIST Demo。本章将以该实践为基础来深入理解LeNet网络模型。</font></p> <div style="text-align: right;font-size:100%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_labelTop">回到顶部(go to top)</a><a name="_label0"></a></div><h2>1. 初见LeNet原始模型</h2> <p><font size="4"></font>&nbsp;</p> <p><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160821185633558-1802239041.png"><img title="1" style="border-left-width: 0px; border-right-width: 0px; background-image: none; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" alt="1" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160821185634276-414022095.png" width="1079" height="317"></a></p> <p><font size="3">Fig.1. Architecture of original LeNet-5.</font></p> <p><font size="3">图片来源： Lecun, et al., Gradient-based learning applied to document recognition, <i>P IEEE</i>, vol. 86, no. 11, 1998, pp. 2278-2324.</font></p> <p><font size="4">在这篇图片的论文中，详细描述了LeNet-5的结构。</font></p> <p><font size="4">这里不对LeNet-5原始模型进行讨论。可以参考这些资料：</font></p> <p><a href="http://blog.csdn.net/qiaofangjie/article/details/16826849" target="_blank"><font color="#0000ff" size="4">http://blog.csdn.net/qiaofangjie/article/details/16826849</font></a></p> <p><a href="http://blog.csdn.net/xuanyuansen/article/details/41800721" target="_blank"><font color="#0000ff" size="4">http://blog.csdn.net/xuanyuansen/article/details/41800721</font></a></p> <div style="text-align: right;font-size:100%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_labelTop">回到顶部(go to top)</a><a name="_label1"></a></div><h2>2. Caffe LeNet的网络结构</h2> <p><font size="4">他山之石，可以攻玉。本来是准备画出Caffe LeNet的图的，但发现已经有人做了，并且画的很好，就直接拿过来辅助理解了。</font></p> <p><font size="4">第3部分图片来源：</font><a href="http://www.2cto.com/kf/201606/518254.html" target="_blank"><font color="#0000ff" size="4">http://www.2cto.com/kf/201606/518254.html</font></a></p> <p><font size="4">先从整体上感知Caffe LeNet的拓扑图，由于Caffe中定义网络的结构采用的是bottom&amp;top这种上下结构，所以这里的图也采用这种方式展现出来，更加方便理解。</font></p> <p><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160822184634167-856984387.png"><img title="1" style="border-left-width: 0px; border-right-width: 0px; background-image: none; border-bottom-width: 0px; padding-top: 0px; padding-left: 0px; display: inline; padding-right: 0px; border-top-width: 0px" border="0" alt="1" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160822184634839-856661089.png" width="701" height="530"></a></p> <p><font size="3">Fig.2. Architecture of caffe LeNet.</font></p> <p><font size="4">From bottom to top: Data Layer, conv1, pool1, conv2, pool2, ip1, relu1, ip2, [accuracy]loss.</font></p> <p><font size="4">本节接下来将按照这个顺序依次理解Caffe LeNet的网络结构。</font></p> <div style="text-align: right;font-size:100%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_labelTop">回到顶部(go to top)</a><a name="_label2"></a></div><h2>3. 逐层理解Caffe LeNet</h2> <p><font size="4">本节将采用定义与图解想结合的方式逐层理解Caffe LeNet的结构。</font></p> <div style="text-align: right"><a name="_lab2_2_0"></a></div><h3>3.1 Data Layer</h3> <div class="csharpcode"><pre class="alt"><font size="4">#==============定义TRAIN的数据层============================================</font></pre><pre><font size="4">layer { </font></pre><pre class="alt"><font size="4">  name: <span class="str">"mnist"</span> #定义该层的名字</font></pre><pre><font size="4">  type: <span class="str">"Data"</span>  #该层的类型是数据</font></pre><pre class="alt"><font size="4">  top: <span class="str">"data"</span>   #该层生成一个data blob</font></pre><pre><font size="4">  top: <span class="str">"label"</span>  #该层生成一个label blob</font></pre><pre class="alt"><font size="4">  include {</font></pre><pre><font size="4">    phase: TRAIN #说明该层只在TRAIN阶段使用</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  transform_param {</font></pre><pre class="alt"><font size="4">    scale: 0.00390625 #数据归一化系数，1/256，归一到[0,1)</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  data_param {</font></pre><pre><font size="4">    source: <span class="str">"E:/MyCode/DL/caffe-master/examples/mnist/mnist_train_lmdb"</span> #训练数据的路径</font></pre><pre class="alt"><font size="4">    batch_size: 64 #批量处理的大小</font></pre><pre><font size="4">    backend: LMDB</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre><pre class="alt"><font size="4">#==============定义TEST的数据层============================================</font></pre><pre><font size="4">layer { </font></pre><pre class="alt"><font size="4">  name: <span class="str">"mnist"</span></font></pre><pre><font size="4">  type: <span class="str">"Data"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"data"</span></font></pre><pre><font size="4">  top: <span class="str">"label"</span></font></pre><pre class="alt"><font size="4">  include {</font></pre><pre><font size="4">    phase: TEST #说明该层只在TEST阶段使用</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  transform_param {</font></pre><pre class="alt"><font size="4">    scale: 0.00390625</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  data_param {</font></pre><pre><font size="4">    source: <span class="str">"E:/MyCode/DL/caffe-master/examples/mnist/mnist_test_lmdb"</span> #测试数据的路径</font></pre><pre class="alt"><font size="4">    batch_size: 100</font></pre><pre><font size="4">    backend: LMDB</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><font size="4"><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160830211301543-606223669.png"><img title="2" style="border-top: 0px; border-right: 0px; background-image: none; border-bottom: 0px; padding-top: 0px; padding-left: 0px; border-left: 0px; display: inline; padding-right: 0px" border="0" alt="2" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160830211302683-852594652.png" width="644" height="480"></a></font></p>
+<p><font size="3">Fig.3. Architecture of data layer.</font></p>
+<p><font size="4">Fig.3 是train情况下，数据层读取lmdb数据，每次读取64条数据，即N=64。</font></p>
+<p><font size="4">Caffe中采用4D表示，N*C*H*W(Num*Channels*Height*Width)。</font></p>
+<div style="text-align: right"><a name="_lab2_2_1"></a></div><h3>3.2 Conv1 Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义卷积层1=============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"conv1"</span>       #该层的名字conv1，即卷积层1</font></pre><pre><font size="4">  type: <span class="str">"Convolution"</span> #该层的类型是卷积层</font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"data"</span>      #该层使用的数据是由数据层提供的data blob</font></pre><pre><font size="4">  top: <span class="str">"conv1"</span>        #该层生成的数据是conv1</font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 1        #weight learning rate(简写为lr)权值的学习率，1表示该值是lenet_solver.prototxt中base_lr: 0.01的1倍</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 2        #bias learning rate偏移值的学习率，2表示该值是lenet_solver.prototxt中base_lr: 0.01的2倍</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  convolution_param {</font></pre><pre><font size="4">    num_output: 20    #产生20个输出通道</font></pre><pre class="alt"><font size="4">    kernel_size: 5    #卷积核的大小为5*5</font></pre><pre><font size="4">    stride: 1         #卷积核移动的步幅为1</font></pre><pre class="alt"><font size="4">    weight_filler {</font></pre><pre><font size="4">      type: <span class="str">"xavier"</span>  #xavier算法，根据输入和输出的神经元的个数自动初始化权值比例</font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">    bias_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"constant"</span>  #将偏移值初始化为“稳定”状态，即设为默认值0</font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160830211303652-1284257148.png"><img title="3" style="border-top: 0px; border-right: 0px; background-image: none; border-bottom: 0px; padding-top: 0px; padding-left: 0px; border-left: 0px; display: inline; padding-right: 0px" border="0" alt="3" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160830211304574-921511236.png" width="643" height="484"></a></p>
+<p><font size="3">Fig.4. Architecture of conv1 layer.</font></p>
+<p><font size="4">conv1的数据变化的情况：batch_size*1*28*28-&gt;batch_size*20*24*24</font></p>
+<div style="text-align: right"><a name="_lab2_2_2"></a></div><h3>3.3 Pool1 Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义池化层1=============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"pool1"</span></font></pre><pre><font size="4">  type: <span class="str">"Pooling"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"conv1"</span>     #该层使用的数据是由conv1层提供的conv1</font></pre><pre><font size="4">  top: <span class="str">"pool1"</span>        #该层生成的数据是pool1</font></pre><pre class="alt"><font size="4">  pooling_param {</font></pre><pre><font size="4">    pool: MAX         #采用最大值池化</font></pre><pre class="alt"><font size="4">    kernel_size: 2    #池化核大小为2*2</font></pre><pre><font size="4">    stride: 2         #池化核移动的步幅为2，即非重叠移动</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160830211305371-1219412592.png"><img title="4" style="border-top: 0px; border-right: 0px; background-image: none; border-bottom: 0px; padding-top: 0px; padding-left: 0px; border-left: 0px; display: inline; padding-right: 0px" border="0" alt="4" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160830211306371-1658521582.png" width="644" height="466"></a></p>
+<p><font size="3">Fig.5. Architecture of pool1 layer.</font></p>
+<p><font size="4">池化层1过程数据变化：batch_size*20*24*24-&gt;batch_size*20*12*12</font></p>
+<div style="text-align: right"><a name="_lab2_2_3"></a></div><h3>3.4 Conv2 Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义卷积层2=============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"conv2"</span></font></pre><pre><font size="4">  type: <span class="str">"Convolution"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"pool1"</span></font></pre><pre><font size="4">  top: <span class="str">"conv2"</span></font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 1</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 2</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  convolution_param {</font></pre><pre><font size="4">    num_output: 50</font></pre><pre class="alt"><font size="4">    kernel_size: 5</font></pre><pre><font size="4">    stride: 1</font></pre><pre class="alt"><font size="4">    weight_filler {</font></pre><pre><font size="4">      type: <span class="str">"xavier"</span></font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">    bias_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"constant"</span></font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><font size="4">conv2层的图与Fig.4 类似，卷积层2过程数据变化：batch_size*20*12*12-&gt;batch_size*50*8*8。</font></p>
+<div style="text-align: right"><a name="_lab2_2_4"></a></div><h3>3.5 Pool2 Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义池化层2=============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"pool2"</span></font></pre><pre><font size="4">  type: <span class="str">"Pooling"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"conv2"</span></font></pre><pre><font size="4">  top: <span class="str">"pool2"</span></font></pre><pre class="alt"><font size="4">  pooling_param {</font></pre><pre><font size="4">    pool: MAX</font></pre><pre class="alt"><font size="4">    kernel_size: 2</font></pre><pre><font size="4">    stride: 2</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><font size="4">pool2层图与Fig.5类似，池化层2过程数据变化：batch_size*50*8*8-&gt;batch_size*50*4*4。</font></p>
+<div style="text-align: right"><a name="_lab2_2_5"></a></div><h3>3.6 Ip1 Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义全连接层1=============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"ip1"</span></font></pre><pre><font size="4">  type: <span class="str">"InnerProduct"</span> #该层的类型为全连接层</font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"pool2"</span></font></pre><pre><font size="4">  top: <span class="str">"ip1"</span></font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 1</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 2</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  inner_product_param {</font></pre><pre><font size="4">    num_output: 500 #有500个输出通道</font></pre><pre class="alt"><font size="4">    weight_filler {</font></pre><pre><font size="4">      type: <span class="str">"xavier"</span></font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">    bias_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"constant"</span></font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160830211307730-219161733.png"><img title="5" style="border-top: 0px; border-right: 0px; background-image: none; border-bottom: 0px; padding-top: 0px; padding-left: 0px; border-left: 0px; display: inline; padding-right: 0px" border="0" alt="5" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160830211311496-459032068.png" width="644" height="457"></a></p>
+<p><font size="3">Fig.6. Architecture of ip11 layer.</font></p>
+<p><font size="4">ip1过程数据变化：batch_size*50*4*4-&gt;batch_size*500*1*1。</font></p>
+<p><font size="4">此处的全连接是将C*H*W转换成1D feature vector，即800-&gt;500.</font></p>
+<div style="text-align: right"><a name="_lab2_2_6"></a></div><h3>3.7 Relu1 Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义ReLU1层=============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"relu1"</span></font></pre><pre><font size="4">  type: <span class="str">"ReLU"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"ip1"</span></font></pre><pre><font size="4">  top: <span class="str">"ip1"</span></font></pre><pre class="alt"><font size="4">}</font></pre><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160830211312371-1962176087.png"><img title="6" style="border-top: 0px; border-right: 0px; background-image: none; border-bottom: 0px; padding-top: 0px; padding-left: 0px; border-left: 0px; display: inline; padding-right: 0px" border="0" alt="6" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160830211313418-987105603.png" width="644" height="260"></a></div>
+<div class="csharpcode"><font size="3" face="Verdana">Fig.7. Architecture of relu1 layer.</font></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><font size="4">ReLU1层过程数据变化：batch_size*500*1*1-&gt;batch_size*500*1*1</font></p>
+<div style="text-align: right"><a name="_lab2_2_7"></a></div><h3>3.8 Ip2 Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义全连接层2============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"ip2"</span></font></pre><pre><font size="4">  type: <span class="str">"InnerProduct"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"ip1"</span></font></pre><pre><font size="4">  top: <span class="str">"ip2"</span></font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 1</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 2</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  inner_product_param {</font></pre><pre><font size="4">    num_output: 10          #10个输出数据，对应0-9十个数字</font></pre><pre class="alt"><font size="4">    weight_filler {</font></pre><pre><font size="4">      type: <span class="str">"xavier"</span></font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">    bias_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"constant"</span></font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><font size="4">ip2过程数据变化：batch_size*500*1*1-&gt;batch_size*10*1*1</font></p>
+<div style="text-align: right"><a name="_lab2_2_8"></a></div><h3>3.9 Loss Layer</h3>
+<div class="csharpcode"><pre class="alt"><font size="4">#==============定义损失函数层============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"loss"</span></font></pre><pre><font size="4">  type: <span class="str">"SoftmaxWithLoss"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"ip2"</span></font></pre><pre><font size="4">  bottom: <span class="str">"label"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"loss"</span></font></pre><pre><font size="4">}</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style>
+
+<p><font size="4"><a href="http://images2015.cnblogs.com/blog/377158/201608/377158-20160830211314183-1791262604.png"><img title="7" style="border-top: 0px; border-right: 0px; background-image: none; border-bottom: 0px; padding-top: 0px; padding-left: 0px; border-left: 0px; display: inline; padding-right: 0px" border="0" alt="7" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/377158-20160830211315355-1179077562.png" width="644" height="460"></a></font></p>
+<p><font size="3" face="Verdana">Fig.8. Architecture of loss layer.</font></p>
+<p><font size="4">损失层过程数据变化：batch_size*10*1*1-&gt;batch_size*10*1*1</font></p>
+<p><font size="4">note:注意到caffe LeNet中有一个accuracy layer的定义，这是输出测试结果的层。</font></p>
+<div style="text-align: right;font-size:100%;font-weight:normal;color:rgb(0,0,255)"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#_labelTop">回到顶部(go to top)</a><a name="_label3"></a></div><h2>4. Caffe LeNet的完整定义</h2>
+<div class="csharpcode"><pre class="alt"><font size="4">name: <span class="str">"LeNet"</span> #定义网络的名字</font></pre><pre><font size="4">#==============定义TRAIN的数据层============================================</font></pre><pre class="alt"><font size="4">layer { </font></pre><pre><font size="4">  name: <span class="str">"mnist"</span> #定义该层的名字</font></pre><pre class="alt"><font size="4">  type: <span class="str">"Data"</span>  #该层的类型是数据</font></pre><pre><font size="4">  top: <span class="str">"data"</span>   #该层生成一个data blob</font></pre><pre class="alt"><font size="4">  top: <span class="str">"label"</span>  #该层生成一个label blob</font></pre><pre><font size="4">  include {</font></pre><pre class="alt"><font size="4">    phase: TRAIN #说明该层只在TRAIN阶段使用</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  transform_param {</font></pre><pre><font size="4">    scale: 0.00390625 #数据归一化系数，1/256，归一到[0,1)</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  data_param {</font></pre><pre class="alt"><font size="4">    source: <span class="str">"E:/MyCode/DL/caffe-master/examples/mnist/mnist_train_lmdb"</span> #训练数据的路径</font></pre><pre><font size="4">    batch_size: 64 #批量处理的大小</font></pre><pre class="alt"><font size="4">    backend: LMDB</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}</font></pre><pre><font size="4">#==============定义TEST的数据层============================================</font></pre><pre class="alt"><font size="4">layer { </font></pre><pre><font size="4">  name: <span class="str">"mnist"</span></font></pre><pre class="alt"><font size="4">  type: <span class="str">"Data"</span></font></pre><pre><font size="4">  top: <span class="str">"data"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"label"</span></font></pre><pre><font size="4">  include {</font></pre><pre class="alt"><font size="4">    phase: TEST #说明该层只在TEST阶段使用</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  transform_param {</font></pre><pre><font size="4">    scale: 0.00390625</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  data_param {</font></pre><pre class="alt"><font size="4">    source: <span class="str">"E:/MyCode/DL/caffe-master/examples/mnist/mnist_test_lmdb"</span> #测试数据的路径</font></pre><pre><font size="4">    batch_size: 100</font></pre><pre class="alt"><font size="4">    backend: LMDB</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}</font></pre><pre><font size="4">#==============定义卷积层1=============================</font></pre><pre class="alt"><font size="4">layer {</font></pre><pre><font size="4">  name: <span class="str">"conv1"</span>       #该层的名字conv1，即卷积层1</font></pre><pre class="alt"><font size="4">  type: <span class="str">"Convolution"</span> #该层的类型是卷积层</font></pre><pre><font size="4">  bottom: <span class="str">"data"</span>      #该层使用的数据是由数据层提供的data blob</font></pre><pre class="alt"><font size="4">  top: <span class="str">"conv1"</span>        #该层生成的数据是conv1</font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 1        #weight learning rate(简写为lr)权值的学习率，1表示该值是lenet_solver.prototxt中base_lr: 0.01的1倍</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 2        #bias learning rate偏移值的学习率，2表示该值是lenet_solver.prototxt中base_lr: 0.01的2倍</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  convolution_param {</font></pre><pre class="alt"><font size="4">    num_output: 20    #产生20个输出通道</font></pre><pre><font size="4">    kernel_size: 5    #卷积核的大小为5*5</font></pre><pre class="alt"><font size="4">    stride: 1         #卷积核移动的步幅为1</font></pre><pre><font size="4">    weight_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"xavier"</span>  #xavier算法，根据输入和输出的神经元的个数自动初始化权值比例</font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">    bias_filler {</font></pre><pre><font size="4">      type: <span class="str">"constant"</span>  #将偏移值初始化为“稳定”状态，即设为默认值0</font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}#卷积过程数据变化：batch_size*1*28*28-&gt;batch_size*20*24*24</font></pre><pre><font size="4">#==============定义池化层1=============================</font></pre><pre class="alt"><font size="4">layer {</font></pre><pre><font size="4">  name: <span class="str">"pool1"</span></font></pre><pre class="alt"><font size="4">  type: <span class="str">"Pooling"</span></font></pre><pre><font size="4">  bottom: <span class="str">"conv1"</span>     #该层使用的数据是由conv1层提供的conv1</font></pre><pre class="alt"><font size="4">  top: <span class="str">"pool1"</span>        #该层生成的数据是pool1</font></pre><pre><font size="4">  pooling_param {</font></pre><pre class="alt"><font size="4">    pool: MAX         #采用最大值池化</font></pre><pre><font size="4">    kernel_size: 2    #池化核大小为2*2</font></pre><pre class="alt"><font size="4">    stride: 2         #池化核移动的步幅为2，即非重叠移动</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}#池化层1过程数据变化：batch_size*20*24*24-&gt;batch_size*20*12*12</font></pre><pre><font size="4">#==============定义卷积层2=============================</font></pre><pre class="alt"><font size="4">layer {</font></pre><pre><font size="4">  name: <span class="str">"conv2"</span></font></pre><pre class="alt"><font size="4">  type: <span class="str">"Convolution"</span></font></pre><pre><font size="4">  bottom: <span class="str">"pool1"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"conv2"</span></font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 1</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 2</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  convolution_param {</font></pre><pre class="alt"><font size="4">    num_output: 50</font></pre><pre><font size="4">    kernel_size: 5</font></pre><pre class="alt"><font size="4">    stride: 1</font></pre><pre><font size="4">    weight_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"xavier"</span></font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">    bias_filler {</font></pre><pre><font size="4">      type: <span class="str">"constant"</span></font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}#卷积层2过程数据变化：batch_size*20*12*12-&gt;batch_size*50*8*8</font></pre><pre><font size="4">#==============定义池化层2=============================</font></pre><pre class="alt"><font size="4">layer {</font></pre><pre><font size="4">  name: <span class="str">"pool2"</span></font></pre><pre class="alt"><font size="4">  type: <span class="str">"Pooling"</span></font></pre><pre><font size="4">  bottom: <span class="str">"conv2"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"pool2"</span></font></pre><pre><font size="4">  pooling_param {</font></pre><pre class="alt"><font size="4">    pool: MAX</font></pre><pre><font size="4">    kernel_size: 2</font></pre><pre class="alt"><font size="4">    stride: 2</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}#池化层2过程数据变化：batch_size*50*8*8-&gt;batch_size*50*4*4</font></pre><pre><font size="4">#==============定义全连接层1=============================</font></pre><pre class="alt"><font size="4">layer {</font></pre><pre><font size="4">  name: <span class="str">"ip1"</span></font></pre><pre class="alt"><font size="4">  type: <span class="str">"InnerProduct"</span> #该层的类型为全连接层</font></pre><pre><font size="4">  bottom: <span class="str">"pool2"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"ip1"</span></font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 1</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 2</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  inner_product_param {</font></pre><pre class="alt"><font size="4">    num_output: 500 #有500个输出通道</font></pre><pre><font size="4">    weight_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"xavier"</span></font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">    bias_filler {</font></pre><pre><font size="4">      type: <span class="str">"constant"</span></font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}#全连接层1过程数据变化：batch_size*50*4*4-&gt;batch_size*500*1*1</font></pre><pre><font size="4">#==============定义ReLU1层=============================</font></pre><pre class="alt"><font size="4">layer {</font></pre><pre><font size="4">  name: <span class="str">"relu1"</span></font></pre><pre class="alt"><font size="4">  type: <span class="str">"ReLU"</span></font></pre><pre><font size="4">  bottom: <span class="str">"ip1"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"ip1"</span></font></pre><pre><font size="4">}#ReLU1层过程数据变化：batch_size*500*1*1-&gt;batch_size*500*1*1</font></pre><pre class="alt"><font size="4">#==============定义全连接层2============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"ip2"</span></font></pre><pre><font size="4">  type: <span class="str">"InnerProduct"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"ip1"</span></font></pre><pre><font size="4">  top: <span class="str">"ip2"</span></font></pre><pre class="alt"><font size="4">  param {</font></pre><pre><font size="4">    lr_mult: 1</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">  param {</font></pre><pre class="alt"><font size="4">    lr_mult: 2</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">  inner_product_param {</font></pre><pre><font size="4">    num_output: 10          #10个输出数据，对应0-9十个数字</font></pre><pre class="alt"><font size="4">    weight_filler {</font></pre><pre><font size="4">      type: <span class="str">"xavier"</span></font></pre><pre class="alt"><font size="4">    }</font></pre><pre><font size="4">    bias_filler {</font></pre><pre class="alt"><font size="4">      type: <span class="str">"constant"</span></font></pre><pre><font size="4">    }</font></pre><pre class="alt"><font size="4">  }</font></pre><pre><font size="4">}#全连接层2过程数据变化：batch_size*500*1*1-&gt;batch_size*10*1*1</font></pre><pre class="alt"><font size="4">#==============定义显示准确率结果层============================</font></pre><pre><font size="4">layer {</font></pre><pre class="alt"><font size="4">  name: <span class="str">"accuracy"</span></font></pre><pre><font size="4">  type: <span class="str">"Accuracy"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"ip2"</span></font></pre><pre><font size="4">  bottom: <span class="str">"label"</span></font></pre><pre class="alt"><font size="4">  top: <span class="str">"accuracy"</span></font></pre><pre><font size="4">  include {</font></pre><pre class="alt"><font size="4">    phase: TEST</font></pre><pre><font size="4">  }</font></pre><pre class="alt"><font size="4">}</font></pre><pre><font size="4">#==============定义损失函数层============================</font></pre><pre class="alt"><font size="4">layer {</font></pre><pre><font size="4">  name: <span class="str">"loss"</span></font></pre><pre class="alt"><font size="4">  type: <span class="str">"SoftmaxWithLoss"</span></font></pre><pre><font size="4">  bottom: <span class="str">"ip2"</span></font></pre><pre class="alt"><font size="4">  bottom: <span class="str">"label"</span></font></pre><pre><font size="4">  top: <span class="str">"loss"</span></font></pre><pre class="alt"><font size="4">}#损失层过程数据变化：batch_size*10*1*1-&gt;batch_size*10*1*1</font></pre></div>
+<style type="text/css">.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, "Courier New", courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }
+</style></div><div id="MySignature" style="display: block;">不学则无术</div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/xiaopanlyu/category/865692.html" target="_blank">【015】Deep Learning</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5793280,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;8f0b11e5-7b5b-e111-aa3f-842b2b196315&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/xiaopanlyu/" target="_blank"><img src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/20160811164339.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/xiaopanlyu/">Xiaopan_Lyu</a><br>
+            <a href="http://home.cnblogs.com/u/xiaopanlyu/followees">关注 - 5</a><br>
+            <a href="http://home.cnblogs.com/u/xiaopanlyu/followers">粉丝 - 22</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;8f0b11e5-7b5b-e111-aa3f-842b2b196315&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5793280,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(5793280,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/xiaopanlyu/p/5790156.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/xiaopanlyu/p/5790156.html" title="发布于2016-08-20 12:19">Who is the best at Dataset X?</a><br><a href="http://www.cnblogs.com/xiaopanlyu/p/5869408.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/xiaopanlyu/p/5869408.html" title="发布于2016-09-13 18:28">Linux配置静态IP</a><br></div>
+</div>
+
+
+		<p class="postfoot">
+			posted on <span id="post-date">2016-08-22 18:47</span> <a href="http://www.cnblogs.com/xiaopanlyu/">Xiaopan_Lyu</a> 阅读(<span id="post_view_count">2204</span>) 评论(<span id="post_comment_count">5</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5793280" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#" onclick="AddToWz(5793280);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=109153,cb_entryId=5793280,cb_blogApp=currentBlogApp,cb_blogUserGuid='8f0b11e5-7b5b-e111-aa3f-842b2b196315',cb_entryCreatedDate='2016/8/22 18:47:00';loadViewCount(cb_entryId);</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<a name="评论"></a>
+<div id="comments">
+<h3>评论</h3>
+	
+	
+			<h4>
+				<a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3597199" class="layer">#1楼</a><a name="3597199" id="comment_anchor_3597199"></a>
+					<span>
+						 <span class="comment_date">2017-01-05 17:52</span>
+					</span>
+				<a id="a_comment_author_3597199" href="http://home.cnblogs.com/u/481269/" target="_blank">guotong1988</a> <a href="http://msg.cnblogs.com/send/guotong1988" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</h4>
+			<p>
+				</p><div id="comment_body_3597199" class="blog_comment_body">有个地方看不太懂，就是<br>最开始的一层<br>layer {<br>name: "mnist"<br>type: "Data"<br>top: "data"<br>top: "label"<br>为什么top是这样，data和label都是top？？<br>而代码最后<br>layer {<br>name: "loss"<br>type: "SoftmaxWithLoss"<br>bottom: "ip2"<br>bottom: "label"<br>top: "loss"<br>我理解top最后应该是对应label，好混乱。。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3597199,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3597199,&#39;Bury&#39;,this)">反对(0)</a></div>
+				&nbsp;&nbsp;<span class="comment_actions"></span>
+			<p></p>
+		
+			<h4>
+				<a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3637783" class="layer">#2楼</a><a name="3637783" id="comment_anchor_3637783"></a>
+					<span>
+						 <span class="comment_date">2017-03-11 15:53</span>
+					</span>
+				<a id="a_comment_author_3637783" href="http://home.cnblogs.com/u/1123514/" target="_blank">开发者的灵感</a> <a href="http://msg.cnblogs.com/send/%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E7%81%B5%E6%84%9F" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</h4>
+			<p>
+				</p><div id="comment_body_3637783" class="blog_comment_body">conv1的数据变化的情况：batch_size*1*28*28-&gt;batch_size*20*24*24<br>请问这是怎么得到的？</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3637783,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3637783,&#39;Bury&#39;,this)">反对(0)</a></div>
+				&nbsp;&nbsp;<span class="comment_actions"></span>
+			<p></p>
+		
+			<h4>
+				<a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3640454" class="layer">#3楼</a><a name="3640454" id="comment_anchor_3640454"></a>[<span class="louzhu">楼主</span>]
+					<span>
+						 <span class="comment_date">2017-03-14 16:24</span>
+					</span>
+				<a id="a_comment_author_3640454" href="http://www.cnblogs.com/xiaopanlyu/" target="_blank">Xiaopan_Lyu</a> <a href="http://msg.cnblogs.com/send/Xiaopan_Lyu" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</h4>
+			<p>
+				</p><div id="comment_body_3640454" class="blog_comment_body"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3637783" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3637783);">@</a>
+开发者的灵感<br>batch_size*1*28*28 实际上是指<b>N*C*H*W (num,channels,height,width)</b><br>Conv1层中：<br>  convolution_param {<br>   <b>num_output: 20</b>  #产生20个输出通道<br>    <b>kernel_size: 5</b>    #卷积核的大小为5*5<br>   <b>stride: 1</b>        #卷积核移动的步幅为1<br>    weight_filler {<br>      type: "xavier"  #xavier算法，根据输入和输出的神经元的个数自动初始化权值比例<br>    }<br>    bias_filler {<br>      type: "constant"  #将偏移值初始化为“稳定”状态，即设为默认值0<br>    }<br>  }<br>经过conv1产生20个通道，然后利用5*5的卷积核在步长为1的情况下，处理 28*28的图像变成24*24，具体计算就是28-5+1=24，你可以画一个28*28的格子演算一下。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3640454,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3640454,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3640454_avatar" style="display:none;">http://pic.cnblogs.com/face/377158/20160811164339.png</span>
+				&nbsp;&nbsp;<span class="comment_actions"></span>
+			<p></p>
+		
+			<h4>
+				<a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3640472" class="layer">#4楼</a><a name="3640472" id="comment_anchor_3640472"></a>[<span class="louzhu">楼主</span>]
+					<span>
+						 <span class="comment_date">2017-03-14 16:38</span>
+					</span>
+				<a id="a_comment_author_3640472" href="http://www.cnblogs.com/xiaopanlyu/" target="_blank">Xiaopan_Lyu</a> <a href="http://msg.cnblogs.com/send/Xiaopan_Lyu" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</h4>
+			<p>
+				</p><div id="comment_body_3640472" class="blog_comment_body"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3597199" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3597199);">@</a>
+guotong1988<br>我的理解top代表该层数据的输出，mnist层代表的是初始数据的读入，读入的数据有data &amp; label， 只不过label是在loss层作为该层的输入。这篇博客中的LeNet-5网络结构图可以辅助理解 <a href="http://www.cnblogs.com/xiaopanlyu/p/6192860.html" target="_blank">http://www.cnblogs.com/xiaopanlyu/p/6192860.html</a></div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3640472,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3640472,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3640472_avatar" style="display:none;">http://pic.cnblogs.com/face/377158/20160811164339.png</span>
+				&nbsp;&nbsp;<span class="comment_actions"></span>
+			<p></p>
+		
+			<h4>
+				<a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3644606" class="layer">#5楼</a><a name="3644606" id="comment_anchor_3644606"></a><span id="comment-maxId" style="display:none;">3644606</span><span id="comment-maxDate" style="display:none;">2017/3/18 22:52:07</span>
+					<span>
+						 <span class="comment_date">2017-03-18 22:52</span>
+					</span>
+				<a id="a_comment_author_3644606" href="http://home.cnblogs.com/u/1123514/" target="_blank">开发者的灵感</a> <a href="http://msg.cnblogs.com/send/%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E7%81%B5%E6%84%9F" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</h4>
+			<p>
+				</p><div id="comment_body_3644606" class="blog_comment_body"><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#3640454" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3640454);">@</a>
+Xiaopan_Lyu<br>非常感谢，已经明白了</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3644606,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3644606,&#39;Bury&#39;,this)">反对(0)</a></div>
+				&nbsp;&nbsp;<span class="comment_actions"></span>
+			<p></p>
+		
+</div><div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://cn.udacity.com/mlnd/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=MLND03" target="_blank">【推荐】Google机器学习认证项目首推价末班车</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.grapecity.com.cn/enterprise-solutions/huozige/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=huozige&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/24442-20170531232906555-989803912.png" alt="huozige"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/570992/" target="_blank">用环保快递包裹一天可少砍十万棵树，为何推广难</a><br> ·  <a href="http://news.cnblogs.com/n/571050/" target="_blank">外媒：消费者虽然疯狂吐槽苹果音箱 但依然会乖乖购买</a><br> ·  <a href="http://news.cnblogs.com/n/571049/" target="_blank">乐视系欠款逾6000万遭起诉 有供应商6次催债未果</a><br> ·  <a href="http://news.cnblogs.com/n/571048/" target="_blank">逆天神奇材料诞生了！手机再也不会摔碎屏</a><br> ·  <a href="http://news.cnblogs.com/n/571047/" target="_blank">299元起！三款华为随身WiFi 2发布：外出流量共享神器</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/24442-20170601093816602-1429765193.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/570194/" target="_blank">小printf的故事：真正的程序员？</a><br> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © Xiaopan_Lyu
+</p>
+</div>
+<div id="rightmenu">
+	
+		<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center">4</td><td align="center">5</td><td align="center">6</td><td class="CalTodayDay" align="center">7</td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+		
+<h3>导航</h3>
+<ul>
+			<li><a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+			<li><a id="blog_nav_myhome" href="http://www.cnblogs.com/xiaopanlyu/">首页</a></li>
+			<li><a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+			<li><a id="blog_nav_contact" accesskey="9" rel="nofollow" href="https://msg.cnblogs.com/send/Xiaopan_Lyu">联系</a></li>
+			<li><a id="blog_nav_rss" href="http://www.cnblogs.com/xiaopanlyu/rss">订阅</a><a id="blog_nav_rss_image" href="http://www.cnblogs.com/xiaopanlyu/rss"><img src="./Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型 - Xiaopan_Lyu - 博客园_files/xml.gif" alt="订阅"></a>
+			</li><li><a id="blog_nav_admin" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div id="blog_stats">
+<h3>统计</h3>
+	<ul>
+		<li>随笔 - 90
+		</li><li>文章 - 0
+		</li><li>评论 - 23
+		</li><li>引用 - 0
+	</li>
+</ul></div>
+		
+<h3>公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/xiaopanlyu/">Xiaopan_Lyu</a><br>园龄：<a href="http://home.cnblogs.com/u/xiaopanlyu/" title="入园时间：2012-02-20">5年3个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/xiaopanlyu/followers/">22</a><br>关注：<a href="http://home.cnblogs.com/u/xiaopanlyu/followees/">5</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;8f0b11e5-7b5b-e111-aa3f-842b2b196315&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+
+		<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/xiaopanlyu/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/xiaopanlyu/category/694917.html">【001】Ajax(1)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/xiaopanlyu/category/458095.html">【002】Android(2)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/xiaopanlyu/category/364424.html">【003】ASP.NET(19)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/xiaopanlyu/category/694923.html">【004】C++(11)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/xiaopanlyu/category/364428.html">【005】Javascript(14)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/xiaopanlyu/category/364426.html">【006】SQL Server(5)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/xiaopanlyu/category/694920.html">【007】algorithm</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/xiaopanlyu/category/694919.html">【008】OpenCV(12)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/xiaopanlyu/category/719395.html">【009】academic related(4)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/xiaopanlyu/category/722437.html">【010】Matlab(2)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/xiaopanlyu/category/770850.html">【011】Latex(3)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_11" href="http://www.cnblogs.com/xiaopanlyu/category/784396.html">【012】Office(2)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_12" href="http://www.cnblogs.com/xiaopanlyu/category/832436.html">【013】SVN(3)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_13" href="http://www.cnblogs.com/xiaopanlyu/category/839536.html">【014】General Technology(2)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_14" href="http://www.cnblogs.com/xiaopanlyu/category/865692.html">【015】Deep Learning(10)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_15" href="http://www.cnblogs.com/xiaopanlyu/category/881996.html">【016】Linux(1)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_16" href="http://www.cnblogs.com/xiaopanlyu/category/886917.html">【017】Python(1)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_17" href="http://www.cnblogs.com/xiaopanlyu/category/887825.html">【018】Paper</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_18" href="http://www.cnblogs.com/xiaopanlyu/category/905977.html">【019】Java(1)</a> </li>
+			
+				<li><a id="CatList_LinkList_0_Link_19" href="http://www.cnblogs.com/xiaopanlyu/category/905979.html">【020】Oracle(1)</a> </li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/12.html">2016年12月 (2)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/11.html">2016年11月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/09.html">2016年9月 (3)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/08.html">2016年8月 (7)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/07.html">2016年7月 (4)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/06.html">2016年6月 (3)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/05.html">2016年5月 (2)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/04.html">2016年4月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/03.html">2016年3月 (4)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/02.html">2016年2月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/xiaopanlyu/archive/2016/01.html">2016年1月 (9)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/xiaopanlyu/archive/2015/12.html">2015年12月 (3)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/xiaopanlyu/archive/2015/09.html">2015年9月 (4)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_13" href="http://www.cnblogs.com/xiaopanlyu/archive/2015/08.html">2015年8月 (5)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_14" href="http://www.cnblogs.com/xiaopanlyu/archive/2015/06.html">2015年6月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_15" href="http://www.cnblogs.com/xiaopanlyu/archive/2015/05.html">2015年5月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_16" href="http://www.cnblogs.com/xiaopanlyu/archive/2014/09.html">2014年9月 (1)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_17" href="http://www.cnblogs.com/xiaopanlyu/archive/2013/03.html">2013年3月 (6)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_18" href="http://www.cnblogs.com/xiaopanlyu/archive/2012/06.html">2012年6月 (20)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_19" href="http://www.cnblogs.com/xiaopanlyu/archive/2012/05.html">2012年5月 (3)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_20" href="http://www.cnblogs.com/xiaopanlyu/archive/2012/03.html">2012年3月 (5)</a> </li>
+			
+				<li><a id="CatList_LinkList_1_Link_21" href="http://www.cnblogs.com/xiaopanlyu/archive/2012/02.html">2012年2月 (4)</a> </li>
+			
+				</ul>
+			
+	</div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2012/05/23/2515273.html">1. js中return false,return,return true的用法及区别(11738)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/p/4499459.html">2. c++拼接字符串效率比较（+=、append、stringstream、sprintf）(7636)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2013/03/08/2950842.html">3. 用JS实现在页面关闭或刷新时触发特定的事件(5113)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/p/5720426.html">4. 取消本地SVN文件夹与服务器关联(4096)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/p/4561728.html">5. OpenCV中的常用函数(3929)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2012/03/24/2404128.html">1. Excel与数据库之间的那些事(5)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/p/5793280.html">2. Chapter 4 深入理解Caffe MNIST DEMO中的LeNet网络模型(5)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/p/4499459.html">3. c++拼接字符串效率比较（+=、append、stringstream、sprintf）(4)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2012/03/24/2404115.html">4. ajax实现在线考试倒计时(3)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2012/03/24/2415512.html">5. .Net对SQL数据库的web备份(2)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2012/03/24/2404128.html">1. Excel与数据库之间的那些事(2)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2012/05/23/2515273.html">2. js中return false,return,return true的用法及区别(1)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/archive/2012/06/28/2568759.html">3. C#中关于页面缓存(1)</a></li><li><a href="http://www.cnblogs.com/xiaopanlyu/p/4561728.html">4. OpenCV中的常用函数(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+	
+</div>
+			
+			
+			
+			
+			 
+
+	
+
+<!--PageEndHtml Block Begin-->
+<script language="javascript" type="text/javascript">
+//生成目录索引列表
+function GenerateContentList()
+{
+    var jquery_h1_list = $('#cnblogs_post_body h2');
+    if (jquery_h1_list.length == 0) { return; }
+    if ($('#cnblogs_post_body').length == 0) { return; }
+
+    var content = '<a name="_labelTop"></a>';
+    content    += '<div id="navCategory">';
+    content    += '<p style="font-size:200%;font-weight:normal;"><b>目录</b></p>';
+    // 一级目录 start
+    content += '<ul class="first_class_ul">';
+
+    for (var i = 0; i < jquery_h1_list.length; i++)
+    {
+        var go_to_top = '<div style="text-align: right;font-size:100%;font-weight:normal;color:rgb(0,0,255)"><a href="#_labelTop">回到顶部(go to top)</a><a name="_label' + i + '"></a></div>';
+        $(jquery_h1_list[i]).before(go_to_top);
+
+        // 一级目录的一条
+        var li_content = '<li style="font-size:130%;font-weight:normal;color:rgb(0,0,255)"><a href="#_label' + i + '">' + $(jquery_h1_list[i]).text() + '</a></li>';
+
+        var nextH1Index = i + 1;
+        if (nextH1Index == jquery_h1_list.length) { nextH1Index = 0; }
+        var jquery_h2_list = $(jquery_h1_list[i]).nextUntil(jquery_h1_list[nextH1Index], "h3");
+        // 二级目录 start
+        if (jquery_h2_list.length > 0)
+        {
+            //li_content +='<ul style="list-style-type:none; text-align: left; margin:2px 2px;">';
+            li_content += '<ul class="second_class_ul">';
+        }
+        for (var j = 0; j < jquery_h2_list.length; j++)
+        {
+            var go_to_top2 = '<div style="text-align: right"><a name="_lab2_'+ i + '_' + j + '"></a></div>';
+            $(jquery_h2_list[j]).before(go_to_top2);
+            // 二级目录的一条
+            li_content +='<li style="font-size:120%;font-weight:normal;color:rgb(0,0,255)"><a href="#_lab2_'+ i +'_' + j + '">' + $(jquery_h2_list[j]).text() + '</a></li>';
+
+            var nextH2Index = j + 1;
+            var next;
+            if (nextH2Index == jquery_h2_list.length) 
+            {
+                if (i + 1 == jquery_h1_list.length)
+                {
+                    next = jquery_h1_list[0];
+                }
+                else
+                {
+                    next = jquery_h1_list[i + 1];
+                }
+            }
+            else
+            {
+                next = jquery_h2_list[nextH2Index];
+            }
+            var jquery_h3_list = $(jquery_h2_list[j]).nextUntil(next, "h4");
+            // 三级目录 start
+            if (jquery_h3_list.length > 0)
+            {
+                li_content += '<ul class="third_class_ul">';
+            }
+            
+            for (var k = 0; k < jquery_h3_list.length; k++)
+            {
+                var go_to_third_Content = '<div style="text-align: right"><a name="_label3_' + i + '_' + j + '_' + k + '"></a></div>';
+                $(jquery_h3_list[k]).before(go_to_third_Content);
+                // 三级目录的一条
+                li_content += '<li style="font-size:100%;font-weight:normal;color:rgb(0,0,255)"><a href="#_label3_' + i + '_' + j + '_' + k + '">' + $(jquery_h3_list[k]).text() + '</a></li>';
+            }
+            
+            if (jquery_h3_list.length > 0)
+            {
+                li_content += '</ul>';
+            }
+            li_content += '</li>';
+            // 三级目录 end
+        }
+        if (jquery_h2_list.length > 0)
+        {
+            li_content +='</ul>';
+        }
+        li_content +='</li>';
+        // 二级目录 end
+
+        content += li_content;
+    }
+    // 一级目录 end
+    content += '</ul>';
+    content += '</div>';
+
+    $($('#cnblogs_post_body')[0]).prepend(content);
+}
+
+GenerateContentList();
+</script>
+levels of contents
+<!--PageEndHtml Block End-->
+
+
+</body></html>

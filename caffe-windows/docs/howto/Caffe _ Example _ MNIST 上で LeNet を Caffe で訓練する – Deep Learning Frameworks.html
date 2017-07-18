@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)http://caffe.classcat.com/2017/03/31/caffe-example-mnist/ -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="http://caffe.classcat.com/xmlrpc.php">
+
+	<title>Caffe : Example : MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks</title>
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Deep Learning Frameworks » フィード" href="http://caffe.classcat.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Deep Learning Frameworks » コメントフィード" href="http://caffe.classcat.com/comments/feed/">
+		<script id="facebook-jssdk" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/sdk.js.下载"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/caffe.classcat.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.5"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/wp-emoji-release.min.js.下载" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="academica-style-css" href="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="academica-style-mobile-css" href="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/media-queries.css" type="text/css" media="all">
+<link rel="stylesheet" id="academica-google-font-default-css" href="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/css" type="text/css" media="all">
+<link rel="stylesheet" id="dashicons-css" href="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/dashicons.min.css" type="text/css" media="all">
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/jquery.js.下载"></script>
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/jquery-migrate.min.js.下载"></script>
+<link rel="https://api.w.org/" href="http://caffe.classcat.com/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://caffe.classcat.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://caffe.classcat.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Caffe: Tutorial: Blob, 層, そしてネット : Caffe モデルの解剖" href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/">
+<link rel="next" title="Caffe : Tutorial : Forward と Backward" href="http://caffe.classcat.com/2017/03/31/caffe-tutorial-forward-backward/">
+<meta name="generator" content="WordPress 4.7.5">
+<link rel="canonical" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/">
+<link rel="shortlink" href="http://caffe.classcat.com/?p=2496">
+<link rel="alternate" type="application/json+oembed" href="http://caffe.classcat.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fcaffe.classcat.com%2F2017%2F03%2F31%2Fcaffe-example-mnist%2F">
+<link rel="alternate" type="text/xml+oembed" href="http://caffe.classcat.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fcaffe.classcat.com%2F2017%2F03%2F31%2Fcaffe-example-mnist%2F&amp;format=xml">
+
+<style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, "hiragino kaku gothic pro",meiryo,"ms pgothic",sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}.fb_link img{border:none}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_reset .fb_dialog_legacy{overflow:visible}.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}.fb_dialog_content{background:#fff;color:#333}.fb_dialog_close_icon{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent}.fb_dialog_close_icon:active{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent}.fb_dialog_loader{background-color:#f6f7f9;border:1px solid #606060;font-size:24px;padding:20px}.fb_dialog_top_left,.fb_dialog_top_right,.fb_dialog_bottom_left,.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}.fb_dialog_top_left{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}.fb_dialog_top_right{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}.fb_dialog_bottom_left{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}.fb_dialog_bottom_right{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}.fb_dialog_vert_left,.fb_dialog_vert_right,.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}.fb_dialog_vert_left,.fb_dialog_vert_right{width:10px;height:100%}.fb_dialog_vert_left{margin-left:-10px}.fb_dialog_vert_right{right:0;margin-right:-10px}.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{width:100%;height:10px}.fb_dialog_horiz_top{margin-top:-10px}.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{-webkit-transform:none;height:100%;margin:0;overflow:visible;position:absolute;top:-10000px;left:0;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{width:auto;height:auto;min-height:initial;min-width:initial;background:none}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{color:#fff;display:block;padding-top:20px;clear:both;font-size:18px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;bottom:0;left:0;right:0;top:0;width:100%;min-height:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4966A6), color-stop(.5, #355492), to(#2A4887));border:1px solid #29487d;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset, rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f6f7f9;border:1px solid #555;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-repeat:no-repeat;background-position:50% 50%;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_hide_iframes iframe{position:relative;left:-10000px}.fb_iframe_widget_loader{position:relative;display:inline-block}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}.fb_iframe_widget_loader .FB_Loader{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}</style></head>
+
+<body class="post-template-default single single-post postid-2496 single-format-standard column-double"><div id="menu-main-slide" class="menu-mymenu1-container mm-menu mm-vertical mm-offcanvas"><ul id="menu-mymenu1" class="menu mm-list mm-panel mm-opened mm-current"><li id="menu-item-12" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-12"><a href="http://caffe.classcat.com/">ホーム</a></li>
+<li id="menu-item-3597" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3597"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-0"></a><a href="http://caffe.classcat.com/2017/04/30/keras-image-classficication-lenet/">Keras</a>
+<ul class="sub-menu mm-list mm-panel" id="mm-0">
+	<li id="menu-item-3739" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3739"><a href="http://caffe.classcat.com/2017/05/08/keras-2-0-release-notes/">Keras 2.0 リリースノート</a></li>
+	<li id="menu-item-3933" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3933"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-1"></a><a href="http://caffe.classcat.com/2017/04/30/keras-image-classficication-lenet/">Keras : 画像分類</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-1">
+		<li id="menu-item-3596" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3596"><a href="http://caffe.classcat.com/2017/04/30/keras-image-classficication-lenet/">LeNet で MNIST, CIFAR-10, CIFAR-100</a></li>
+		<li id="menu-item-3775" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3775"><a href="http://caffe.classcat.com/2017/05/09/keras-image-classficication-alexnet/">AlexNet</a></li>
+		<li id="menu-item-3850" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3850"><a href="http://caffe.classcat.com/2017/05/12/keras-image-classficication-resnet-50/">ResNet-50</a></li>
+		<li id="menu-item-3814" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3814"><a href="http://caffe.classcat.com/2017/05/12/keras-image-classficication-googlenet-inception-v3/">GoogLeNet Inception v3</a></li>
+		<li id="menu-item-3918" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3918"><a href="http://caffe.classcat.com/2017/05/15/keras-image-classficication-xception/">Xception</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-3150" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3150"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-2"></a><a href="http://caffe.classcat.com/2017/04/13/pytorch-readme/">PyTorch</a>
+<ul class="sub-menu mm-list mm-panel" id="mm-2">
+	<li id="menu-item-3084" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3084"><a href="http://caffe.classcat.com/2017/04/13/pytorch-readme/">PyTorch : ReadMe</a></li>
+	<li id="menu-item-3679" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3679"><a href="http://caffe.classcat.com/2017/05/05/pytorch-0-1-12-release-note/">PyTorch 0.1.12 リリースノート</a></li>
+	<li id="menu-item-3149" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3149"><a href="http://caffe.classcat.com/2017/04/14/pytorch-tutorial-tensor/">Tutorial 初級 : PyTorch とは何か？</a></li>
+	<li id="menu-item-3169" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3169"><a href="http://caffe.classcat.com/2017/04/14/pytorch-tutorial-autograd/">Tutorial 初級 : Autograd: automatic differentiation</a></li>
+	<li id="menu-item-3240" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3240"><a href="http://caffe.classcat.com/2017/04/14/pytorch-tutorial-neural-networks/">Tutorial 初級 : ニューラルネットワーク</a></li>
+	<li id="menu-item-3257" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3257"><a href="http://caffe.classcat.com/2017/04/15/pytorch-tutorial-cifar10/">Tutorial 初級 : 分類器を訓練する – CIFAR-10</a></li>
+</ul>
+</li>
+<li id="menu-item-1456" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1456"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-3"></a><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-ndarray/">MXNet チュートリアル</a>
+<ul class="sub-menu mm-list mm-panel" id="mm-3">
+	<li id="menu-item-1394" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1394"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-4"></a><a href="http://caffe.classcat.com/2017/02/15/mxnet-get-started/">Get Started</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-4">
+		<li id="menu-item-1395" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1395"><a href="http://caffe.classcat.com/2017/02/15/mxnet-catchphrase/">MXNet キャッチフレーズ</a></li>
+		<li id="menu-item-1396" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1396"><a href="http://caffe.classcat.com/2017/02/15/mxnet-get-started/">MXNet Get Started</a></li>
+	</ul>
+</li>
+	<li id="menu-item-1863" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1863"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-5"></a><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-ndarray/">基本</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-5">
+		<li id="menu-item-1455" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1455"><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-ndarray/">NDArray</a></li>
+		<li id="menu-item-1554" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1554"><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-symbol/">Symbol</a></li>
+		<li id="menu-item-1668" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1668"><a href="http://caffe.classcat.com/2017/02/18/mxnet-tutorial-module/">トレーニングと推論モジュール</a></li>
+		<li id="menu-item-1762" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1762"><a href="http://caffe.classcat.com/2017/02/19/mxnet-tutorial-mixed/">Mixed Programing</a></li>
+	</ul>
+</li>
+	<li id="menu-item-1864" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1864"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-6"></a><a href="http://caffe.classcat.com/2017/02/19/mxnet-tutorial-loading-data/">I/O</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-6">
+		<li id="menu-item-1730" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1730"><a href="http://caffe.classcat.com/2017/02/19/mxnet-tutorial-loading-data/">データをロードする</a></li>
+		<li id="menu-item-1872" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1872"><a href="http://caffe.classcat.com/2017/02/21/mxnet-tutorial-image-io/">画像データ I/O</a></li>
+		<li id="menu-item-1901" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1901"><a href="http://caffe.classcat.com/2017/02/21/mxnet-tutorial-record-io/">Python Record IO</a></li>
+	</ul>
+</li>
+	<li id="menu-item-1939" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1939"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-7"></a><a href="http://caffe.classcat.com/2017/02/22/mxnet-tutorial-mnist/">コンピュータ・ビジョン</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-7">
+		<li id="menu-item-1940" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1940"><a href="http://caffe.classcat.com/2017/02/22/mxnet-tutorial-mnist/">手書き数字認識 – MNIST</a></li>
+		<li id="menu-item-2189" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2189"><a href="http://caffe.classcat.com/2017/02/24/mxnet-tutorial-cv-image-classification/">画像分類</a></li>
+	</ul>
+</li>
+	<li id="menu-item-2529" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2529"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-8"></a><a href="http://caffe.classcat.com/2017/02/18/mxnet-architecture-program-model/">MXNet その他</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-8">
+		<li id="menu-item-1590" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1590"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-9"></a><a href="http://caffe.classcat.com/2017/02/17/mxnet-howto-visualize-graph/">How To</a>
+		<ul class="sub-menu mm-list mm-panel" id="mm-9">
+			<li id="menu-item-1591" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1591"><a href="http://caffe.classcat.com/2017/02/17/mxnet-howto-visualize-graph/">ニューラルネットワークを計算グラフとしてどのように可視化するか</a></li>
+			<li id="menu-item-2298" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2298"><a href="http://caffe.classcat.com/2017/02/28/mxnet-howto-multi_devices/">MXNet をデータ並列で複数の  CPU/GPU で実行する</a></li>
+			<li id="menu-item-2263" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2263"><a href="http://caffe.classcat.com/2017/02/27/mxnet-howto-cloud/">MXNet のためのクラウド・セットアップ</a></li>
+		</ul>
+</li>
+		<li id="menu-item-1637" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1637"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-10"></a><a href="http://caffe.classcat.com/2017/02/18/mxnet-architecture-program-model/">Architecture</a>
+		<ul class="sub-menu mm-list mm-panel" id="mm-10">
+			<li id="menu-item-1636" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1636"><a href="http://caffe.classcat.com/2017/02/18/mxnet-architecture-program-model/">深層学習のためのプログラミング・モデル</a></li>
+			<li id="menu-item-1839" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1839"><a href="http://caffe.classcat.com/2017/02/21/mxnet-architecture-overview/">MXNet システム・アーキテクチャ</a></li>
+		</ul>
+</li>
+		<li id="menu-item-2127" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2127"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-11"></a><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-module/">API</a>
+		<ul class="sub-menu mm-list mm-panel" id="mm-11">
+			<li id="menu-item-2128" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2128"><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-module/">Module API 概要</a></li>
+			<li id="menu-item-2175" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2175"><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-model/">Model API 概要</a></li>
+			<li id="menu-item-2199" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2199"><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-kvstore/">KVStore API 概要</a></li>
+		</ul>
+</li>
+		<li id="menu-item-2383" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2383"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-12"></a><a href="http://caffe.classcat.com/2017/03/02/mxnet-resnet/">応用例</a>
+		<ul class="sub-menu mm-list mm-panel" id="mm-12">
+			<li id="menu-item-2384" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2384"><a href="http://caffe.classcat.com/2017/03/02/mxnet-resnet/">MXNet で ResNet : EC2 上の分散トレーニングで画像分類 – CIFAR-10 他 –</a></li>
+		</ul>
+</li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-2451" class="menu-item menu-item-type-post_type menu-item-object-post current-menu-ancestor current-menu-parent menu-item-has-children menu-item-2451"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-13"></a><a href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/">Caffe</a>
+<ul class="sub-menu mm-list mm-panel" id="mm-13">
+	<li id="menu-item-3397" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3397"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-14"></a><a href="http://caffe.classcat.com/2017/04/22/caffe2-tutorial-basics-of-caffe2/">Caffe2</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-14">
+		<li id="menu-item-3398" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3398"><a href="http://caffe.classcat.com/2017/04/22/caffe2-tutorial-basics-of-caffe2/">Caffe2: Tutorial: Caffe2 基本概念 – 演算子 &amp; ネット</a></li>
+		<li id="menu-item-3455" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3455"><a href="http://caffe.classcat.com/2017/04/22/caffe2-tutorial-mnist/">Caffe2: Tutorial: MNIST – CNN をスクラッチから作成する</a></li>
+	</ul>
+</li>
+	<li id="menu-item-2640" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2640"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-15"></a><a href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/">Caffe: Tutorial</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-15">
+		<li id="menu-item-2452" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2452"><a href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/">Blob, 層, そしてネット : Caffe モデルの解剖</a></li>
+		<li id="menu-item-2588" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2588"><a href="http://caffe.classcat.com/2017/03/31/caffe-tutorial-forward-backward/">Forward と Backward</a></li>
+		<li id="menu-item-2629" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2629"><a href="http://caffe.classcat.com/2017/04/02/caffe-tutorial-loss/">損失</a></li>
+		<li id="menu-item-2692" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2692"><a href="http://caffe.classcat.com/2017/04/02/caffe-tutorial-layers/">層カタログ</a></li>
+		<li id="menu-item-2661" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2661"><a href="http://caffe.classcat.com/2017/04/02/caffe-tutorial-interfaces/">インターフェイス</a></li>
+		<li id="menu-item-2735" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2735"><a href="http://caffe.classcat.com/2017/04/03/caffe-tutorial-data/">Data: Ins と Outs</a></li>
+	</ul>
+</li>
+	<li id="menu-item-2641" class="menu-item menu-item-type-post_type menu-item-object-post current-menu-item current-menu-ancestor current-menu-parent menu-item-has-children menu-item-2641"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-16"></a><a href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/">Caffe : Example</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-16">
+		<li id="menu-item-3053" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3053"><a href="http://caffe.classcat.com/2017/04/07/caffe-example-imagenet/">Brewing ImageNet</a></li>
+		<li id="menu-item-2525" class="menu-item menu-item-type-post_type menu-item-object-post current-menu-item menu-item-2525"><a href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/">MNIST 上で LeNet を Caffe で訓練する</a></li>
+	</ul>
+</li>
+	<li id="menu-item-2773" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2773"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-17"></a><a href="http://caffe.classcat.com/2017/04/03/caffe-nb-example-classification/">Caffe : Notebook Example</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-17">
+		<li id="menu-item-2774" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2774"><a href="http://caffe.classcat.com/2017/04/03/caffe-nb-example-classification/">分類 : Caffe でインスタント認識</a></li>
+		<li id="menu-item-2862" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2862"><a href="http://caffe.classcat.com/2017/04/04/caffe-nb-example-learning-lenet/">LeNet を利用して Python で解く</a></li>
+		<li id="menu-item-2983" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2983"><a href="http://caffe.classcat.com/2017/04/05/caffe-nb-example-fine-tuning/">スタイル認識のための事前訓練されたネットワークの再調整</a></li>
+	</ul>
+</li>
+	<li id="menu-item-2817" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2817"><a href="http://caffe.classcat.com/2017/04/03/caffe-doc-model-zoo/">Caffe : doc : Caffe モデル Zoo</a></li>
+</ul>
+</li>
+<li id="menu-item-1638" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1638"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-18"></a><a href="http://tensorflow.classcat.com/">その他</a>
+<ul class="sub-menu mm-list mm-panel" id="mm-18">
+	<li id="menu-item-1447" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1447"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-19"></a><a href="http://caffe.classcat.com/2016/03/24/theano-tutorial-baby-steps-algebra/">Theano</a>
+	<ul class="sub-menu mm-list mm-panel" id="mm-19">
+		<li id="menu-item-1451" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1451"><a href="http://caffe.classcat.com/2016/03/27/deeplearning-tutorial-gettingstarted/">Theano: DeepLearning : 始めに</a></li>
+		<li id="menu-item-1448" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1448"><a href="http://caffe.classcat.com/2016/03/24/theano-tutorial-baby-steps-algebra/">Theano 0.8.0: Tutorial: 最初の一歩 – 代数</a></li>
+		<li id="menu-item-1449" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1449"><a href="http://caffe.classcat.com/2016/03/25/theano-tutorial-examples/">Theano 0.8.0: Tutorial: より多くの例</a></li>
+		<li id="menu-item-1450" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1450"><a href="http://caffe.classcat.com/2016/03/26/theano-tutorial-derivatives/">Theano 0.8.0: Tutorial: Theano における導関数</a></li>
+		<li id="menu-item-1452" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1452"><a href="http://caffe.classcat.com/2016/03/28/deeplearning-tutorial-logreg/">Theano: DeepLearning : ロジスティック回帰による MNIST 分類</a></li>
+		<li id="menu-item-1594" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1594"><a href="http://caffe.classcat.com/2016/03/31/deeplearning-tutorial-lstm/">Theano: DeepLearning : 感情分析のための LSTM</a></li>
+	</ul>
+</li>
+	<li id="menu-item-1457" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1457"><a href="http://tensorflow.classcat.com/">TensorFlow</a></li>
+	<li id="menu-item-3899" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3899"><a href="http://caffe.classcat.com/2017/05/15/fasttext/">fastText</a></li>
+</ul>
+</li>
+<li id="menu-item-1464" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1464"><a class="mm-subopen" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#mm-20"></a><a href="http://www.classcat.com/">クラスキャット</a>
+<ul class="sub-menu mm-list mm-panel" id="mm-20">
+	<li id="menu-item-1463" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1463"><a href="http://caffe.classcat.com/company/">会社案内</a></li>
+	<li id="menu-item-2434" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2434"><a href="http://caffe.classcat.com/contact/">お問合せ</a></li>
+	<li id="menu-item-2408" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2408"><a href="http://caffe.classcat.com/category/press-release/">プレスリリース</a></li>
+	<li id="menu-item-2337" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2337"><a href="http://caffe.classcat.com/category/blog/">ブログ</a></li>
+</ul>
+</li>
+</ul></div>
+
+	
+	<div class="mm-page mm-slideout"><div id="header" class="clearfix">
+
+		
+			<div class="inner-wrap">
+
+				<div id="logo" class="logo-left">
+					 <h1 id="site-title"> 
+						<a href="http://caffe.classcat.com/" title="Deep Learning Frameworks - Keras PyTorch MXNet Caffe2 ドキュメント &amp; 応用 – クラスキャット" rel="home">
+
+							Deep Learning Frameworks
+						</a>
+
+					 </h1> 
+					<p id="site-description">Keras PyTorch MXNet Caffe2 ドキュメント &amp; 応用 – クラスキャット</p>
+				</div><!-- end #logo -->
+
+			</div><!-- end .inner-wrap -->
+
+			<div id="main-nav">
+
+				<div class="inner-wrap">
+
+					<nav class="main-navbar" role="navigation">
+
+	                    <div class="navbar-header">
+	                        
+	                           <a class="navbar-toggle" href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/#menu-main-slide">
+	                               <span class="icon-bar"></span>
+	                               <span class="icon-bar"></span>
+	                               <span class="icon-bar"></span>
+	                           </a>
+
+
+	                           
+	                    </div>
+
+
+	                    <div id="navbar-main">
+
+	                        <div class="menu-mymenu1-container"><ul id="menu-mymenu1-1" class="nav navbar-nav dropdown sf-menu sf-js-enabled sf-arrows"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-12"><a href="http://caffe.classcat.com/">ホーム</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3597"><a href="http://caffe.classcat.com/2017/04/30/keras-image-classficication-lenet/" class="sf-with-ul">Keras</a>
+<ul class="sub-menu" style="display: none;">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3739"><a href="http://caffe.classcat.com/2017/05/08/keras-2-0-release-notes/">Keras 2.0 リリースノート</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3933"><a href="http://caffe.classcat.com/2017/04/30/keras-image-classficication-lenet/" class="sf-with-ul">Keras : 画像分類</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3596"><a href="http://caffe.classcat.com/2017/04/30/keras-image-classficication-lenet/">LeNet で MNIST, CIFAR-10, CIFAR-100</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3775"><a href="http://caffe.classcat.com/2017/05/09/keras-image-classficication-alexnet/">AlexNet</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3850"><a href="http://caffe.classcat.com/2017/05/12/keras-image-classficication-resnet-50/">ResNet-50</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3814"><a href="http://caffe.classcat.com/2017/05/12/keras-image-classficication-googlenet-inception-v3/">GoogLeNet Inception v3</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3918"><a href="http://caffe.classcat.com/2017/05/15/keras-image-classficication-xception/">Xception</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3150"><a href="http://caffe.classcat.com/2017/04/13/pytorch-readme/" class="sf-with-ul">PyTorch</a>
+<ul class="sub-menu" style="display: none;">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3084"><a href="http://caffe.classcat.com/2017/04/13/pytorch-readme/">PyTorch : ReadMe</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3679"><a href="http://caffe.classcat.com/2017/05/05/pytorch-0-1-12-release-note/">PyTorch 0.1.12 リリースノート</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3149"><a href="http://caffe.classcat.com/2017/04/14/pytorch-tutorial-tensor/">Tutorial 初級 : PyTorch とは何か？</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3169"><a href="http://caffe.classcat.com/2017/04/14/pytorch-tutorial-autograd/">Tutorial 初級 : Autograd: automatic differentiation</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3240"><a href="http://caffe.classcat.com/2017/04/14/pytorch-tutorial-neural-networks/">Tutorial 初級 : ニューラルネットワーク</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3257"><a href="http://caffe.classcat.com/2017/04/15/pytorch-tutorial-cifar10/">Tutorial 初級 : 分類器を訓練する – CIFAR-10</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1456"><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-ndarray/" class="sf-with-ul">MXNet チュートリアル</a>
+<ul class="sub-menu" style="display: none;">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1394"><a href="http://caffe.classcat.com/2017/02/15/mxnet-get-started/" class="sf-with-ul">Get Started</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1395"><a href="http://caffe.classcat.com/2017/02/15/mxnet-catchphrase/">MXNet キャッチフレーズ</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1396"><a href="http://caffe.classcat.com/2017/02/15/mxnet-get-started/">MXNet Get Started</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1863"><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-ndarray/" class="sf-with-ul">基本</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1455"><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-ndarray/">NDArray</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1554"><a href="http://caffe.classcat.com/2017/02/16/mxnet-tutorial-symbol/">Symbol</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1668"><a href="http://caffe.classcat.com/2017/02/18/mxnet-tutorial-module/">トレーニングと推論モジュール</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1762"><a href="http://caffe.classcat.com/2017/02/19/mxnet-tutorial-mixed/">Mixed Programing</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1864"><a href="http://caffe.classcat.com/2017/02/19/mxnet-tutorial-loading-data/" class="sf-with-ul">I/O</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1730"><a href="http://caffe.classcat.com/2017/02/19/mxnet-tutorial-loading-data/">データをロードする</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1872"><a href="http://caffe.classcat.com/2017/02/21/mxnet-tutorial-image-io/">画像データ I/O</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1901"><a href="http://caffe.classcat.com/2017/02/21/mxnet-tutorial-record-io/">Python Record IO</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1939"><a href="http://caffe.classcat.com/2017/02/22/mxnet-tutorial-mnist/" class="sf-with-ul">コンピュータ・ビジョン</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1940"><a href="http://caffe.classcat.com/2017/02/22/mxnet-tutorial-mnist/">手書き数字認識 – MNIST</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2189"><a href="http://caffe.classcat.com/2017/02/24/mxnet-tutorial-cv-image-classification/">画像分類</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2529"><a href="http://caffe.classcat.com/2017/02/18/mxnet-architecture-program-model/" class="sf-with-ul">MXNet その他</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1590"><a href="http://caffe.classcat.com/2017/02/17/mxnet-howto-visualize-graph/" class="sf-with-ul">How To</a>
+		<ul class="sub-menu" style="display: none;">
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1591"><a href="http://caffe.classcat.com/2017/02/17/mxnet-howto-visualize-graph/">ニューラルネットワークを計算グラフとしてどのように可視化するか</a></li>
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2298"><a href="http://caffe.classcat.com/2017/02/28/mxnet-howto-multi_devices/">MXNet をデータ並列で複数の  CPU/GPU で実行する</a></li>
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2263"><a href="http://caffe.classcat.com/2017/02/27/mxnet-howto-cloud/">MXNet のためのクラウド・セットアップ</a></li>
+		</ul>
+</li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1637"><a href="http://caffe.classcat.com/2017/02/18/mxnet-architecture-program-model/" class="sf-with-ul">Architecture</a>
+		<ul class="sub-menu" style="display: none;">
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1636"><a href="http://caffe.classcat.com/2017/02/18/mxnet-architecture-program-model/">深層学習のためのプログラミング・モデル</a></li>
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1839"><a href="http://caffe.classcat.com/2017/02/21/mxnet-architecture-overview/">MXNet システム・アーキテクチャ</a></li>
+		</ul>
+</li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2127"><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-module/" class="sf-with-ul">API</a>
+		<ul class="sub-menu" style="display: none;">
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2128"><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-module/">Module API 概要</a></li>
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2175"><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-model/">Model API 概要</a></li>
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2199"><a href="http://caffe.classcat.com/2017/02/24/mxnet-api-kvstore/">KVStore API 概要</a></li>
+		</ul>
+</li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2383"><a href="http://caffe.classcat.com/2017/03/02/mxnet-resnet/" class="sf-with-ul">応用例</a>
+		<ul class="sub-menu" style="display: none;">
+			<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2384"><a href="http://caffe.classcat.com/2017/03/02/mxnet-resnet/">MXNet で ResNet : EC2 上の分散トレーニングで画像分類 – CIFAR-10 他 –</a></li>
+		</ul>
+</li>
+	</ul>
+</li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-post current-menu-ancestor current-menu-parent menu-item-has-children menu-item-2451"><a href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/" class="sf-with-ul">Caffe</a>
+<ul class="sub-menu" style="display: none;">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-3397"><a href="http://caffe.classcat.com/2017/04/22/caffe2-tutorial-basics-of-caffe2/" class="sf-with-ul">Caffe2</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3398"><a href="http://caffe.classcat.com/2017/04/22/caffe2-tutorial-basics-of-caffe2/">Caffe2: Tutorial: Caffe2 基本概念 – 演算子 &amp; ネット</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3455"><a href="http://caffe.classcat.com/2017/04/22/caffe2-tutorial-mnist/">Caffe2: Tutorial: MNIST – CNN をスクラッチから作成する</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2640"><a href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/" class="sf-with-ul">Caffe: Tutorial</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2452"><a href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/">Blob, 層, そしてネット : Caffe モデルの解剖</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2588"><a href="http://caffe.classcat.com/2017/03/31/caffe-tutorial-forward-backward/">Forward と Backward</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2629"><a href="http://caffe.classcat.com/2017/04/02/caffe-tutorial-loss/">損失</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2692"><a href="http://caffe.classcat.com/2017/04/02/caffe-tutorial-layers/">層カタログ</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2661"><a href="http://caffe.classcat.com/2017/04/02/caffe-tutorial-interfaces/">インターフェイス</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2735"><a href="http://caffe.classcat.com/2017/04/03/caffe-tutorial-data/">Data: Ins と Outs</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post current-menu-item current-menu-ancestor current-menu-parent menu-item-has-children menu-item-2641"><a href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/" class="sf-with-ul">Caffe : Example</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3053"><a href="http://caffe.classcat.com/2017/04/07/caffe-example-imagenet/">Brewing ImageNet</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post current-menu-item menu-item-2525"><a href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/">MNIST 上で LeNet を Caffe で訓練する</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-2773"><a href="http://caffe.classcat.com/2017/04/03/caffe-nb-example-classification/" class="sf-with-ul">Caffe : Notebook Example</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2774"><a href="http://caffe.classcat.com/2017/04/03/caffe-nb-example-classification/">分類 : Caffe でインスタント認識</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2862"><a href="http://caffe.classcat.com/2017/04/04/caffe-nb-example-learning-lenet/">LeNet を利用して Python で解く</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2983"><a href="http://caffe.classcat.com/2017/04/05/caffe-nb-example-fine-tuning/">スタイル認識のための事前訓練されたネットワークの再調整</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-2817"><a href="http://caffe.classcat.com/2017/04/03/caffe-doc-model-zoo/">Caffe : doc : Caffe モデル Zoo</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1638"><a href="http://tensorflow.classcat.com/" class="sf-with-ul">その他</a>
+<ul class="sub-menu" style="display: none;">
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-1447"><a href="http://caffe.classcat.com/2016/03/24/theano-tutorial-baby-steps-algebra/" class="sf-with-ul">Theano</a>
+	<ul class="sub-menu" style="display: none;">
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1451"><a href="http://caffe.classcat.com/2016/03/27/deeplearning-tutorial-gettingstarted/">Theano: DeepLearning : 始めに</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1448"><a href="http://caffe.classcat.com/2016/03/24/theano-tutorial-baby-steps-algebra/">Theano 0.8.0: Tutorial: 最初の一歩 – 代数</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1449"><a href="http://caffe.classcat.com/2016/03/25/theano-tutorial-examples/">Theano 0.8.0: Tutorial: より多くの例</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1450"><a href="http://caffe.classcat.com/2016/03/26/theano-tutorial-derivatives/">Theano 0.8.0: Tutorial: Theano における導関数</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1452"><a href="http://caffe.classcat.com/2016/03/28/deeplearning-tutorial-logreg/">Theano: DeepLearning : ロジスティック回帰による MNIST 分類</a></li>
+		<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-1594"><a href="http://caffe.classcat.com/2016/03/31/deeplearning-tutorial-lstm/">Theano: DeepLearning : 感情分析のための LSTM</a></li>
+	</ul>
+</li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1457"><a href="http://tensorflow.classcat.com/">TensorFlow</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-post menu-item-3899"><a href="http://caffe.classcat.com/2017/05/15/fasttext/">fastText</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1464"><a href="http://www.classcat.com/" class="sf-with-ul">クラスキャット</a>
+<ul class="sub-menu" style="display: none;">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1463"><a href="http://caffe.classcat.com/company/">会社案内</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2434"><a href="http://caffe.classcat.com/contact/">お問合せ</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2408"><a href="http://caffe.classcat.com/category/press-release/">プレスリリース</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2337"><a href="http://caffe.classcat.com/category/blog/">ブログ</a></li>
+</ul>
+</li>
+</ul></div>
+
+	                    </div><!-- #navbar-main -->
+
+	                </nav><!-- .navbar -->
+
+					<div id="search">
+						<form method="get" id="searchform" action="http://caffe.classcat.com/">
+	<label for="s" class="assistive-text hidden">検索</label>
+	<input id="s" type="text" name="s" placeholder="検索">
+	<button id="searchsubmit" name="submit" type="submit">検索</button>
+</form>					</div><!-- end #search -->
+
+				</div><!-- end .inner-wrap -->
+
+			</div><!-- end #main-nav -->
+
+		
+	</div><div id="wrap">
+<div id="content" class="clearfix">
+
+	
+	<div class="column column-title">
+		<div id="crumbs">
+	<p><a href="http://caffe.classcat.com/">ホーム</a> » <a href="http://caffe.classcat.com/category/caffe/">Caffe</a> » <span class="current">Caffe : Example : MNIST 上で LeNet を Caffe で訓練する</span></p>
+</div><!-- end #crumbs -->	</div><!-- end .column-title -->
+
+		<div class="column column-narrow">
+			</div><!-- end .column-narrow -->
+	
+	<div class="column column-content single">
+
+		
+<div id="post-2496" class="post-2496 post type-post status-publish format-standard hentry category-caffe category-mnist category-protobuf tag-caffe-example">
+
+	<h1 class="title-header">Caffe : Example : MNIST 上で LeNet を Caffe で訓練する</h1>
+	<div class="entry-meta">
+		<p class="tags"><strong>タグ:</strong> <a href="http://caffe.classcat.com/tag/caffe-example/" rel="tag">Caffe Example</a></p><span class="by-author">投稿者: <span class="author vcard"><a class="url fn n" href="http://caffe.classcat.com/author/masao-classcat/" title="masao-classcat のすべての投稿を表示" rel="author">masao-classcat</a></span> </span>in <span class="category"><a href="http://caffe.classcat.com/category/caffe/" rel="category tag">Caffe</a>, <a href="http://caffe.classcat.com/category/mnist/" rel="category tag">MNIST</a>, <a href="http://caffe.classcat.com/category/protobuf/" rel="category tag">Protocol Buffers</a></span> 投稿日: <span class="datetime"><a href="http://caffe.classcat.com/2017/03/31/caffe-example-mnist/" title="14:05" rel="bookmark"><time class="entry-date" datetime="2017-03-31T14:05:04+00:00" pubdate="">03/31/2017</time></a></span>.	</div><!-- end .entry-meta -->
+
+	<div class="entry-content clearfix">
+		<p><b><strong>Caffe</strong> : Example : MNIST 上で LeNet を Caffe で訓練する (翻訳/解説)</b><br>
+翻訳 : (株)クラスキャット セールスインフォメーション<br>
+日時 : 03/31/2017</p>
+<p>* 本ページは、Caffe の本家サイトの Example –  Training LeNet on MNIST with Caffe を翻訳した上で<br>
+適宜、補足説明したものです：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://caffe.berkeleyvision.org/gathered/examples/mnist.html" target="__blank">http://caffe.berkeleyvision.org/gathered/examples/mnist.html</a><br>
+* ご自由にリンクを張って頂いてかまいませんが、sales-info@classcat.com までご一報いただけると嬉しいです。</p>
+<p>&nbsp;</p>
+<h2>データセットを用意する</h2>
+<p>最初に必要なのは MNIST website からダウンロードしてデータ・フォーマットを変換することです。これを行なうためには、単に次のコマンドを実行します :</p>
+<div><div id="highlighter_723910" class="syntaxhighlighter  bash"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="bash functions">cd</code> <code class="bash plain">$CAFFE_ROOT</code></div><div class="line number2 index1 alt1"><code class="bash plain">.</code><code class="bash plain">/data/mnist/get_mnist</code><code class="bash plain">.sh</code></div><div class="line number3 index2 alt2"><code class="bash plain">.</code><code class="bash plain">/examples/mnist/create_mnist</code><code class="bash plain">.sh</code></div></div></td></tr></tbody></table></div></div>
+<p>スクリプトを実行した後には２つのデータセット、mnist_train_lmdb と mnist_test_lmdb があるでしょう。</p>
+<p>&nbsp;</p>
+<h2>LeNet: MNIST 分類モデル</h2>
+<p>実際に訓練プログラムを実行する前に、何が起きるのかを説明しておきましょう。私たちは LeNet ネットワークを使用します、これは数字分類タスクで上手く動作することが知られています。元の LeNet 実装からは少しだけ異なるバージョンを使用します、ニューロンのための sigmoid 活性を Rectified Linear Unit (ReLU) 活性で置き換えます。</p>
+<p>LeNet のデザインは CNN の本質を含みます、これは ImageNet のもののような大きなモデルでも使用されます。一般的に、それは pooling 層が続く畳込み層、pooling 層が続くもう一つの畳込み層、そして従来の多層パーセプトロンに似た２つの完全結合層から成ります。$CAFFE_ROOT/examples/mnist/lenet_train_test.prototxt で層を定義しました。</p>
+<p>&nbsp;</p>
+<h2>MNIST ネットワークを定義する</h2>
+<p>このセクションは、MNIST 手書き数字分類のための LeNet モデルを指定する lenet_train_test.prototxt モデル定義を説明します。貴方が <a href="https://developers.google.com/protocol-buffers/docs/overview" target="_blank">Google Protobuf</a> に精通していることを仮定しそして Caffe で使用される protobuf 定義を読んでいることを仮定しています、これは $CAFFE_ROOT/src/caffe/proto/caffe.proto で見つかります。</p>
+<p>特に、caffe::NetParameter (あるいは python では、 caffe.proto.caffe_pb2.NetParameter) protobuf を書いていきます。ネットワークに名前を与えることから始めます :</p>
+<div><div id="highlighter_755383" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">name: "LeNet"</code></div></div></td></tr></tbody></table></div></div>
+<p>* 訳注: NetParameter 及び関連 message の定義は以下です (deprecated なフィールドが多いですが) :</p>
+<div><div id="highlighter_106487" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div><div class="line number32 index31 alt1">32</div><div class="line number33 index32 alt2">33</div><div class="line number34 index33 alt1">34</div><div class="line number35 index34 alt2">35</div><div class="line number36 index35 alt1">36</div><div class="line number37 index36 alt2">37</div><div class="line number38 index37 alt1">38</div><div class="line number39 index38 alt2">39</div><div class="line number40 index39 alt1">40</div><div class="line number41 index40 alt2">41</div><div class="line number42 index41 alt1">42</div><div class="line number43 index42 alt2">43</div><div class="line number44 index43 alt1">44</div><div class="line number45 index44 alt2">45</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">message NetParameter {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">optional string name = 1; </code><code class="cpp comments">// ネットワーク名を与えることを考える</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// DEPRECATED. InputParameter 参照。ネットワークへの入力 blob。</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">repeated string input = 3;</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// DEPRECATED. InputParameter 参照。入力 blob の shape。</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">repeated BlobShape input_shape = 8;</code></div><div class="line number7 index6 alt2">&nbsp;</div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// 4D input dimensions -- deprecated.&nbsp; 代わりに "input_shape" を使用する。</code></div><div class="line number9 index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// If specified, for each input blob there should be four</code></div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// values specifying the num, channels, height and width of the input blob.</code></div><div class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// Thus, there should be a total of (4 * #input) numbers.</code></div><div class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">repeated int32 input_dim = 4;</code></div><div class="line number13 index12 alt2">&nbsp;</div><div class="line number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// ネットワークが全ての層に backward 演算を carry out することを強制するか否か。</code></div><div class="line number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// False を設定する場合、backward を carry out するか否かは</code></div><div class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// ネット構造と学習率に従って自動的に決定されます。</code></div><div class="line number17 index16 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">optional </code><code class="cpp color1 bold">bool</code> <code class="cpp plain">force_backward = 5 [</code><code class="cpp keyword bold">default</code> <code class="cpp plain">= </code><code class="cpp keyword bold">false</code><code class="cpp plain">];</code></div><div class="line number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// phase, level, そして stage を含む、ネットワークの現在の "state"。</code></div><div class="line number19 index18 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// Some layers may be included/excluded depending on this state and the states</code></div><div class="line number20 index19 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// specified in the layers' include and exclude fields.</code></div><div class="line number21 index20 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">optional NetState state = 6;</code></div><div class="line number22 index21 alt1">&nbsp;</div><div class="line number23 index22 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// Net::Forward, Net::Backward, そして Net::Update を実行する間の結果についての</code></div><div class="line number24 index23 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// デバッギング情報を出力する。</code></div><div class="line number25 index24 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">optional </code><code class="cpp color1 bold">bool</code> <code class="cpp plain">debug_info = 7 [</code><code class="cpp keyword bold">default</code> <code class="cpp plain">= </code><code class="cpp keyword bold">false</code><code class="cpp plain">];</code></div><div class="line number26 index25 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// ネットを作る層群。connectivity と behavior を含む、それらの configurations の各々は</code></div><div class="line number27 index26 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">//&nbsp; LayerParameter として指定されます。</code></div><div class="line number28 index27 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">repeated LayerParameter layer = 100;&nbsp; </code><code class="cpp comments">// ID 100 so layers are printed last.</code></div><div class="line number29 index28 alt2">&nbsp;</div><div class="line number30 index29 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// DEPRECATED: 代わりに 'layer' を使用します。</code></div><div class="line number31 index30 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">repeated V1LayerParameter layers = 2;</code></div><div class="line number32 index31 alt1"><code class="cpp plain">}</code></div><div class="line number33 index32 alt2">&nbsp;</div><div class="line number34 index33 alt1"><code class="cpp plain">message InputParameter {</code></div><div class="line number35 index34 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// This layer produces N &gt;= 1 top blob(s) to be assigned manually.</code></div><div class="line number36 index35 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// Define N shapes to set a shape for each top.</code></div><div class="line number37 index36 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// Define 1 shape to set the same shape for every top.</code></div><div class="line number38 index37 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// Define no shape to defer to reshaping manually.</code></div><div class="line number39 index38 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">repeated BlobShape shape = 1;</code></div><div class="line number40 index39 alt1"><code class="cpp plain">}</code></div><div class="line number41 index40 alt2">&nbsp;</div><div class="line number42 index41 alt1"><code class="cpp comments">// Blob の shape (次元群) を指定する。</code></div><div class="line number43 index42 alt2"><code class="cpp plain">message BlobShape {</code></div><div class="line number44 index43 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">repeated int64 dim = 1 [packed = </code><code class="cpp keyword bold">true</code><code class="cpp plain">];</code></div><div class="line number45 index44 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<h4>データ層を書く</h4>
+<p>現在、デモで先に作成した lmdb から MNIST データを読みます。これはデータ層で定義されます :</p>
+<div><div id="highlighter_372357" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">layer {</code></div><div class="line number2 index1 alt1"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">name: "mnist"</code></div><div class="line number3 index2 alt2"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">type: "Data"</code></div><div class="line number4 index3 alt1"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">transform_param {</code></div><div class="line number5 index4 alt2"><code class="plain spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain plain">scale: 0.00390625</code></div><div class="line number6 index5 alt1"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">}</code></div><div class="line number7 index6 alt2"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">data_param {</code></div><div class="line number8 index7 alt1"><code class="plain spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain plain">source: "mnist_train_lmdb"</code></div><div class="line number9 index8 alt2"><code class="plain spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain plain">backend: LMDB</code></div><div class="line number10 index9 alt1"><code class="plain spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="plain plain">batch_size: 64</code></div><div class="line number11 index10 alt2"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">}</code></div><div class="line number12 index11 alt1"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">top: "data"</code></div><div class="line number13 index12 alt2"><code class="plain spaces">&nbsp;&nbsp;</code><code class="plain plain">top: "label"</code></div><div class="line number14 index13 alt1"><code class="plain plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>特に、この層は name mnist, type data を持ち、そしてそれは与えられた lmdb ソースからデータを読みます。バッチサイズ 64 を使用し入ってくるピクセルを範囲 [0, 1) におさまるようにスケールします。何故 0.00390625 ？それは 1 を 256 で除算したものです。そして最後に、この層は２つの blob を生成します、一つは data blob で、もう一つは label blob です。</p>
+<h4>畳込み層を書く</h4>
+<p>最初の畳込み層を定義しましょう :</p>
+<div><div id="highlighter_443112" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">layer {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">name: </code><code class="cpp string">"conv1"</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"Convolution"</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">param { lr_mult: 1 }</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">param { lr_mult: 2 }</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">convolution_param {</code></div><div class="line number7 index6 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">num_output: 20</code></div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">kernel_size: 5</code></div><div class="line number9 index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">stride: 1</code></div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">weight_filler {</code></div><div class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"xavier"</code></div><div class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number13 index12 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">bias_filler {</code></div><div class="line number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"constant"</code></div><div class="line number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number17 index16 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">bottom: </code><code class="cpp string">"data"</code></div><div class="line number18 index17 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">top: </code><code class="cpp string">"conv1"</code></div><div class="line number19 index18 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>この層は  (data 層から提供される) data blobを取り、conv1 層を生成します。それは 20 チャネルの出力を生成します、畳込みカーネルサイズ 5 そしてストライド 1 で実行されます。</p>
+<p>filler は重みとバイアスの値をランダムに初期化することを可能にします。weight filler に対しては、xavier アルゴリズムを使用します、これは入力と出力ニューロンの数を基に初期化のスケールを自動的に決定します。bias filler に対しては、デフォルトの filling 値 0 で単に constant として初期化します。</p>
+<p>* 訳注: xavier アルゴリズムについては <a href="http://philipperemy.github.io/xavier-initialization/" target="_blank">Xavier Initialization</a> が参考になります。</p>
+<p>lr_mults は層の学習可能なパラメータのための学習率調整です。この場合、重み学習率はランタイム時に solver により与えられる学習率と同じになるように、バイアス学習率はそれの２倍の大きさに設定します – これは通常より良い収束率に導かれます。</p>
+<h4>Pooling 層を書く</h4>
+<p>やれやれ (Phew)。Pooling 層は定義するに実際にははるかに簡単です :</p>
+<div><div id="highlighter_159032" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">layer {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">name: </code><code class="cpp string">"pool1"</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"Pooling"</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">pooling_param {</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">kernel_size: 2</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">stride: 2</code></div><div class="line number7 index6 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">pool: MAX</code></div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number9 index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">bottom: </code><code class="cpp string">"conv1"</code></div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">top: </code><code class="cpp string">"pool1"</code></div><div class="line number11 index10 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>これは、pool カーネル・サイズ 2 とストライド 2 で max pooling を実行することを言っています(従って近接する pooling 領域間にオーバーラップはありません )。</p>
+<p>同様に、２番目の畳込みと pooling 層も書き上げることができます。<br>
+詳細は $CAFFE_ROOT/examples/mnist/lenet_train_test.prototxt を確認してください。</p>
+<h4>完全結合層を書く</h4>
+<p>完全結合層を書くのもまた単純です :</p>
+<div><div id="highlighter_487357" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">layer {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">name: </code><code class="cpp string">"ip1"</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"InnerProduct"</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">param { lr_mult: 1 }</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">param { lr_mult: 2 }</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">inner_product_param {</code></div><div class="line number7 index6 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">num_output: 500</code></div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">weight_filler {</code></div><div class="line number9 index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"xavier"</code></div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">bias_filler {</code></div><div class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"constant"</code></div><div class="line number13 index12 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">bottom: </code><code class="cpp string">"pool2"</code></div><div class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">top: </code><code class="cpp string">"ip1"</code></div><div class="line number17 index16 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>これは完全結合層 (Caffe では InnerProduct 層として知られています) を 500 出力で定義します。他の全ての行は馴染みがあるはずです、違いますか？</p>
+<h4>ReLU 層を書く</h4>
+<p>ReLU 層もまた単純です :</p>
+<div><div id="highlighter_77687" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">layer {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">name: </code><code class="cpp string">"relu1"</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"ReLU"</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">bottom: </code><code class="cpp string">"ip1"</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">top: </code><code class="cpp string">"ip1"</code></div><div class="line number6 index5 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>ReLU は element-wise な演算ですから、何某かのメモリをセーブするために in-place 操作を行なうことができます。これは単に bottom と top blob に同じ名前を与えることにより達成されます。もちろん他の層タイプのための重複した blob 名は使用しないでください！</p>
+<p>ReLU 層の後、もう一つの innerproduct 層を書きます :</p>
+<div><div id="highlighter_752858" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">layer {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">name: </code><code class="cpp string">"ip2"</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"InnerProduct"</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">param { lr_mult: 1 }</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">param { lr_mult: 2 }</code></div><div class="line number6 index5 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">inner_product_param {</code></div><div class="line number7 index6 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">num_output: 10</code></div><div class="line number8 index7 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">weight_filler {</code></div><div class="line number9 index8 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"xavier"</code></div><div class="line number10 index9 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number11 index10 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">bias_filler {</code></div><div class="line number12 index11 alt1"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"constant"</code></div><div class="line number13 index12 alt2"><code class="cpp spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number14 index13 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">}</code></div><div class="line number15 index14 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">bottom: </code><code class="cpp string">"ip1"</code></div><div class="line number16 index15 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">top: </code><code class="cpp string">"ip2"</code></div><div class="line number17 index16 alt2"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<h4>損失層を書く</h4>
+<p>最後に、損失を書きます！</p>
+<div><div id="highlighter_250868" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">layer {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">name: </code><code class="cpp string">"loss"</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">type: </code><code class="cpp string">"SoftmaxWithLoss"</code></div><div class="line number4 index3 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">bottom: </code><code class="cpp string">"ip2"</code></div><div class="line number5 index4 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">bottom: </code><code class="cpp string">"label"</code></div><div class="line number6 index5 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>softmax_loss 層は softmax と 多項ロジスティック損失の両者を実装しています (時間を節約して数値的安定性を改善します)。それは２つの blob を取ります、最初の一つは予測で２つ目はデータ層で提供される label です (覚えていますか？)。それはどのような出力も生成しません – それが行なう全ては損失関数値を計算し、backpropagation が始まったときにそれをレポートし、そして ip2 に関する勾配を initiate します。これはマジックが始まる場所です。</p>
+<h4>追加ノート: 層ルールを書く</h4>
+<p>層定義は、ネットワーク定義においてそれらが含まれるかどうかいつ含まれるかのためのルールを含むことができます、以下のようなものです :</p>
+<div><div id="highlighter_488329" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp plain">layer {</code></div><div class="line number2 index1 alt1"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp comments">// ...layer definition...</code></div><div class="line number3 index2 alt2"><code class="cpp spaces">&nbsp;&nbsp;</code><code class="cpp plain">include: { phase: TRAIN }</code></div><div class="line number4 index3 alt1"><code class="cpp plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>これは、現在のネットワークの状態を基に、層のネットワーク内の包含を制御するルールです。層ルールとモデル・スキーマについて更なる情報は $CAFFE_ROOT/src/caffe/proto/caffe.proto を参照できます。</p>
+<p>上の例では、この層は TRAIN 段階 (phase) でのみ含まれます。TRAIN を TEST に変更すれば、この層は test 段階でのみ使用されます。デフォルトでは、つまり層ルールなしでは、層はいつもネットワークに含まれます。こうして、lenet_train_test.prototxt は (異なる batch_size で) 定義された２つの DATA 層を持ちます、一つは訓練段階のためそしてもう一つはテスティング段階のためです。また、Accuracy (精度) 層もあります、これは、lenet_solver.prototxt で定義されたように、モデル精度を 100 反復毎にレポートするために TEST 段階にのみ含まれます。</p>
+<p>&nbsp;</p>
+<h2>MNIST Solver を定義する</h2>
+<p>prototxt $CAFFE_ROOT/examples/mnist/lenet_solver.prototxt の各行を説明しているコメントを確認してください :</p>
+<div><div id="highlighter_117931" class="syntaxhighlighter  cpp"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="cpp preprocessor"># 訓練/テスト・ネット protocol buffer 定義</code></div><div class="line number2 index1 alt1"><code class="cpp plain">net: </code><code class="cpp string">"examples/mnist/lenet_train_test.prototxt"</code></div><div class="line number3 index2 alt2"><code class="cpp preprocessor"># test_iter specifies how many forward passes the test should carry out.</code></div><div class="line number4 index3 alt1"><code class="cpp preprocessor"># In the case of MNIST, we have test batch size 100 and 100 test iterations,</code></div><div class="line number5 index4 alt2"><code class="cpp preprocessor"># covering the full 10,000 testing images.</code></div><div class="line number6 index5 alt1"><code class="cpp plain">test_iter: 100</code></div><div class="line number7 index6 alt2"><code class="cpp preprocessor"># 500 訓練反復毎にテスティングを carry out する。</code></div><div class="line number8 index7 alt1"><code class="cpp plain">test_interval: 500</code></div><div class="line number9 index8 alt2"><code class="cpp preprocessor"># ベース学習率、momentum そしてネットワークの重み減衰。</code></div><div class="line number10 index9 alt1"><code class="cpp plain">base_lr: 0.01</code></div><div class="line number11 index10 alt2"><code class="cpp plain">momentum: 0.9</code></div><div class="line number12 index11 alt1"><code class="cpp plain">weight_decay: 0.0005</code></div><div class="line number13 index12 alt2"><code class="cpp preprocessor"># 学習率ポリシー</code></div><div class="line number14 index13 alt1"><code class="cpp plain">lr_policy: </code><code class="cpp string">"inv"</code></div><div class="line number15 index14 alt2"><code class="cpp plain">gamma: 0.0001</code></div><div class="line number16 index15 alt1"><code class="cpp plain">power: 0.75</code></div><div class="line number17 index16 alt2"><code class="cpp preprocessor"># 100 反復毎に表示する</code></div><div class="line number18 index17 alt1"><code class="cpp plain">display: 100</code></div><div class="line number19 index18 alt2"><code class="cpp preprocessor"># 反復の最大値</code></div><div class="line number20 index19 alt1"><code class="cpp plain">max_iter: 10000</code></div><div class="line number21 index20 alt2"><code class="cpp preprocessor"># 中間結果のスナップショット</code></div><div class="line number22 index21 alt1"><code class="cpp plain">snapshot: 5000</code></div><div class="line number23 index22 alt2"><code class="cpp plain">snapshot_prefix: </code><code class="cpp string">"examples/mnist/lenet"</code></div><div class="line number24 index23 alt1"><code class="cpp preprocessor"># solver モード: CPU または GPU</code></div><div class="line number25 index24 alt2"><code class="cpp plain">solver_mode: GPU</code></div></div></td></tr></tbody></table></div></div>
+<p>&nbsp;</p>
+<h2>モデルを訓練してテストする</h2>
+<p>ネットワーク定義 protobuf と solver protobuf ファイルを書いた後ではモデルを訓練するのは単純です。単に train_lenet.sh、あるいは次のコマンドを直接実行します :</p>
+<div><div id="highlighter_882995" class="syntaxhighlighter  bash"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="bash functions">cd</code> <code class="bash plain">$CAFFE_ROOT</code></div><div class="line number2 index1 alt1"><code class="bash plain">.</code><code class="bash plain">/examples/mnist/train_lenet</code><code class="bash plain">.sh</code></div></div></td></tr></tbody></table></div></div>
+<p>train_lenet.sh は単純なスクリプトですが、これが素早い説明です : 訓練のための主要なツールは caffe でその入力としてアクション train と solver protobuf テキストファイルを取ります。コードを実行する時、このような沢山のメッセージが飛ぶのを見るでしょう :</p>
+<div><div id="highlighter_452205" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">I1203 net.cpp:66] Creating Layer conv1</code></div><div class="line number2 index1 alt1"><code class="plain plain">I1203 net.cpp:76] conv1 &lt;- data</code></div><div class="line number3 index2 alt2"><code class="plain plain">I1203 net.cpp:101] conv1 -&gt; conv1</code></div><div class="line number4 index3 alt1"><code class="plain plain">I1203 net.cpp:116] Top shape: 20 24 24</code></div><div class="line number5 index4 alt2"><code class="plain plain">I1203 net.cpp:127] conv1 needs backward computation.</code></div></div></td></tr></tbody></table></div></div>
+<p>これらのメッセージは各層、その接続そしてその出力 shape についての詳細を教えてくれます、それはデバッギングで手助けとなるでしょう。初期化の後、訓練が始まります :</p>
+<div><div id="highlighter_551737" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">I1203 net.cpp:142] Network initialization done.</code></div><div class="line number2 index1 alt1"><code class="plain plain">I1203 solver.cpp:36] Solver scaffolding done.</code></div><div class="line number3 index2 alt2"><code class="plain plain">I1203 solver.cpp:44] Solving LeNet</code></div></div></td></tr></tbody></table></div></div>
+<p>solver 設定を基にして、100 反復毎に訓練損失関数を出力し、そして 500 反復毎にネットワークをテストします。このようなメッセージを見るでしょう :</p>
+<div><div id="highlighter_267145" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">I1203 solver.cpp:204] Iteration 100, lr = 0.00992565</code></div><div class="line number2 index1 alt1"><code class="plain plain">I1203 solver.cpp:66] Iteration 100, loss = 0.26044</code></div><div class="line number3 index2 alt2"><code class="plain plain">...</code></div><div class="line number4 index3 alt1"><code class="plain plain">I1203 solver.cpp:84] Testing net</code></div><div class="line number5 index4 alt2"><code class="plain plain">I1203 solver.cpp:111] Test score #0: 0.9785</code></div><div class="line number6 index5 alt1"><code class="plain plain">I1203 solver.cpp:111] Test score #1: 0.0606671</code></div></div></td></tr></tbody></table></div></div>
+<p>各訓練反復について、lr はその反復の学習率で loss は訓練関数です。テスト段階の出力について、score 0 は精度で、score 1 はテスト損失関数です。</p>
+<p>そして数分後、完了です！</p>
+<div><div id="highlighter_7174" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">I1203 solver.cpp:84] Testing net</code></div><div class="line number2 index1 alt1"><code class="plain plain">I1203 solver.cpp:111] Test score #0: 0.9897</code></div><div class="line number3 index2 alt2"><code class="plain plain">I1203 solver.cpp:111] Test score #1: 0.0324599</code></div><div class="line number4 index3 alt1"><code class="plain plain">I1203 solver.cpp:126] Snapshotting to lenet_iter_10000</code></div><div class="line number5 index4 alt2"><code class="plain plain">I1203 solver.cpp:133] Snapshotting solver state to lenet_iter_10000.solverstate</code></div><div class="line number6 index5 alt1"><code class="plain plain">I1203 solver.cpp:78] Optimization Done.</code></div></div></td></tr></tbody></table></div></div>
+<p>バイナリ protobuf ファイルとしてストアされる、最終的なモデルは以下にストアされます :</p>
+<div><div id="highlighter_343931" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain">lenet_iter_10000</code></div></div></td></tr></tbody></table></div></div>
+<p>これは貴方のアプリケーションで訓練されたモデルとしてデプロイされます、もし現実世界のアプリケーション・データセット上で訓練するのであれば。</p>
+<h4>Um… GPU 訓練についてはどうでしょう？</h4>
+<p>You just did! 全ての訓練は GPU 上で実行されました。事実として、CPU 上で訓練をしたいのであれば、lenet_solver.prototxt の一行を単に変更できます :</p>
+<div><div id="highlighter_337506" class="syntaxhighlighter  plain"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="plain plain"># solver mode: CPU or GPU</code></div><div class="line number2 index1 alt1"><code class="plain plain">solver_mode: CPU</code></div></div></td></tr></tbody></table></div></div>
+<p>そうすれば訓練のために CPU を使用できるでしょう。簡単でしょう？</p>
+<p>MNIST は小さなデータセットですから、通信オーバーヘッドにより GPU での訓練は実際にはそれほどの恩恵をもたらしません。より複雑なモデルでより大きなデータセット上では、ImageNet のような、計算速度の違いはより本質的になります。</p>
+<h4>固定ステップにおいて学習率をどのように減少させるか？</h4>
+<p>lenet_multistep_solver.prototxt を見てください。</p>
+<div>&nbsp;</div>
+<p>以上<br>
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/shCore.js.下载"></script><script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/shBrushCpp.js.下载"></script><br>
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/shBrushBash.js.下载"></script><br>
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/shBrushPlain.js.下载"></script>
+<link type="text/css" rel="stylesheet" href="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/shThemeEclipse.css">
+<script type="text/javascript">
+SyntaxHighlighter.defaults['toolbar'] = false;
+SyntaxHighlighter.all();
+</script></p>
+	</div><!-- end .entry-content -->
+
+</div><!-- end #post-## -->
+		<div class="navigation clearfix">
+			<span class="alignleft"><a href="http://caffe.classcat.com/2017/03/30/caffe-tutorial-net-layer-blob/" rel="prev"><span class="meta-nav">←</span> Caffe: Tutorial: Blob, 層, そしてネット : Caffe モデルの解剖</a></span>			<span class="alignright"><a href="http://caffe.classcat.com/2017/03/31/caffe-tutorial-forward-backward/" rel="next">Caffe : Tutorial : Forward と Backward <span class="meta-nav">→</span></a></span>		</div><!-- end .navigation -->
+
+		
+<div id="comments">
+
+	
+</div><!-- #comments -->
+	</div><!-- end .column-content -->
+
+		<div class="column column-narrow column-last">
+		<div id="text-21" class="widget clearfix widget_text"><h3 class="heading">AI &amp; Biz セミナー#14 @東京</h3>			<div class="textwidget"><div style="border-style:solid;border-color:cornflowerblue;border-width:2px; border-radius:10px; padding:8px; font-size:11pt;">
+<b>人工知能はビジネスにどう生かせるか？</b> Vol.14<br>
+<span style="color:mediumblue;">大好評により、第14弾も開催！</span><br>
+企業の研究開発部門の人工知能テクノロジー活用支援を目的とし、人工知能テクノロジーをどのように実ビジネスに取り込めるのか？また、いち早く人工知能テクノロジーを取り入れた製品・サービスを市場に展開するには？にフォーカスしたセミナーを開催いたします。
+ [<a href="http://www.classcat.com/2017/05/30/0721/">詳細</a>]<br>
+日時：2017年7月21日(金) <br>
+会場：日本アイ・ビー・エム(株) 本社<br>
+共催：クラスキャット、XEENUTS<br>
+後援：日本アイ・ビー・エム<br>
+参加費： <b>無料</b> (事前登録制)
+</div></div>
+		</div><div id="text-20" class="widget clearfix widget_text"><h3 class="heading">音声認識 &amp; AI #2 (@東京)</h3>			<div class="textwidget"><div style="border-style:solid;border-color:cornflowerblue;border-width:2px; border-radius:10px; padding:8px; font-size:11pt;">
+<b>音声認識/AI 技術を取り入れた製品・サービスを市場展開するには？</b> Vol.2<br>
+<span style="color:royalblue;">日本語の音声認識にフォーカスした内容です。</span>コールセンター、ロボット、カーナビゲーション、スマートフォンや家電の音声による操作など豊富な事例と共に音声認識技術を自社ソリューションに取り入れるためのステップを解説いたします。  [<a href="http://www.classcat.com/2017/04/29/0615/">詳細</a>]<br>
+日時：2017年6月15日(木)<br>
+会場：ニュアンスコミュニケーションズジャパン<br>
+主催：クラスキャット、XEENUTS<br>
+共催：ニュアンスコミュニケーションズジャパン(株)、ホシデン(株)<br>
+参加費： <b>無料</b> (事前登録制)
+</div></div>
+		</div><div id="text-18" class="widget clearfix widget_text"><h3 class="heading">AI &amp; Biz セミナー#12 @大阪</h3>			<div class="textwidget"><div style="border-style:solid;border-color:cornflowerblue;border-width:2px; border-radius:10px; padding:8px; font-size:11pt;">
+<b>AI 技術を取り入れた 製品・サービスを市場に展開するには？</b> Vol.12 [大阪:製造業]<br>
+<span style="color:royalblue;">製造業における AI 活用の実践</span><br>
+企業における AI 技術の活用支援を目的とし、AI 技術をどのように実ビジネスに取り込めるのか？ AI 技術を取り入れた製品・サービスを市場に展開するには？ にフォーカスしたセミナーを開催します。<br>
+特に製造業で AI 技術がどのように活用されているかを具体的に紹介いたします。 [<a href="http://www.classcat.com/2017/04/19/0621/">詳細</a>]<br>
+日時：2017年6月21日(水)<br>
+会場：<small>日本アイ・ビー・エム 大阪事業所</small><br>
+主催：クラスキャット、XEENUTS<br>
+後援：日本アイ・ビー・エム<br>
+参加費： <b>無料</b> (事前登録制)
+</div></div>
+		</div><div id="text-19" class="widget clearfix widget_text"><h3 class="heading">AI &amp; Biz セミナー#13 @名古屋</h3>			<div class="textwidget"><div style="border-style:solid;border-color:cornflowerblue;border-width:2px; border-radius:10px; padding:8px; font-size:11pt;">
+<b>いち早く人工知能テクノロジーを取り入れた 製品・サービスを市場に展開するには？</b> Vol.13 [名古屋:製造業] [<a href="http://www.classcat.com/2017/04/19/0622/">詳細</a>]<br>
+日時：2017年6月22日(木) <br>
+会場：<small>日本アイ・ビー・エム 名古屋事業所</small><br>
+主催：クラスキャット、XEENUTS<br>
+後援：日本アイ・ビー・エム<br>
+参加費： <b>無料</b> (事前登録制)
+</div></div>
+		</div><div id="text-16" class="widget clearfix widget_text"><h3 class="heading">AI Biz. 個別相談会 [無償]</h3>			<div class="textwidget"><div style="border-style:solid;border-color:orange;border-width:2px; border-radius:10px; padding:8px; font-size:11pt;">
+【  [無償] <b>人工知能ビジネス個別相談会</b> (事業責任者向け)】<br>
+<span style="color:royalblue;">4/3 から個別相談会(事業責任者向け)を無償で開催する運びとなりました。お気軽に申込ください。</span><br>
+個別相談会(事業責任者向け)では、人工知能テクノロジーを自社製品または新規サービスなどに採用を検討している事業責任者を対象に、質疑・応答形式で開催させていただきます。  [<a href="http://www.classcat.com/ai_individual_consultation/">詳細</a>]
+</div></div>
+		</div><div id="text-14" class="widget clearfix widget_text"><h3 class="heading">AI 開発支援/研修サービス</h3>			<div class="textwidget"><div style="border-style:solid;border-color:cornflowerblue;border-width:2px; border-radius:10px; padding:8px; font-size:11pt;">
+<strong>TensorFlow</strong>、<b>深層学習</b>、更には<b>人工知能</b> の各種コンサルティングや研修サービスも承っております。<br>
+* 詳細は :
+<center><a href="http://www.classcat.com/">http://www.classcat.com/</a></center>
+* お問合せは :
+<center>クラスキャット<br>
+セールスインフォメーション<br>
+sales-info@classcat.com</center>
+</div></div>
+		</div><div id="text-2" class="widget clearfix widget_text">			<div class="textwidget"><div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div></div></div><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe name="fb_xdm_frame_http" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" id="fb_xdm_frame_http" aria-hidden="true" title="Facebook Cross Domain Communication Frame" tabindex="-1" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/0F7S7QWJ0Ac.html" style="border: none;"></iframe><iframe name="fb_xdm_frame_https" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" id="fb_xdm_frame_https" aria-hidden="true" title="Facebook Cross Domain Communication Frame" tabindex="-1" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/0F7S7QWJ0Ac(1).html" style="border: none;"></iframe></div></div></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-page fb_iframe_widget" data-href="https://www.facebook.com/ClassCatJP/" data-tabs="timeline" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false" fb-xfbml-state="rendered" fb-iframe-plugin-query="adapt_container_width=true&amp;app_id=&amp;container_width=250&amp;hide_cover=false&amp;href=https%3A%2F%2Fwww.facebook.com%2FClassCatJP%2F&amp;locale=ja_JP&amp;sdk=joey&amp;show_facepile=false&amp;small_header=true&amp;tabs=timeline"><span style="vertical-align: bottom; width: 250px; height: 500px;"><iframe name="f1cf4238e0af87c" width="1000px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" title="fb:page Facebook Social Plugin" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/page.html" style="border: none; visibility: visible; width: 250px; height: 500px;" class=""></iframe></span></div></div>
+		</div>		<div id="recent-posts-2" class="widget clearfix widget_recent_entries">		<h3 class="heading">最近の投稿</h3>		<ul>
+					<li>
+				<a href="http://caffe.classcat.com/2017/05/15/keras-image-classficication-xception/">Keras : 画像分類 : Xception</a>
+						</li>
+					<li>
+				<a href="http://caffe.classcat.com/2017/05/15/fasttext/">fastText</a>
+						</li>
+					<li>
+				<a href="http://caffe.classcat.com/2017/05/12/keras-image-classficication-resnet-50/">Keras : 画像分類 : ResNet-50</a>
+						</li>
+					<li>
+				<a href="http://caffe.classcat.com/2017/05/12/keras-image-classficication-googlenet-inception-v3/">Keras : 画像分類 : GoogLeNet Inception v3</a>
+						</li>
+					<li>
+				<a href="http://caffe.classcat.com/2017/05/09/keras-image-classficication-alexnet/">Keras : 画像分類 : AlexNet</a>
+						</li>
+				</ul>
+		</div>		<div id="tag_cloud-2" class="widget clearfix widget_tag_cloud"><h3 class="heading">タグ</h3><div class="tagcloud"><a href="http://caffe.classcat.com/tag/caffe2-tutorial/" class="tag-link-45 tag-link-position-1" title="2件のトピック" style="font-size: 11.6pt;">Caffe2 Tutorial</a>
+<a href="http://caffe.classcat.com/tag/caffe-doc/" class="tag-link-39 tag-link-position-2" title="1件のトピック" style="font-size: 8pt;">Caffe Doc</a>
+<a href="http://caffe.classcat.com/tag/caffe-example/" class="tag-link-36 tag-link-position-3" title="2件のトピック" style="font-size: 11.6pt;">Caffe Example</a>
+<a href="http://caffe.classcat.com/tag/caffe-notebook-example/" class="tag-link-38 tag-link-position-4" title="3件のトピック" style="font-size: 14pt;">Caffe Notebook Example</a>
+<a href="http://caffe.classcat.com/tag/caffe-tutorial/" class="tag-link-35 tag-link-position-5" title="6件のトピック" style="font-size: 19pt;">Caffe Tutorial</a>
+<a href="http://caffe.classcat.com/tag/keras-image-classification/" class="tag-link-47 tag-link-position-6" title="5件のトピック" style="font-size: 17.6pt;">Keras Image Classification</a>
+<a href="http://caffe.classcat.com/tag/keras-release-note/" class="tag-link-51 tag-link-position-7" title="1件のトピック" style="font-size: 8pt;">Keras Release Note</a>
+<a href="http://caffe.classcat.com/tag/mxnet-api/" class="tag-link-28 tag-link-position-8" title="2件のトピック" style="font-size: 11.6pt;">MXNet API</a>
+<a href="http://caffe.classcat.com/tag/mxnet-architecture/" class="tag-link-22 tag-link-position-9" title="2件のトピック" style="font-size: 11.6pt;">MXNet Architecture</a>
+<a href="http://caffe.classcat.com/tag/mxnet-get-started/" class="tag-link-23 tag-link-position-10" title="2件のトピック" style="font-size: 11.6pt;">MXNet Get Started</a>
+<a href="http://caffe.classcat.com/tag/mxnet-how-to/" class="tag-link-25 tag-link-position-11" title="2件のトピック" style="font-size: 11.6pt;">MXNet How To</a>
+<a href="http://caffe.classcat.com/tag/mxnet-tutorial/" class="tag-link-24 tag-link-position-12" title="9件のトピック" style="font-size: 22pt;">MXNet Tutorial</a>
+<a href="http://caffe.classcat.com/tag/pytorch-release-note/" class="tag-link-50 tag-link-position-13" title="1件のトピック" style="font-size: 8pt;">PyTorch Release Note</a>
+<a href="http://caffe.classcat.com/tag/pytorch-tutorial-beginner/" class="tag-link-43 tag-link-position-14" title="4件のトピック" style="font-size: 16pt;">PyTorch Tutorial Beginner</a></div>
+</div><div id="categories-2" class="widget clearfix widget_categories"><h3 class="heading">カテゴリー</h3>		<ul>
+	<li class="cat-item cat-item-52"><a href="http://caffe.classcat.com/category/alexnet/">AlexNet</a>
+</li>
+	<li class="cat-item cat-item-34"><a href="http://caffe.classcat.com/category/caffe/">Caffe</a>
+</li>
+	<li class="cat-item cat-item-44"><a href="http://caffe.classcat.com/category/caffe2/">Caffe2</a>
+</li>
+	<li class="cat-item cat-item-10"><a href="http://caffe.classcat.com/category/cifar-10/">CIFAR-10</a>
+</li>
+	<li class="cat-item cat-item-11"><a href="http://caffe.classcat.com/category/cifar-100/">CIFAR-100</a>
+</li>
+	<li class="cat-item cat-item-13"><a href="http://caffe.classcat.com/category/cnn/">CNN</a>
+</li>
+	<li class="cat-item cat-item-56"><a href="http://caffe.classcat.com/category/fasttext/">fastText</a>
+</li>
+	<li class="cat-item cat-item-20"><a href="http://caffe.classcat.com/category/googlenet/">GoogLeNet</a>
+</li>
+	<li class="cat-item cat-item-8"><a href="http://caffe.classcat.com/category/gpu/">GPU</a>
+</li>
+	<li class="cat-item cat-item-27"><a href="http://caffe.classcat.com/category/inception/">Inception</a>
+</li>
+	<li class="cat-item cat-item-4"><a href="http://caffe.classcat.com/category/keras/">Keras</a>
+</li>
+	<li class="cat-item cat-item-29"><a href="http://caffe.classcat.com/category/kvstore/">KVStore</a>
+</li>
+	<li class="cat-item cat-item-40"><a href="http://caffe.classcat.com/category/lenet/">LeNet</a>
+</li>
+	<li class="cat-item cat-item-5"><a href="http://caffe.classcat.com/category/lstm/">LSTM</a>
+</li>
+	<li class="cat-item cat-item-9"><a href="http://caffe.classcat.com/category/mnist/">MNIST</a>
+</li>
+	<li class="cat-item cat-item-19"><a href="http://caffe.classcat.com/category/mxnet/">MXNet</a>
+</li>
+	<li class="cat-item cat-item-26"><a href="http://caffe.classcat.com/category/ndarray/">NDArray</a>
+</li>
+	<li class="cat-item cat-item-37"><a href="http://caffe.classcat.com/category/protobuf/">Protocol Buffers</a>
+</li>
+	<li class="cat-item cat-item-41"><a href="http://caffe.classcat.com/category/pytorch/">PyTorch</a>
+</li>
+	<li class="cat-item cat-item-31"><a href="http://caffe.classcat.com/category/resnet/">ResNet</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://caffe.classcat.com/category/tensorflow/">TensorFlow</a>
+</li>
+	<li class="cat-item cat-item-7"><a href="http://caffe.classcat.com/category/theano/">Theano</a>
+</li>
+	<li class="cat-item cat-item-57"><a href="http://caffe.classcat.com/category/xception/">Xception</a>
+</li>
+	<li class="cat-item cat-item-32"><a href="http://caffe.classcat.com/category/press-release/">プレスリリース</a>
+</li>
+	<li class="cat-item cat-item-30"><a href="http://caffe.classcat.com/category/blog/">ブログ</a>
+</li>
+	<li class="cat-item cat-item-33"><a href="http://caffe.classcat.com/category/object-detection/">物体検出</a>
+</li>
+	<li class="cat-item cat-item-48"><a href="http://caffe.classcat.com/category/image-classification/">画像分類</a>
+</li>
+	<li class="cat-item cat-item-49"><a href="http://caffe.classcat.com/category/transfer-learning/">転移学習</a>
+</li>
+		</ul>
+</div>	</div><!-- end .column-narrow -->
+	
+	
+</div><!-- end #content -->
+
+			<div id="footer" class="clearfix">
+				
+								<p class="copy">
+ 					Powered by <a href="http://wordpress.org/">WordPress</a> / Academica WordPress Theme by <a href="http://www.wpzoom.com/">WPZOOM</a>				</p>
+			</div><!-- end #footer -->
+		</div></div><!-- end #header -->
+
+	<!-- end #wrap -->
+
+		<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/jquery.mmenu.min.all.js.下载"></script>
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/superfish.min.js.下载"></script>
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/functions.js.下载"></script>
+<script type="text/javascript" src="./Caffe _ Example _ MNIST 上で LeNet を Caffe で訓練する – Deep Learning Frameworks_files/wp-embed.min.js.下载"></script>
+	
+<div id="mm-blocker" class="mm-slideout"></div></body></html>

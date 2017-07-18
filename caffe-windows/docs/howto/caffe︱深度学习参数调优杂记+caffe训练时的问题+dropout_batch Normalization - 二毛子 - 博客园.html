@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)http://www.cnblogs.com/maohai/p/6453417.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout/batch Normalization - 二毛子 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/bundle-AnotherEon001.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/bundle-AnotherEon001-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/maohai/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/maohai/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/maohai/wlwmanifest.xml">
+<script async="" src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/analytics.js.下载"></script><script src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'maohai', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+<!--PageBeginHtml Block Begin-->
+<div id="top">
+<a href="http://www.kanxia.org/info/38753.html">夺吻99次：校草大人，太腹黑！</a>
+<a href="http://www.kanxia.org/info/38669.html">顶级老公，太嚣张！</a>
+<a href="http://www.kanxia.org/info/38747.html">误惹大神：落跑萌妻你等着</a>
+<a href="http://www.kanxia.org/info/38743.html">独宠娇妃：王爷翻墙窥香</a>
+<a href="http://www.kanxia.org/info/38721.html">情定现代：皇上本无罪</a>
+<a href="http://www.kanxia.org/info/38682.html">宠妻上瘾：狼性邪帝，停！</a>
+<a href="http://www.kanxia.org/info/38757.html">霸道老公，撩不停！</a>
+<a href="http://www.kanxia.org/info/38225.html">独家占有：穆先生，宠不停！</a>
+<a href="http://www.kanxia.org/info/36831.html">重生之龙套姐姐的逆袭</a>
+<a href="http://www.kanxia.org/info/36920.html">爱在灰烬里重燃</a>
+<a href="http://www.kanxia.org/info/36824.html">厉害了我的金箍棒</a>
+<a href="http://www.kanxia.org/info/36531.html">时空胖商人</a>
+<a href="http://www.kanxia.org/info/36537.html">娇妻甜蜜蜜：恶魔总裁霸道宠</a>
+<a href="http://www.kanxia.org/info/36536.html">穿越之惹火军嫂</a>
+<a href="http://www.kanxia.org/info/36918.html">日久成婚</a>
+<a href="http://www.kanxia.org/info/36921.html">你在心上，爱情那么长</a>
+<a href="http://www.kanxia.org/info/36349.html">闪婚总裁契约妻</a>
+<a href="http://www.kanxia.org/info/36724.html">修仙老师在都市</a>
+<a href="http://www.kanxia.org/info/36515.html">穿入西游</a>
+<a href="http://www.kanxia.org/info/36522.html">道长求罩：约会僵尸新娘</a>
+<a href="http://www.kanxia.org/info/36542.html">顶级盛宠：男神索爱100天</a>
+<a href="http://www.kanxia.org/info/36512.html">花都玄医</a>
+<a href="http://www.kanxia.org/info/36521.html">萌妻翻身：老公送上门</a>
+<a href="http://www.kanxia.org/info/36511.html">末日工厂</a>
+<a href="http://www.kanxia.org/info/36540.html">萌妻要不够：狼性总裁，抱紧爱</a>
+<a href="http://www.kanxia.org/info/36541.html">喜孕少奶奶：总裁大人，又饿了</a>
+<a href="http://www.kanxia.org/info/36547.html">重生非洲当酋长</a>
+<a href="http://www.kanxia.org/info/36535.html">邪王追爱：殿下独宠三小姐</a>
+<a href="http://www.kanxia.org/info/36533.html">腹黑专宠：快穿女配有点萌</a>
+<a href="http://www.kanxia.org/info/36451.html">大剑神</a>
+<a href="http://www.kanxia.org/info/36201.html">大圣</a>
+<a href="http://www.kanxia.org/info/36095.html">那年我们同过窗</a>
+<a href="http://www.kanxia.org/info/35918.html">重生之黄金宝鉴</a>
+<a href="http://www.kanxia.org/info/35775.html">心头肉</a>
+<a href="http://www.kanxia.org/info/35663.html">重生傻妻向前冲</a>
+<a href="http://www.kanxia.org/info/35415.html">天穹王座</a>
+<a href="http://www.kanxia.org/info/35369.html">女神的贴身司机</a>
+<a href="http://www.kanxia.org/info/35325.html">有种别缠我</a>
+<a href="http://www.kanxia.org/info/35305.html">乡村朋友圈</a>
+<a href="http://www.kanxia.org/info/35288.html">功夫兵王</a>
+<a href="http://www.kanxia.org/info/35259.html">重生之寒门长嫂</a>
+<a href="http://www.kanxia.org/info/35193.html">破烂王</a>
+<a href="http://www.kanxia.org/info/35177.html">至尊神魔</a>
+<a href="http://www.kanxia.org/info/35081.html">青春有约</a>
+<a href="http://www.kanxia.org/info/34957.html">我的美女特工老婆</a>
+<a href="http://www.kanxia.org/info/34748.html">至尊重生</a>
+<a href="http://www.kanxia.org/info/34500.html">我的老婆是总裁</a>
+<a href="http://www.kanxia.org/info/34342.html">千金归来：追妻365天</a>
+<a href="http://www.kanxia.org/info/34205.html">嗨，亲爱的9点不见不散</a>
+<a href="http://www.kanxia.org/info/34128.html">灵武帝尊</a>
+<a href="http://www.kanxia.org/info/34087.html">天域神座</a>
+<a href="http://www.kanxia.org/info/33982.html">修真归来</a>
+<a href="http://www.kanxia.org/info/33962.html">渣男必须死</a>
+<a href="http://www.kanxia.org/info/33611.html">迷失的青春期</a>
+<a href="http://www.kanxia.org/info/33561.html">食味娇娘</a>
+<a href="http://www.kanxia.org/info/33544.html">锦堂娇</a>
+<a href="http://www.kanxia.org/info/33358.html">至尊掠夺系统</a>
+<a href="http://www.kanxia.org/info/33193.html">我的无限历程</a>
+<a href="http://www.kanxia.org/info/32637.html">火影之最强全能系统</a>
+<a href="http://www.kanxia.org/info/32608.html">守神记</a>
+<a href="http://www.kanxia.org/info/32381.html">仙凡变</a>
+<a href="http://www.kanxia.org/info/32111.html">三生三世枕上书</a>
+<a href="http://www.kanxia.org/info/32100.html">我是你的噩梦</a>
+<a href="http://www.kanxia.org/info/32072.html">抗战时空倒爷</a>
+<a href="http://www.kanxia.org/info/32014.html">总裁太冷血：蜜宠娇妻不要逃</a>
+<a href="http://www.kanxia.org/info/32006.html">枕上萌妻：老公，别靠近</a>
+<a href="http://www.kanxia.org/info/31360.html">重生之万界主宰</a>
+<a href="http://www.kanxia.org/info/31218.html">重生完美男神</a>
+<a href="http://www.kanxia.org/info/31175.html">娘娘带球跑了！</a>
+<a href="http://www.kanxia.org/info/31096.html">霸道鬼夫好难缠</a>
+<a href="http://www.kanxia.org/info/31071.html">金丹老祖在现代</a>
+<a href="http://www.kanxia.org/info/31068.html">网游重生之毒奶神坑</a>
+<a href="http://www.kanxia.org/info/31011.html">穿越八零之军妻养成计划</a>
+<a href="http://www.kanxia.org/info/30987.html">盖世小农民</a>
+<a href="http://www.kanxia.org/info/30667.html">明星班主任</a>
+<a href="http://www.kanxia.org/info/30595.html">超能重工</a>
+<a href="http://www.kanxia.org/info/30570.html">我在洪荒有块田</a>
+<a href="http://www.kanxia.org/info/30496.html">海贼王之终极分身</a>
+<a href="http://www.kanxia.org/info/30495.html">连上星际互联网</a>
+<a href="http://www.kanxia.org/info/30381.html">仙神菜园</a>
+<a href="http://www.kanxia.org/info/30350.html">洪荒之功德天榜</a>
+<a href="http://www.kanxia.org/info/30349.html">穿梭诸天</a>
+<a href="http://www.kanxia.org/info/30280.html">鸿蒙第一掌门</a>
+<a href="http://www.kanxia.org/info/30250.html">我在洪荒当食神</a>
+<a href="http://www.kanxia.org/info/30146.html">神奇养殖场</a>
+<a href="http://www.kanxia.org/info/30124.html">重生之乡村养猪</a>
+<a href="http://www.kanxia.org/info/30057.html">抗日之逆天英雄</a>
+<a href="http://www.kanxia.org/info/30013.html">都市之特种狂兵</a>
+<a href="http://www.kanxia.org/info/30011.html">土豪系统在都市</a>
+<a href="http://www.kanxia.org/info/29994.html">和外星人打游戏</a>
+<a href="http://www.kanxia.org/info/29973.html">都市最后一个神仙</a>
+<a href="http://www.kanxia.org/info/29968.html">wifi修仙</a>
+<a href="http://www.kanxia.org/info/29811.html">超级吞噬系统</a>
+<a href="http://www.kanxia.org/info/29814.html">领主之兵伐天下</a>
+<a href="http://www.kanxia.org/info/29697.html">万界圣师</a>
+<a href="http://www.kanxia.org/info/29587.html">异界霸主在都市</a>
+<a href="http://www.kanxia.org/info/29437.html">妖怪公寓</a>
+<a href="http://www.kanxia.org/info/29434.html">帝仙</a>
+<a href="http://www.kanxia.org/info/29432.html">巫师纪元</a>
+<a href="http://www.kanxia.org/info/29423.html">参天</a>
+<a href="http://www.kanxia.org/info/29040.html">随身仙园空间</a>
+<a href="http://www.kanxia.org/info/28572.html">愿无深情共余生</a>
+<a href="http://www.kanxia.org/info/28264.html">腹黑老公别太坏</a>
+<a href="http://www.kanxia.org/info/28195.html">我的似水年华</a>
+<a href="http://www.kanxia.org/info/27996.html">造化玉碟</a>
+<a href="http://www.kanxia.org/info/27985.html">超级狂少</a>
+<a href="http://www.kanxia.org/info/27599.html">网游末日之从零开始</a>
+<a href="http://www.kanxia.org/info/26428.html">美女的超级高手</a>
+<a href="http://www.kanxia.org/info/26009.html">我的傲娇大小姐</a>
+<a href="http://www.kanxia.org/info/25934.html">超级司机</a>
+<a href="http://www.kanxia.org/info/25525.html">全能小村医</a>
+<a href="http://www.kanxia.org/info/25202.html">重走未来路</a>
+<a href="http://www.kanxia.org/info/24598.html">我的24岁总裁老婆</a>
+<a href="http://www.kanxia.org/info/24451.html">女神的超级保镖</a>
+<a href="http://www.kanxia.org/info/24296.html">这样恋着多喜欢</a>
+<a href="http://www.kanxia.org/info/24299.html">撩婚</a>
+<a href="http://www.kanxia.org/info/24238.html">最强升级系统</a>
+<a href="http://www.kanxia.org/info/23924.html">万古杀帝</a>
+<a href="http://www.kanxia.org/info/23819.html">懵懂青春</a>
+<a href="http://www.kanxia.org/info/23636.html">天命神相</a>
+<a href="http://www.kanxia.org/info/23435.html">绝世战魂</a>
+<a href="http://www.kanxia.org/info/23123.html">东陵宝藏之谜</a>
+<a href="http://www.kanxia.org/info/22777.html">段誉，我要跟你抢老婆</a>
+<a href="http://www.kanxia.org/info/22660.html">绝世无双</a>
+<a href="http://www.kanxia.org/info/22527.html">我的师父是神仙</a>
+<a href="http://www.kanxia.org/info/22510.html">地府交流群</a>
+<a href="http://www.kanxia.org/info/19715.html">从仙界归来的厨神</a>
+<a href="http://www.kanxia.org/info/19631.html">从仙界归来</a>
+<a href="http://www.kanxia.org/info/19132.html">重生之富二代</a>
+<a href="http://www.kanxia.org/info/19066.html">傲气凌神</a>
+</div>
+<!--PageBeginHtml Block End-->
+
+<div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/maohai/">二毛子</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div id="blog_stats">
+<div class="BlogStats">随笔 - 2614, 文章 - 0, 评论 - 0, 引用 - 0</div>
+</div></div>
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/maohai/p/6453417.html">caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout/batch Normalization</a>
+		</h2>
+		<div class="postbody">
+		<div id="cnblogs_post_body">
+        <div class="markdown_views"><h1 id="一深度学习中常用的调节参数">一、深度学习中常用的调节参数</h1>
+
+<blockquote>
+  <p>本节为笔者上课笔记（CDA深度学习实战课程第一期）</p>
+</blockquote>
+
+
+
+<h2 id="1学习率">1、学习率</h2>
+
+<p>步长的选择：你走的距离长短，越短当然不会错过，但是耗时间。步长的选择比较麻烦。步长越小，越容易得到局部最优化（到了比较大的山谷，就出不去了），而大了会全局最优</p>
+
+<p>一般来说，前1000步，很大，0.1；到了后面，迭代次数增高，下降0.01，再多，然后再小一些。 <br>
+<img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170108110633678" alt="这里写图片描述" title=""></p>
+
+
+
+<h2 id="2权重">2、权重</h2>
+
+<p><strong>梯度消失的情况，</strong>就是当数值接近于正向∞，求导之后就更小的，约等于0，偏导为0 <br>
+<strong>梯度爆炸，</strong>数值无限大</p>
+
+<p><strong>对于梯度消失现象：激活函数</strong> <br>
+Sigmoid会发生梯度消失的情况，所以激活函数一般不用，收敛不了了。Tanh(x)，没解决梯度消失的问题。 <br>
+ReLu   Max(0,x)，比较好，代表Max门单元，解决了梯度消失的问题，而且起到了降维</p>
+
+<p><strong>权重初始化</strong>，可以随机也可以一开始设置一定的图形分布，用高斯初始化</p>
+
+
+
+<h2 id="3层数">3、层数</h2>
+
+<p>越多，灵敏度越好，收敛地更好，激活函数也越多，曲线的性能也更好 <br>
+但是，神经元过拟合，并且计算量较大层数越多。在节点多的情况下一般会考虑：Drop-out <br>
+节点太多也不好，所以需要删除一些无效的节点 <br>
+但是去掉节点，这里却是随机的，随机去掉（30%-60%）的节点 <br>
+注意：随机的选择，去掉一些节点。但是drop-out也不一定是避免过拟合 <br>
+很常见。一般不drop-out一定会过拟合，有drop-out概率低一些</p>
+
+
+
+<h2 id="4过拟合">4、过拟合</h2>
+
+<p>上面的drop-out就算一种。其他过拟合可能也会使用：BN,batch normalization（归一化）</p>
+
+<blockquote>
+  <p>在caffe操作时候，模型训练中如何解决过拟合现象？</p>
+</blockquote>
+
+<p>看到验证集的数据趋于平稳，譬如第1000次之后，验证集的loss平稳了，那么就截取1000次，把学习率降低为原来的0.1，拿来第10000次结果，修改文件，继续训练。 <br>
+.</p>
+
+
+
+<h2 id="5loss设计与观察">5、Loss设计与观察</h2>
+
+<p>一般来说分类就是Softmax, 回归就是L2的loss. 但是要注意loss的错误范围(主要是回归), 你预测一个label是10000的值, 模型输出0, 你算算这loss多大, 这还是单变量的情况下. 一般结果都是nan. 所以不仅仅输入要做normalization, 输出也要。 <br>
+准确率虽然是评测指标, 但是训练过程中还是要注意loss的. 你会发现有些情况下, 准确率是突变的, 原来一直是0, 可能保持上千迭代, 然后突然变1. 要是因为这个你提前中断训练了, 只有老天替你惋惜了. 而loss是不会有这么诡异的情况发生的, 毕竟优化目标是loss. <br>
+对比训练集和验证集的loss。    判断过拟合, 训练是否足够, 是否需要early stop的依据</p>
+
+<hr>
+
+
+
+<h1 id="二caffe训练时loss变为nan的原因">二、caffe训练时Loss变为nan的原因</h1>
+
+<blockquote>
+  <p>本节转载于公众号平台：极市平台</p>
+</blockquote>
+
+
+
+<h2 id="1梯度爆炸">1、梯度爆炸</h2>
+
+<blockquote>
+  <p>原因：梯度变得非常大，使得学习过程难以继续</p>
+</blockquote>
+
+<p><strong>现象：观察log，注意每一轮迭代后的loss。loss随着每轮迭代越来越大，最终超过了浮点型表示的范围，就变成了NaN。</strong> <br>
+措施：  <br>
+1. 减小solver.prototxt中的base_lr，至少减小一个数量级。如果有多个loss layer，需要找出哪个损失层导致了梯度爆炸，并在train_val.prototxt中减小该层的loss_weight，而非是减小通用的base_lr。  <br>
+2. 设置clip gradient，用于限制过大的diff</p>
+
+
+
+<h2 id="2不当的损失函数">2、不当的损失函数</h2>
+
+<blockquote>
+  <p>原因：有时候损失层中loss的计算可能导致NaN的出现。比如，给InfogainLoss层（信息熵损失）输入没有归一化的值，使用带有bug的自定义损失层等等。</p>
+</blockquote>
+
+<p><strong>现象：观测训练产生的log时一开始并不能看到异常，loss也在逐步的降低，但突然之间NaN就出现了。</strong> <br>
+措施：看看你是否能重现这个错误，在loss layer中加入一些输出以进行调试。 <br>
+示例：有一次我使用的loss归一化了batch中label错误的次数。如果某个label从未在batch中出现过，loss就会变成NaN。在这种情况下，可以用足够大的batch来尽量避免这个错误。</p>
+
+
+
+<h2 id="3不当的输入">3、不当的输入</h2>
+
+<blockquote>
+  <p>原因：输入中就含有NaN。</p>
+</blockquote>
+
+<p><strong>现象：每当学习的过程中碰到这个错误的输入，就会变成NaN。观察log的时候也许不能察觉任何异常，loss逐步的降低，但突然间就变成NaN了。</strong> <br>
+措施：重整你的数据集，确保训练集和验证集里面没有损坏的图片。调试中你可以使用一个简单的网络来读取输入层，有一个缺省的loss，并过一遍所有输入，如果其中有错误的输入，这个缺省的层也会产生NaN。 <br>
+案例：有一次公司需要训练一个模型，把标注好的图片放在了七牛上，拉下来的时候发生了dns劫持，有一张图片被换成了淘宝的购物二维码，且这个二维码格式与原图的格式不符合，因此成为了一张“损坏”图片。每次训练遇到这个图片的时候就会产生NaN。 <br>
+良好的习惯是，你有一个检测性的网络，每次训练目标网络之前把所有的样本在这个检测性的网络里面过一遍，去掉非法值。</p>
+
+
+
+<h2 id="4池化层中步长比核的尺寸大">4、池化层中步长比核的尺寸大</h2>
+
+<p>如下例所示，当池化层中stride &gt; kernel的时候会在y中产生NaN</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs css">    <span class="hljs-tag">layer</span> <span class="hljs-rules">{
+      <span class="hljs-rule"><span class="hljs-attribute">name</span>:<span class="hljs-value"> <span class="hljs-string">"faulty_pooling"</span>
+      type: <span class="hljs-string">"Pooling"</span>
+      bottom: <span class="hljs-string">"x"</span>
+      top: <span class="hljs-string">"y"</span>
+      pooling_param {
+      pool: AVE
+      stride: <span class="hljs-number">5</span>
+      kernel: <span class="hljs-number">3</span>
+      </span></span></span>}
+    }</code></pre>
+
+<p><a href="http://stackoverflow.com/questions/33962226/common-causes-of-NaNs-during-training">http://stackoverflow.com/questions/33962226/common-causes-of-NaNs-during-training</a></p>
+
+<p>. <br>
+.</p>
+
+
+
+<h1 id="三一些训练时候出现的问题">三、一些训练时候出现的问题</h1>
+
+<p><em>本节转载于公众号深度学习大讲堂，文章《caffe代码夜话1》</em></p>
+
+
+
+<h2 id="1为啥label需要从0开始">1、为啥label需要从0开始？</h2>
+
+<p>在使用SoftmaxLoss层作为损失函数层的单标签分类问题中，label要求从零开始，例如1000类的ImageNet分类任务，label的范围是0~999。这个限制来自于Caffe的一个实现机制，label会直接作为数组的下标使用，具体代码SoftmaxLoss.cpp中133行和139行的实现代码。</p>
+
+<p><img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170120093427979" alt="这里写图片描述" title=""></p>
+
+<p>132行第一层for循环中的outer_num等于batch size，对于人脸识别和图像分类等单标签分类任务而言，inner_num等于1。如果label从1开始，会导致bottom_diff数组访问越界。 <br>
+.</p>
+
+
+
+<h2 id="2为什么caffe中引入了这个innernuminnernum等于什么">2、为什么Caffe中引入了这个inner_num，inner_num等于什么</h2>
+
+<p>从FCN全卷积网络的方向去思考。FCN中label标签长度=图片尺寸 <br>
+caffe引入inner_num使得输入image的size可以是任意大小，innuer_num大小即为softmax层输入的height*width <br>
+.</p>
+
+
+
+<h2 id="3在标签正确的前提下如果倒数第一个全连接层numoutput-实际的类别数caffe的训练是否会报错">3、在标签正确的前提下，如果倒数第一个全连接层num_output &gt; 实际的类别数，Caffe的训练是否会报错？</h2>
+
+<p>不会报错且无影响 <br>
+.</p>
+
+
+
+<h2 id="4bn中的useglobalstatus">4、BN中的use_global_status</h2>
+
+<p><img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170120093948343" alt="这里写图片描述" title=""> <br>
+图2. ResNet部署阶模型Proto文件片段</p>
+
+<p>但是如果直接拿这个Proto用于训练（基于随机初始化），则会导致模型不收敛，原因在于在Caffe的batch_norm_layer.cpp实现中，use_global_stats==true时会强制使用模型中存储的BatchNorm层均值与方差参数，而非基于当前batch内计算均值和方差。</p>
+
+<p>首先看use_global_stats变量是如何计算的： <br>
+<img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170120094000409" alt="这里写图片描述" title=""> <br>
+图3. use_global_stats计算 </p>
+
+<p>再看这个变量的作用： <br>
+<img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170120094007003" alt="这里写图片描述" title=""> <br>
+图4. use_global_stats为true时的行为</p>
+
+<p>以下代码在use_global_stats为false的时候通过moving average策略计算模型中最终存储的均值和方差： <br>
+<img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170120094013625" alt="这里写图片描述" title=""> <br>
+图5. BatchNorm层均值和方差的moving average</p>
+
+<p>因此，对于随机初始化训练BatchNorm层，只需要在Proto文件中移除use_global_stats参数即可，Caffe会根据当前的Phase(TRAIN或者TEST)自动去设置use_global_stats的值。 <br>
+.</p>
+
+
+
+<h2 id="5batchnorm层是否支持in-place运算为什么">5、BatchNorm层是否支持in place运算，为什么？</h2>
+
+<p>BN是对输入那一层做归一化操作，要对每个元素-均值/标准差，且输入输出规格相当，是可以进行in place。 <br>
+标准的ReLU函数为max(x, 0)，而一般为当x &gt; 0时输出x，但x &lt;= 0时输出negative_slope。RELU层支持in-place计算，这意味着bottom的输出和输入相同以避免内存的消耗。 <br>
+. <br>
+.</p>
+
+
+
+<h1 id="四过拟合解决dropoutbatch-normalization">四、过拟合解决：dropout、batch Normalization</h1>
+
+<p>来源于：<a href="https://github.com/exacity/deeplearningbook-chinese/releases/">https://github.com/exacity/deeplearningbook-chinese/releases/</a></p>
+
+
+
+<h2 id="1dropout另类bagging类似随机森林rf">1、dropout——另类Bagging（类似随机森林RF）</h2>
+
+<blockquote>
+  <p>引用自Dropout作者： <br>
+  在标准神经网络中，每个参数接收的导数表明其应该如何变化才能使最终损失函数降低，并给定所有其它神经网络单元的状态。因此神经单元可能以一种可以修正其它神经网络单元的错误的方式进行改变。而这就可能导致复杂的共适应(co-adaptations)。由于这些共适应现象没有推广到未见的数据，将导致过拟合。我们假设对每个隐藏层的神经网络单元，Dropout通过使其它隐藏层神经网络单元不可靠从而阻止了共适应的发生。因此，一个隐藏层神经元不能依赖其它特定神经元去纠正其错误。（来源：赛尔译文   Dropout分析）</p>
+</blockquote>
+
+<p>Dropout可以被认为是集成非常多的大神经 网络的实用Bagging方法。当每个模型是一个大型神经网络时,这似乎是不切实际的,因为训练和 评估这样的网络需要花费很多运行时间和内存。 <br>
+Dropout提供了一种廉价的Bagging集成近似,能够训练和评估指数级的神经网络。 <br>
+操作方法：将一些单元的输出乘零就能有效地删除一个单元。</p>
+
+<p><img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170122193957258" alt="这里写图片描述" title=""></p>
+
+<p><strong>（1）具体工作过程：</strong></p>
+
+<p>Dropout以概率p关闭神经元，相应的，以大小为q=1-p的概率开启其他神经元。每个单个神经元有同等概率被关闭。当一个神经元被丢弃时，无论其输入及相关的学习参数是多少，其输出都会被置为0。 <br>
+丢弃的神经元在训练阶段的前向传播和后向传播阶段都不起作用：因为这个原因，每当一个单一的神经元被丢弃时，训练阶段就好像是在一个新的神经网络上完成。 <br>
+训练阶段，可以使用<strong>伯努利随机变量、二项式随机变量</strong>来对一组神经元上的Dropout进行建模。 <br>
+（来源：赛尔译文   Dropout分析） <br>
+<img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170130144545907" alt="这里写图片描述" title=""></p>
+
+<p><strong>（2）dropout类型：</strong> <br>
+正向dropout、反向dropout。 <br>
+反向Dropout有助于只定义一次模型并且只改变了一个参数（保持/丢弃概率）以使用同一模型进行训练和测试。相反，直接Dropout，迫使你在测试阶段修改网络。因为如果你不乘以比例因子q，神经网络的输出将产生更高的相对于连续神经元所期望的值（因此神经元可能饱和）：这就是为什么反向Dropout是更加常见的实现方式。 </p>
+
+<p><strong>（3）dropout与其他规则</strong></p>
+
+<blockquote>
+  <p>故反向Dropout应该与限制参数值的其他归一化技术一起使用，以便简化学习速率选择过程</p>
+</blockquote>
+
+<p>正向Dropout：通常与L2正则化和其它参数约束技术（如Max Norm1）一起使用。正则化有助于保持模型参数值在可控范围内增长。 <br>
+反向Dropout：学习速率被缩放至q的因子，我们将其称q为推动因子（boosting factor），因为它推动了学习速率。此外，我们将r(q)称为有效学习速率(effective learning rate)。总之，有效学习速率相对于所选择的学习速率更高：由于这个原因，限制参数值的正则化可以帮助简化学习速率选择过程。  <br>
+（来源：赛尔译文   Dropout分析）</p>
+
+<p><strong>（4）优势：</strong></p>
+
+<ul>
+<li><p>看作是对输入内容的信息高度智能化、自适应破坏的一种形式,而不是 对输入原始值的破坏。</p></li>
+<li><p>Dropout不仅仅是训练一个Bagging的集成模型,并且是共享隐藏单元的集成模型。这意味着无论其他隐藏单元是否在模型中,每个隐藏单元必须都能够表现良好。隐藏单元必须准备好进行模型之间的交换和互换。</p></li>
+<li><p>计算方便是Dropout的一个优点。训练过程中使用Dropout产生 n 个随机二进制 数与状态相乘,每个样本每次更新只需 O(n)的计算复杂度。</p></li>
+<li><p>Dropout的另一个显著优点是不怎么限制适用的模型或训练过程。几乎在所有   使用分布式表示且可以用随机梯度下降训练的模型上都表现很好。包括前馈神经网 络、概率模型,如受限玻尔兹曼机(Srivastava et   al., 2014),以及循环神经网络(Bayer and Osendorfer, 2014; Pascanu et al.,   2014a)。许多其他差不多强大正则化策略对模 型结构的限制更严格。</p></li>
+</ul>
+
+<p><strong>（5）劣势：</strong></p>
+
+<ul>
+<li><p><strong>Dropout是一个正则化技术,它减少了模型的有效容量。为了抵消这种影响,我们必须增大模型规模。</strong>不出意外的话,使 用Dropout时最佳验证集的误差会低很多,但这是以更大的模型和更多训练算法的迭 <br>
+代次数为代价换来的。对于非常大的数据集,正则化带来的泛化误差减少得很小。在 <br>
+这些情况下,使用Dropout和更大模型的计算代价可能超过正则化带来的好处。</p></li>
+<li><p><strong>只有极少的训练样本可用时,Dropout不会很有效。</strong>在只有不到 5000 的样本 的Alternative Splicing数据集上 (Xiong et al., 2011),贝叶斯神经网络 (Neal, 1996)比Dropout表现更好 <br>
+(Srivastava et al., 2014)。当有其他未分类的数据可用时,无监 督特征学习比Dropout更有优势。 <br>
+.</p></li>
+</ul>
+
+
+
+<h2 id="2batch-normalization">2、batch Normalization</h2>
+
+<p>batch normalization的主要目的是改善优化,但噪音具有正则化的效果,有时使Dropout变得没有必要。 <br>
+<strong>参数训练过程中多层之间协调更新的问题：</strong>在其他层不改变的假设下,梯度用于如何更新每一个参数。但是，一般情况下会同时更新所有层。 这造成了很难选择一个合适的学习速率,因为某一层中参数更新的效果很大程度上取决 于其他所有层。 <br>
+batch normalization可应用于网络 的任何输入层或隐藏层。设 H 是需要标准化的某层的minibatch激励函数,布置为 设计矩阵,每个样本的激励出现在矩阵的每一行中。标准化 H,我们替代它为 <br>
+<img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/20170122200353600" alt="这里写图片描述" title=""> <br>
+其中 μ 是包含每个单元均值的向量,σ 是包含每个单元标准差的向量。 <br>
+反向传播这些操作,计算均值和标准差,并应用它们于标准化 H。这意味着,梯度不会再简单地增加 hi 的标准差或均值;标准化操作会 除掉这一操作的影响,归零其在梯度中的元素。</p>
+
+<p>以前的方法添加代价函数的惩罚,以鼓励单位标准化激励统计量,或是 在每个梯度下降步骤之后重新标准化单位统计量。 <br>
+前者通常会导致不完全的标准化, 而后者通常会显著地消耗时间,因为学习算法会反复改变均值和方差而标准化步骤 会反复抵消这种变化。 <br>
+batch normalization重新参数化模型,以使一些单元总是被定 义标准化,巧妙地回避了这两个问题。</p></div>
+        
+   
+</div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6453417,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;e621883c-74f7-e611-845c-ac853d9f53ac&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/maohai/" target="_blank"><img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/maohai/">二毛子</a><br>
+            <a href="http://home.cnblogs.com/u/maohai/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/maohai/followers">粉丝 - 0</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;e621883c-74f7-e611-845c-ac853d9f53ac&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6453417,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(6453417,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/maohai/p/6453418.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/maohai/p/6453418.html" title="发布于2017-01-07 21:05">关系网络理论︱细讲中介中心性（Betweeness Centrality）</a><br><a href="http://www.cnblogs.com/maohai/p/6453416.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/maohai/p/6453416.html" title="发布于2017-01-08 14:02">GAN︱生成模型学习笔记（运行机制、NLP结合难点、应用案例、相关Paper）</a><br></div>
+</div>
+
+
+		</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2017-01-08 11:27</span> <a href="http://www.cnblogs.com/maohai/">二毛子</a> 阅读(<span id="post_view_count">788</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=6453417" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/maohai/p/6453417.html#" onclick="AddToWz(6453417);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=334315,cb_entryId=6453417,cb_blogApp=currentBlogApp,cb_blogUserGuid='e621883c-74f7-e611-845c-ac853d9f53ac',cb_entryCreatedDate='2017/1/8 11:27:00';loadViewCount(cb_entryId);</script>
+<script src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/syntax_highlighter_csdn.js.下载" type="text/javascript"></script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/maohai/p/6453417.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/maohai/p/6453417.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.gcpowertools.com.cn/products/spreadjs/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=SpreadJS&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/24442-20170531232646446-782226241.gif" alt="spreadjs"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/571196/" target="_blank">雅虎股东批准44.8亿美元出售核心互联网业务 股价大涨10%</a><br> ·  <a href="http://news.cnblogs.com/n/571195/" target="_blank">庆祝《Pokémon GO》一周年 7月22日芝加哥将举行真人线下活动</a><br> ·  <a href="http://news.cnblogs.com/n/571194/" target="_blank">watchOS 4 beta首个上手视频公布</a><br> ·  <a href="http://news.cnblogs.com/n/571193/" target="_blank">Android端Chrome 59发布：页面加载速度最高提升20%</a><br> ·  <a href="http://news.cnblogs.com/n/571192/" target="_blank">谷歌官方确认：Android 8.0系统正式推送！</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/24442-20170608095106606-2028001864.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/570194/" target="_blank">小printf的故事：真正的程序员？</a><br> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+<li>
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+<li>
+<a id="blog_nav_myhome" class="two_words" href="http://www.cnblogs.com/maohai/">首页</a></li>
+<li>
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li>
+<a id="blog_nav_contact" accesskey="9" class="two_words" rel="nofollow" href="https://msg.cnblogs.com/send/%E4%BA%8C%E6%AF%9B%E5%AD%90">联系</a></li>
+<li>
+<a id="blog_nav_rss" class="two_words" href="http://www.cnblogs.com/maohai/rss">订阅</a>
+<a id="blog_nav_rss_image" href="http://www.cnblogs.com/maohai/rss"><img src="./caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout_batch Normalization - 二毛子 - 博客园_files/xml.gif" alt="订阅"></a>
+</li>
+<li>
+<a id="blog_nav_admin" class="two_words" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="日历">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td align="center">8</td><td class="CalTodayDay" align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+<meta name="vs_showGrid" content="False">
+
+<h3>公告</h3>
+<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/maohai/">二毛子</a><br>园龄：<a href="http://home.cnblogs.com/u/maohai/" title="入园时间：2017-02-20">3个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/maohai/followers/">0</a><br>关注：<a href="http://home.cnblogs.com/u/maohai/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;e621883c-74f7-e611-845c-ac853d9f53ac&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+
+<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/maohai/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/maohai/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/maohai/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/maohai/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/maohai/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block"></div><div id="sidebar_categories">
+		<h3>随笔档案</h3>
+		
+				<ul>
+			
+				<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/maohai/archive/2017/02.html">2017年2月 (64)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/maohai/archive/2017/01.html">2017年1月 (43)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/maohai/archive/2016/12.html">2016年12月 (27)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/maohai/archive/2016/11.html">2016年11月 (32)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/maohai/archive/2016/10.html">2016年10月 (37)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/maohai/archive/2016/09.html">2016年9月 (20)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/maohai/archive/2016/08.html">2016年8月 (32)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/maohai/archive/2016/07.html">2016年7月 (41)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/maohai/archive/2016/06.html">2016年6月 (76)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/maohai/archive/2016/05.html">2016年5月 (81)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/maohai/archive/2016/04.html">2016年4月 (85)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_11" href="http://www.cnblogs.com/maohai/archive/2016/03.html">2016年3月 (23)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_12" href="http://www.cnblogs.com/maohai/archive/2016/02.html">2016年2月 (14)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_13" href="http://www.cnblogs.com/maohai/archive/2016/01.html">2016年1月 (5)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_14" href="http://www.cnblogs.com/maohai/archive/2015/12.html">2015年12月 (10)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_15" href="http://www.cnblogs.com/maohai/archive/2015/11.html">2015年11月 (12)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_16" href="http://www.cnblogs.com/maohai/archive/2015/10.html">2015年10月 (5)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_17" href="http://www.cnblogs.com/maohai/archive/2015/09.html">2015年9月 (14)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_18" href="http://www.cnblogs.com/maohai/archive/2015/08.html">2015年8月 (34)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_19" href="http://www.cnblogs.com/maohai/archive/2015/07.html">2015年7月 (93)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_20" href="http://www.cnblogs.com/maohai/archive/2015/06.html">2015年6月 (83)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_21" href="http://www.cnblogs.com/maohai/archive/2015/05.html">2015年5月 (73)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_22" href="http://www.cnblogs.com/maohai/archive/2015/04.html">2015年4月 (92)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_23" href="http://www.cnblogs.com/maohai/archive/2015/03.html">2015年3月 (120)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_24" href="http://www.cnblogs.com/maohai/archive/2015/02.html">2015年2月 (21)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_25" href="http://www.cnblogs.com/maohai/archive/2015/01.html">2015年1月 (86)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_26" href="http://www.cnblogs.com/maohai/archive/2014/12.html">2014年12月 (48)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_27" href="http://www.cnblogs.com/maohai/archive/2014/11.html">2014年11月 (39)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_28" href="http://www.cnblogs.com/maohai/archive/2014/10.html">2014年10月 (151)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_29" href="http://www.cnblogs.com/maohai/archive/2014/09.html">2014年9月 (48)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_30" href="http://www.cnblogs.com/maohai/archive/2014/08.html">2014年8月 (50)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_31" href="http://www.cnblogs.com/maohai/archive/2014/07.html">2014年7月 (142)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_32" href="http://www.cnblogs.com/maohai/archive/2014/06.html">2014年6月 (130)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_33" href="http://www.cnblogs.com/maohai/archive/2014/05.html">2014年5月 (113)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_34" href="http://www.cnblogs.com/maohai/archive/2014/04.html">2014年4月 (73)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_35" href="http://www.cnblogs.com/maohai/archive/2014/03.html">2014年3月 (128)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_36" href="http://www.cnblogs.com/maohai/archive/2014/02.html">2014年2月 (88)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_37" href="http://www.cnblogs.com/maohai/archive/2014/01.html">2014年1月 (53)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_38" href="http://www.cnblogs.com/maohai/archive/2013/12.html">2013年12月 (30)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_39" href="http://www.cnblogs.com/maohai/archive/2013/11.html">2013年11月 (32)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_40" href="http://www.cnblogs.com/maohai/archive/2013/10.html">2013年10月 (24)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_41" href="http://www.cnblogs.com/maohai/archive/2013/09.html">2013年9月 (46)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_42" href="http://www.cnblogs.com/maohai/archive/2013/08.html">2013年8月 (51)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_43" href="http://www.cnblogs.com/maohai/archive/2013/07.html">2013年7月 (135)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_44" href="http://www.cnblogs.com/maohai/archive/2012/04.html">2012年4月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_45" href="http://www.cnblogs.com/maohai/archive/2009/07.html">2009年7月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_46" href="http://www.cnblogs.com/maohai/archive/2008/11.html">2008年11月 (2)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_47" href="http://www.cnblogs.com/maohai/archive/2008/10.html">2008年10月 (2)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_48" href="http://www.cnblogs.com/maohai/archive/2008/07.html">2008年7月 (2)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_49" href="http://www.cnblogs.com/maohai/archive/2008/06.html">2008年6月 (1)</a></li>
+			
+				<li><a id="CatList_LinkList_0_Link_50" href="http://www.cnblogs.com/maohai/archive/2008/04.html">2008年4月 (1)</a></li>
+			
+				</ul>
+			
+	</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap" style="display: none;">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"></div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/maohai/p/6453417.html">1. caffe︱深度学习参数调优杂记+caffe训练时的问题+dropout/batch Normalization(789)</a></li><li><a href="http://www.cnblogs.com/maohai/p/6453405.html">2. NLP︱高级词向量表达（一）——GloVe（理论、相关测评结果、R&amp;python实现、相关应用）(118)</a></li><li><a href="http://www.cnblogs.com/maohai/p/6453413.html">3. caffe+GAN︱PPGN生成模型5则官方案例（caffe版）(77)</a></li><li><a href="http://www.cnblogs.com/maohai/p/6454026.html">4. Jenkins+Gradle实现android开发持续集成、打包(60)</a></li><li><a href="http://www.cnblogs.com/maohai/p/6453397.html">5. cips2016+学习笔记︱简述常见的语言表示模型（词嵌入、句表示、篇章表示）(57)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap" style="display: none;">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap" style="display: none;">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © 二毛子
+</p>
+</div>
+</div>
+
+
+
+</body></html>

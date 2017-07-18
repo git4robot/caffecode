@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)http://www.cnblogs.com/farewell-farewell/p/5887068.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCV——识别印刷体数字 - Not-Bad - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/bundle-LoveIsIntheAir.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/bundle-LoveIsIntheAir-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/farewell-farewell/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/farewell-farewell/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/farewell-farewell/wlwmanifest.xml">
+<script async="" src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/encoder.js.下载"></script><script src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'farewell-farewell', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<center>
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/farewell-farewell/"><img id="blogLogo" src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/logo.gif" alt=""></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/farewell-farewell/">Not-Bad</a></h1>
+<h2>敢不敢</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+	<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/farewell-farewell/">首页</a></li>
+	<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+	<li><a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/Not-Bad">联系</a></li>
+	<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+	<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/farewell-farewell/rss">订阅</a>
+	<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/farewell-farewell/rss"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/xml.gif" alt="订阅"></a></li>
+</ul>
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<!--done-->
+随笔- 164&nbsp;
+文章- 7&nbsp;
+评论- 6&nbsp;
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div class="clear"></div>
+	<div id="topicList">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/farewell-farewell/p/5887068.html">OpenCV——识别印刷体数字</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>数字识别和其他的所有计算机视觉相关的应用都会分为两个步骤：<span style="background-color: #ffff00;">ROI抽取</span>和<span style="background-color: #ffff00;">识别</span>。</p>
+<p>1. ROI抽取即将感兴趣的区域从原始图像中分离初来，这个步骤包括二值化，噪点的消除等<br>2. 识别即通过一些分类器将第一步中的结果进行分类，事实上属于机器学习的一个典型应用</p>
+<p>&nbsp;</p>
+<p>数字识别步骤：</p>
+<p>1.先处理图像：</p>
+<p>&nbsp;&nbsp;转换为灰度值（灰度图较之原始图片，将三个维度的矩阵变成了一个维度）</p>
+<p>&nbsp; 转换为二值图（二值图即将灰度图转换成黑白图，每个点只有两种可能：非黑即白）</p>
+<div class="cnblogs_code">
+<pre>Mat srcImage = imread(<span style="color: #800000;">"</span><span style="color: #800000;">number.png</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+Mat dstImage, grayImage, Image; 
+cvtColor(srcImage, grayImage, COLOR_BGR2GRAY);
+    
+threshold(grayImage, Image, </span><span style="color: #800080;">48</span>, <span style="color: #800080;">255</span>, CV_THRESH_BINARY_INV);</pre>
+</div>
+<p>PS:48即为阈值，如果灰度高于48，那么该点会被认为是255，否则为0。</p>
+<p>2.检测并勾勒轮廓：<br>&nbsp;&nbsp; 轮廓检测将二值图中的可连通的区域用一坨点表示，默认的轮廓检查会返回一个点的序列，使这个序列构成一个图形将该连通区域的所有点包围起来，比如四个点构成一个矩形。</p>
+<p>特例：由于8这个数字中有两个圆圈，默认的轮廓检查会将这两个圆圈都检测到，8就会有三个轮廓，同样还可能出现这种情况的还有数字4,6,9。</p>
+<p>因此需要指定<code class="prettyprint">findContours</code>（）函数仅搜索最外层的轮廓，而不关注内部可能出现的任何轮廓。</p>
+<div class="cnblogs_code">
+<pre>    vector&lt;vector&lt;Point&gt;&gt;<span style="color: #000000;"> contours;
+    vector</span>&lt;Vec4i&gt;<span style="color: #000000;"> hierarchy; 
+    findContours(Image,contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    drawContours(dstImage, contours, </span>-<span style="color: #800080;">1</span>, (<span style="color: #800080;">255</span>,<span style="color: #800080;">255</span>,<span style="color: #800080;">255</span>) );</pre>
+</div>
+<p>检测完轮廓后，使用contours迭代器遍历每一个轮廓，找到并画出包围这个轮廓的最小矩阵。</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>    vector&lt;vector&lt;Point&gt;&gt;<span style="color: #000000;">::iterator It;
+    </span><span style="color: #0000ff;">for</span>(It = contours.begin();It &lt; contours.end();It++){                        <span style="color: #008000;">//</span><span style="color: #008000;">画出可包围数字的最小矩形</span>
+        Point2f vertex[<span style="color: #800080;">4</span><span style="color: #000000;">];  
+        RotatedRect rect </span>= minAreaRect(*<span style="color: #000000;">It);
+        rect.points(vertex);
+
+        </span><span style="color: #0000ff;">for</span>( <span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">4</span>; j++<span style="color: #000000;">)
+            line(dstImage,vertex[j], vertex[ (j</span>+<span style="color: #800080;">1</span>)%<span style="color: #800080;">4</span> ],Scalar(<span style="color: #800080;">0</span>,<span style="color: #800080;">0</span>,<span style="color: #800080;">255</span>),<span style="color: #800080;">1</span><span style="color: #000000;">);
+    }</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>但是，上述方法画出的矩形为旋转矩形（不一定水平）&nbsp;，所以不采用这种方法。应使用boundingRect()画出矩形。</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>vector&lt;vector&lt;Point&gt;&gt;<span style="color: #000000;">::iterator It;
+    </span><span style="color: #0000ff;">for</span>(It = contours.begin();It &lt; contours.end();It++){                        <span style="color: #008000;">//</span><span style="color: #008000;">画出可包围数字的最小矩形</span>
+        Point2f vertex[<span style="color: #800080;">4</span><span style="color: #000000;">];  
+        Rect rect </span>= boundingRect(*<span style="color: #000000;">It);
+        vertex[</span><span style="color: #800080;">0</span>] = rect.tl();                                                              <span style="color: #008000;">//</span><span style="color: #008000;">矩阵左上角的点</span>
+        vertex[<span style="color: #800080;">1</span>].x = (<span style="color: #0000ff;">float</span>)rect.tl().x, vertex[<span style="color: #800080;">1</span>].y = (<span style="color: #0000ff;">float</span>)rect.br().y;                 <span style="color: #008000;">//</span><span style="color: #008000;">矩阵左下方的点</span>
+        vertex[<span style="color: #800080;">2</span>] =<span style="color: #000000;"> rect.br();                                                              </span><span style="color: #008000;">//</span><span style="color: #008000;">矩阵右下角的点</span>
+        vertex[<span style="color: #800080;">3</span>].x = (<span style="color: #0000ff;">float</span>)rect.br().x, vertex[<span style="color: #800080;">3</span>].y = (<span style="color: #0000ff;">float</span>)rect.tl().y;                 <span style="color: #008000;">//</span><span style="color: #008000;">矩阵右上方的点</span>
+
+ <span style="color: #0000ff;">for</span>( <span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">4</span>; j++<span style="color: #000000;">)
+    line(dstImage,vertex[j], vertex[ (j</span>+<span style="color: #800080;">1</span>)%<span style="color: #800080;">4</span> ],Scalar(<span style="color: #800080;">0</span>,<span style="color: #800080;">0</span>,<span style="color: #800080;">255</span>),<span style="color: #800080;">1</span>);</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>画出图像如下图</p>
+<p><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/890020-20160925095725464-2078285482.png" alt="" width="278" height="216"></p>
+<p>3.数字顺序整理：</p>
+<p>由于轮廓检测时，不一定按照图中所给顺序进行检测，所以在检测轮廓时，要记录所给数字的坐标，根据x，y坐标进行排序。</p>
+<p>由于用上述方法在同一行画出的矩形位于同一水平面，因此直接比较其某一点坐标即可。对此，我写出如下结构体：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">struct</span><span style="color: #000000;"> con{
+    </span><span style="color: #0000ff;">double</span> x,y;                    <span style="color: #008000;">//</span><span style="color: #008000;">轮廓位置</span>
+    <span style="color: #0000ff;">int</span> order;                      <span style="color: #008000;">//</span><span style="color: #008000;">轮廓向量contours中的第几个</span>
+
+    <span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>&lt;(con &amp;<span style="color: #000000;">m){
+        </span><span style="color: #0000ff;">if</span>(y &gt; m.y) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;    
+        </span><span style="color: #0000ff;">else</span>  <span style="color: #0000ff;">if</span>( y ==<span style="color: #000000;"> m.y){
+            </span><span style="color: #0000ff;">if</span>(x &lt; m.x) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }                           
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+}con[</span><span style="color: #800080;">100</span>];</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;我按轮廓检测顺序的将矩阵的中心点存入结构体中，然后调用sort()函数。</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>con[i].x = (vertex[<span style="color: #800080;">0</span>].x+vertex[<span style="color: #800080;">1</span>].x+vertex[<span style="color: #800080;">2</span>].x+vertex[<span style="color: #800080;">3</span>].x) / <span style="color: #800080;">4.0</span>;                 <span style="color: #008000;">//</span><span style="color: #008000;">根据中心点判断图像的位置</span>
+con[i].y = (vertex[<span style="color: #800080;">0</span>].y+vertex[<span style="color: #800080;">1</span>].y+vertex[<span style="color: #800080;">2</span>].y+vertex[<span style="color: #800080;">3</span>].y) / <span style="color: #800080;">4.0</span><span style="color: #000000;">;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">cout &lt;&lt; i &lt;&lt;":"&lt;&lt; endl;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">cout &lt;&lt; vertex[3].x&lt;&lt;"  "&lt;&lt; vertex[3].y&lt;&lt;endl;</span>
+con[i].order = i; </pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;但是用这种方法上图中的数字”4“一直在最前面，改了好久也没有结果，就先着手下一步。</p>
+<p>PS：&nbsp; 最后发现了问题，如下：</p>
+<div class="cnblogs_code">
+<pre>sort(con,con+i);                                    <span style="color: #008000;">//</span><span style="color: #008000;">正确</span>
+sort(con,con+i+<span style="color: #800080;">1</span>);                                <span style="color: #008000;">//</span><span style="color: #008000;">错误</span></pre>
+</div>
+<p>4.切割各个数字：</p>
+<p>使用ROI进行切割，关于ROI详见 http://www.cnblogs.com/farewell-farewell/p/5905107.html</p>
+<p>&nbsp;我在此处写的ROI法分隔图片的方法如下，但是存在内存访问上的问题。</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>IplImage* num[<span style="color: #800080;">10</span><span style="color: #000000;">];
+</span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; j++<span style="color: #000000;">){
+    </span><span style="color: #0000ff;">int</span> k =<span style="color: #000000;"> con[i].order;
+    IplImage</span>* src = cvLoadImage(<span style="color: #800000;">"</span><span style="color: #800000;">number.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    cvSetImageROI(src,rect[k]);
+        num[j] </span>= cvCreateImage(cvSize(rect[k].width,rect[k].height),IPL_DEPTH_8U,<span style="color: #800080;">2</span><span style="color: #000000;">);
+    cvCopy(src,num[j]);
+    cvResetImageROI(src);
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;最后换另一种方法，更简单，将其分割</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>    Mat num[<span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; j++<span style="color: #000000;">){
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">s </span><span style="color: #800000;">"</span>&lt;&lt;j&lt;&lt;<span style="color: #000000;">endl;
+        </span><span style="color: #0000ff;">int</span> k =<span style="color: #000000;"> con[j].order;
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">k </span><span style="color: #800000;">"</span>&lt;&lt;k&lt;&lt;<span style="color: #000000;">endl;
+        srcImage(rect[k]).copyTo(num[j]);
+    }</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;分割后的数字按顺序存放在num[10]图像数组中。</p>
+<p>5.最后的识别</p>
+<p>&nbsp;将按轮廓线切割好的数字放于程序文件中，然后采用逐点像素遍历的方法来进行对比</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">两图象逐像素对比的函数</span>
+<span style="color: #0000ff;">double</span> compare(Mat &amp;src, Mat &amp;<span style="color: #000000;">sample)
+{
+    </span><span style="color: #0000ff;">double</span> same = <span style="color: #800080;">0.0</span>, difPoint = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    Mat now;
+    resize(sample,now,src.size());
+    </span><span style="color: #0000ff;">int</span> row =<span style="color: #000000;"> now.rows;
+    </span><span style="color: #0000ff;">int</span> col = now.cols *<span style="color: #000000;">  now.channels();
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">1</span>; i++<span style="color: #000000;">){
+        uchar </span>* data1 = src.ptr&lt;uchar&gt;<span style="color: #000000;">(i);
+        uchar </span>* data2 = now.ptr&lt;uchar&gt;<span style="color: #000000;">(i);
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; row * col; j++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">int</span>  a =<span style="color: #000000;"> data1[j];
+            </span><span style="color: #0000ff;">int</span> b =<span style="color: #000000;"> data2[j];
+            </span><span style="color: #0000ff;">if</span>( a == b)same++<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> difPoint++<span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> same/(same+<span style="color: #000000;">difPoint) ;
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">选取符合程度最高的数字</span>
+<span style="color: #0000ff;">void</span> deal(Mat &amp;src,<span style="color: #0000ff;">int</span><span style="color: #000000;"> order)
+{
+    
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">0.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">1.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">1</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">2.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">2</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">3.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">4.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">4</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">5.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">5</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">6.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">6</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">7.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">7</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">8.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">8</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">9.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">9</span><span style="color: #000000;">);
+
+    sort(result,result</span>+<span style="color: #800080;">10</span><span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">if</span>(result[<span style="color: #800080;">9</span>].bi &gt; <span style="color: #800080;">0.6</span><span style="color: #000000;">) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">第</span><span style="color: #800000;">"</span> &lt;&lt; order &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">个数字为 </span><span style="color: #800000;">"</span>&lt;&lt; result[<span style="color: #800080;">9</span>]. num&lt;&lt;<span style="color: #000000;">endl;
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">识别精度为 </span><span style="color: #800000;">"</span> &lt;&lt; result[<span style="color: #800080;">9</span>].bi &lt;&lt;<span style="color: #000000;">endl;
+    }
+    </span><span style="color: #0000ff;">else</span> cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">第</span><span style="color: #800000;">"</span> &lt;&lt; order &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">个数字无法识别</span><span style="color: #800000;">"</span>&lt;&lt;<span style="color: #000000;">endl;
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">void</span> Threshold(Mat &amp;src,Mat &amp;sample ,<span style="color: #0000ff;">int</span><span style="color: #000000;"> m)
+{
+    cvtColor(sample, sample, COLOR_BGR2GRAY);
+    threshold(sample, sample, </span><span style="color: #800080;">48</span>, <span style="color: #800080;">255</span><span style="color: #000000;">, CV_THRESH_BINARY_INV);
+    result[m].bi </span>=<span style="color: #000000;"> compare(src,sample);
+    result[m].num </span>=<span style="color: #000000;"> m;
+}
+
+
+}con[</span><span style="color: #800080;">15</span><span style="color: #000000;">];
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> result{
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> bi;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+
+    </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>&lt;(result &amp;<span style="color: #000000;">m){
+        </span><span style="color: #0000ff;">if</span>(bi &lt; m.bi)<span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+}result[</span><span style="color: #800080;">15</span>];</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>大功告成~</p>
+<p>&nbsp;</p>
+<p>完整的代码：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>#include &lt;opencv2/opencv.hpp&gt;<span style="color: #000000;">
+#include </span>&lt;opencv2/imgproc/imgproc.hpp&gt;<span style="color: #000000;">
+#include </span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> cv;
+</span><span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> con{
+    </span><span style="color: #0000ff;">double</span> x,y;                    <span style="color: #008000;">//</span><span style="color: #008000;">轮廓位置</span>
+    <span style="color: #0000ff;">int</span> order;                      <span style="color: #008000;">//</span><span style="color: #008000;">轮廓向量contours中的第几个</span>
+
+    <span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>&lt;(con &amp;<span style="color: #000000;">m){
+        </span><span style="color: #0000ff;">if</span>(y &gt; m.y) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;    
+        </span><span style="color: #0000ff;">else</span>  <span style="color: #0000ff;">if</span>( y ==<span style="color: #000000;"> m.y){
+            </span><span style="color: #0000ff;">if</span>(x &lt; m.x) <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        }                           
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+}con[</span><span style="color: #800080;">15</span><span style="color: #000000;">];
+
+</span><span style="color: #0000ff;">struct</span><span style="color: #000000;"> result{
+    </span><span style="color: #0000ff;">double</span><span style="color: #000000;"> bi;
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> num;
+
+    </span><span style="color: #0000ff;">bool</span> <span style="color: #0000ff;">operator</span>&lt;(result &amp;<span style="color: #000000;">m){
+        </span><span style="color: #0000ff;">if</span>(bi &lt; m.bi)<span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+}result[</span><span style="color: #800080;">15</span><span style="color: #000000;">];
+
+Mat num[</span><span style="color: #800080;">15</span><span style="color: #000000;">];
+Mat sample;
+</span><span style="color: #0000ff;">void</span> deal(Mat &amp;src,<span style="color: #0000ff;">int</span><span style="color: #000000;"> order);
+</span><span style="color: #0000ff;">double</span> compare(Mat &amp;src, Mat &amp;<span style="color: #000000;">sample);
+</span><span style="color: #0000ff;">void</span> Threshold(Mat &amp;src,Mat &amp;sample,<span style="color: #0000ff;">int</span><span style="color: #000000;"> m);
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main( )
+{
+    Mat srcImage </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">number.png</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Mat dstImage, grayImage, Image; 
+    srcImage.copyTo(dstImage);
+    cvtColor(srcImage, grayImage, COLOR_BGR2GRAY);
+    threshold(grayImage, Image, </span><span style="color: #800080;">48</span>, <span style="color: #800080;">255</span><span style="color: #000000;">, CV_THRESH_BINARY_INV);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">定义轮廓和层次结构</span>
+    vector&lt;vector&lt;Point&gt;&gt;<span style="color: #000000;"> contours;
+    vector</span>&lt;Vec4i&gt;<span style="color: #000000;"> hierarchy; 
+    findContours(Image,contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    
+    </span><span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    Point2f pp[</span><span style="color: #800080;">5</span>][<span style="color: #800080;">4</span><span style="color: #000000;">];
+    vector</span>&lt;vector&lt;Point&gt;&gt;<span style="color: #000000;">::iterator It;
+    Rect rect[</span><span style="color: #800080;">10</span><span style="color: #000000;">];
+    </span><span style="color: #0000ff;">for</span>(It = contours.begin();It &lt; contours.end();It++){                        <span style="color: #008000;">//</span><span style="color: #008000;">画出可包围数字的最小矩形</span>
+        Point2f vertex[<span style="color: #800080;">4</span><span style="color: #000000;">];  
+        rect[i] </span>= boundingRect(*<span style="color: #000000;">It);
+        vertex[</span><span style="color: #800080;">0</span>] = rect[i].tl();                                                           <span style="color: #008000;">//</span><span style="color: #008000;">矩阵左上角的点</span>
+        vertex[<span style="color: #800080;">1</span>].x = (<span style="color: #0000ff;">float</span>)rect[i].tl().x, vertex[<span style="color: #800080;">1</span>].y = (<span style="color: #0000ff;">float</span>)rect[i].br().y;           <span style="color: #008000;">//</span><span style="color: #008000;">矩阵左下方的点</span>
+        vertex[<span style="color: #800080;">2</span>] = rect[i].br();                                                           <span style="color: #008000;">//</span><span style="color: #008000;">矩阵右下角的点</span>
+        vertex[<span style="color: #800080;">3</span>].x = (<span style="color: #0000ff;">float</span>)rect[i].br().x, vertex[<span style="color: #800080;">3</span>].y = (<span style="color: #0000ff;">float</span>)rect[i].tl().y;           <span style="color: #008000;">//</span><span style="color: #008000;">矩阵右上方的点</span>
+
+        <span style="color: #0000ff;">for</span>( <span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; <span style="color: #800080;">4</span>; j++<span style="color: #000000;">)
+            line(dstImage,vertex[j], vertex[ (j</span>+<span style="color: #800080;">1</span>)%<span style="color: #800080;">4</span> ],Scalar(<span style="color: #800080;">0</span>,<span style="color: #800080;">0</span>,<span style="color: #800080;">255</span>),<span style="color: #800080;">1</span><span style="color: #000000;">);
+
+        con[i].x </span>= (vertex[<span style="color: #800080;">0</span>].x+vertex[<span style="color: #800080;">1</span>].x+vertex[<span style="color: #800080;">2</span>].x+vertex[<span style="color: #800080;">3</span>].x) / <span style="color: #800080;">4.0</span>;                  <span style="color: #008000;">//</span><span style="color: #008000;">根据中心点判断图像的位置</span>
+        con[i].y = (vertex[<span style="color: #800080;">0</span>].y+vertex[<span style="color: #800080;">1</span>].y+vertex[<span style="color: #800080;">2</span>].y+vertex[<span style="color: #800080;">3</span>].y) / <span style="color: #800080;">4.0</span><span style="color: #000000;">;
+        con[i].order </span>=<span style="color: #000000;"> i; 
+        i</span>++<span style="color: #000000;">;
+    }
+    sort(con,con</span>+<span style="color: #000000;">i);
+
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; i; j++<span style="color: #000000;">){
+        </span><span style="color: #0000ff;">int</span> k =<span style="color: #000000;"> con[j].order;
+        srcImage(rect[k]).copyTo(num[j]);
+        cvtColor(num[j], num[j], COLOR_BGR2GRAY);
+        threshold(num[j], num[j], </span><span style="color: #800080;">48</span>, <span style="color: #800080;">255</span><span style="color: #000000;">, CV_THRESH_BINARY_INV);
+        deal(num[j],j</span>+<span style="color: #800080;">1</span><span style="color: #000000;">);
+    }
+
+    system(</span><span style="color: #800000;">"</span><span style="color: #800000;">pause</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">void</span> Threshold(Mat &amp;src,Mat &amp;sample ,<span style="color: #0000ff;">int</span><span style="color: #000000;"> m)
+{
+    cvtColor(sample, sample, COLOR_BGR2GRAY);
+    threshold(sample, sample, </span><span style="color: #800080;">48</span>, <span style="color: #800080;">255</span><span style="color: #000000;">, CV_THRESH_BINARY_INV);
+    result[m].bi </span>=<span style="color: #000000;"> compare(src,sample);
+    result[m].num </span>=<span style="color: #000000;"> m;
+}
+
+</span><span style="color: #0000ff;">void</span> deal(Mat &amp;src,<span style="color: #0000ff;">int</span><span style="color: #000000;"> order)
+{
+    
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">0.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">0</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">1.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">1</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">2.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">2</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">3.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">3</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">4.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">4</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">5.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">5</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">6.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">6</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">7.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">7</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">8.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">8</span><span style="color: #000000;">);
+
+    sample </span>= imread(<span style="color: #800000;">"</span><span style="color: #800000;">9.jpg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    Threshold(src,sample,</span><span style="color: #800080;">9</span><span style="color: #000000;">);
+
+    sort(result,result</span>+<span style="color: #800080;">10</span><span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">if</span>(result[<span style="color: #800080;">9</span>].bi &gt; <span style="color: #800080;">0.6</span><span style="color: #000000;">) {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">第</span><span style="color: #800000;">"</span> &lt;&lt; order &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">个数字为 </span><span style="color: #800000;">"</span>&lt;&lt; result[<span style="color: #800080;">9</span>]. num&lt;&lt;<span style="color: #000000;">endl;
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">识别精度为 </span><span style="color: #800000;">"</span> &lt;&lt; result[<span style="color: #800080;">9</span>].bi &lt;&lt;<span style="color: #000000;">endl;
+    }
+    </span><span style="color: #0000ff;">else</span> cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">第</span><span style="color: #800000;">"</span> &lt;&lt; order &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">个数字无法识别</span><span style="color: #800000;">"</span>&lt;&lt;<span style="color: #000000;">endl;
+}
+
+</span><span style="color: #0000ff;">double</span> compare(Mat &amp;src, Mat &amp;<span style="color: #000000;">sample)
+{
+    </span><span style="color: #0000ff;">double</span> same = <span style="color: #800080;">0.0</span>, difPoint = <span style="color: #800080;">0.0</span><span style="color: #000000;">;
+    Mat now;
+    resize(sample,now,src.size());
+    </span><span style="color: #0000ff;">int</span> row =<span style="color: #000000;"> now.rows;
+    </span><span style="color: #0000ff;">int</span> col = now.cols *<span style="color: #000000;">  now.channels();
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; <span style="color: #800080;">1</span>; i++<span style="color: #000000;">){
+        uchar </span>* data1 = src.ptr&lt;uchar&gt;<span style="color: #000000;">(i);
+        uchar </span>* data2 = now.ptr&lt;uchar&gt;<span style="color: #000000;">(i);
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j &lt; row * col; j++<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">int</span>  a =<span style="color: #000000;"> data1[j];
+            </span><span style="color: #0000ff;">int</span> b =<span style="color: #000000;"> data2[j];
+            </span><span style="color: #0000ff;">if</span>( a == b)same++<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">else</span> difPoint++<span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span> same/(same+<span style="color: #000000;">difPoint) ;
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/farewell-farewell/category/883262.html" target="_blank">OpenCV</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5887068,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;39e59552-95c5-e511-9fc1-ac853d9f53cc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/farewell-farewell/" target="_blank"><img src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/20170119100310.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/farewell-farewell/">Not-Bad</a><br>
+            <a href="http://home.cnblogs.com/u/farewell-farewell/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/farewell-farewell/followers">粉丝 - 5</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;39e59552-95c5-e511-9fc1-ac853d9f53cc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5887068,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">2</span>
+    </div>
+    <div class="buryit" onclick="votePost(5887068,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/farewell-farewell/p/5905107.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/farewell-farewell/p/5905107.html" title="发布于2016-09-25 10:37">OpenCV——使用ROI进行图像切割</a><br><a href="http://www.cnblogs.com/farewell-farewell/p/5910834.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/farewell-farewell/p/5910834.html" title="发布于2016-09-26 22:25">OpenCV——KNN分类算法 &lt;摘&gt;</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2016-09-26 13:54</span> <a href="http://www.cnblogs.com/farewell-farewell/">Not-Bad</a> 阅读(<span id="post_view_count">3702</span>) 评论(<span id="post_comment_count">3</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5887068" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#" onclick="AddToWz(5887068);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=265559,cb_entryId=5887068,cb_blogApp=currentBlogApp,cb_blogUserGuid='39e59552-95c5-e511-9fc1-ac853d9f53cc',cb_entryCreatedDate='2016/9/26 13:54:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<!--done-->
+<br>
+<div class="feedback_area_title">发表评论</div>
+<div class="feedbackNoItems"></div>
+	
+
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#3564235" class="layer">#1楼</a><a name="3564235" id="comment_anchor_3564235"></a>  <span class="comment_date">2016-11-24 15:34</span> | <a id="a_comment_author_3564235" href="http://home.cnblogs.com/u/1069344/" target="_blank">DT123</a> <a href="http://msg.cnblogs.com/send/DT123" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3564235" class="blog_comment_body">您好，我学习了您写的代码，在运行就是没办法将数字识别出来，不知道可以哪里出现错误，可否指导下呢？或者有什么要注意的地方么?</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3564235,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3564235,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#3579842" class="layer">#2楼</a><a name="3579842" id="comment_anchor_3579842"></a>  <span class="comment_date">2016-12-13 23:09</span> | <a id="a_comment_author_3579842" href="http://home.cnblogs.com/u/1080274/" target="_blank">漂流瓶的</a> <a href="http://msg.cnblogs.com/send/%E6%BC%82%E6%B5%81%E7%93%B6%E7%9A%84" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3579842" class="blog_comment_body">你好，我也是没有将数字识别出来，可以请教一下吗？谢谢你</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3579842,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3579842,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#3580895" class="layer">#3楼</a><a name="3580895" id="comment_anchor_3580895"></a>[<span class="louzhu">楼主</span>]<span id="comment-maxId" style="display:none;">3580895</span><span id="comment-maxDate" style="display:none;">2016/12/14 20:44:24</span>  <span class="comment_date">2016-12-14 20:44</span> | <a id="a_comment_author_3580895" href="http://www.cnblogs.com/farewell-farewell/" target="_blank">Not-Bad</a> <a href="http://msg.cnblogs.com/send/Not-Bad" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3580895" class="blog_comment_body"><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#3579842" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3579842);">@</a>
+漂流瓶的<br>你注意一下代码中的图片，应该是你选择的样本图片的问题。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3580895,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3580895,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3580895_avatar" style="display:none;">http://pic.cnblogs.com/face/890020/20170119100310.png</span>
+			</div>
+		</div>
+	<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.gcpowertools.com.cn/products/spreadjs/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=SpreadJS&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/24442-20170531232646446-782226241.gif" alt="spreadjs"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/570796/" target="_blank">17位谷歌Android开发专家是如何看待Kotlin的？</a><br> ·  <a href="http://news.cnblogs.com/n/570795/" target="_blank">英特尔CEO看好自动驾驶 称能帮助寻找失踪儿童</a><br> ·  <a href="http://news.cnblogs.com/n/570793/" target="_blank">Facebook/Twitter/YouTube将直播Ariana Grande公益演唱会</a><br> ·  <a href="http://news.cnblogs.com/n/570792/" target="_blank">工信部放大招！烦人的App推送终于有人治了</a><br> ·  <a href="http://news.cnblogs.com/n/570791/" target="_blank">支付宝官方回应：梭梭树不受地震影响</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./OpenCV——识别印刷体数字 - Not-Bad - 博客园_files/24442-20170601093816602-1429765193.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: topicList 文章列表容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/farewell-farewell/">Not-Bad</a><br>园龄：<a href="http://home.cnblogs.com/u/farewell-farewell/" title="入园时间：2016-01-28">1年4个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/farewell-farewell/followers/">5</a><br>关注：<a href="http://home.cnblogs.com/u/farewell-farewell/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;39e59552-95c5-e511-9fc1-ac853d9f53cc&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalTodayDay" align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/farewell-farewell/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/tag/" title="我的博客的标签列表">我的标签</a></li>
+<li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#">更多链接</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block"></div><div id="sidebar_categories">
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/farewell-farewell/category/784223.html">2016寒假加强作业(40)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/farewell-farewell/category/938163.html">Android(14)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/farewell-farewell/category/850516.html">C++Primer (2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/farewell-farewell/category/892450.html">Emacs(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/farewell-farewell/category/895206.html">Java(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/farewell-farewell/category/853618.html">linux(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/farewell-farewell/category/883262.html">OpenCV(28)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/farewell-farewell/category/880370.html">Python(14)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/farewell-farewell/category/981077.html">sql(postgresql)(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/farewell-farewell/category/842666.html">错误反思(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/farewell-farewell/category/793522.html">函数与算法(10)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_11" href="http://www.cnblogs.com/farewell-farewell/category/902444.html">汇编语言之debug</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_12" href="http://www.cnblogs.com/farewell-farewell/category/824491.html">解题报告(36)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_13" href="http://www.cnblogs.com/farewell-farewell/category/994208.html">树莓派(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_14" href="http://www.cnblogs.com/farewell-farewell/category/911720.html">语音识别(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_15" href="http://www.cnblogs.com/farewell-farewell/category/904777.html">猿小技巧(1)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/farewell-farewell/archive/2017/05.html">2017年5月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/farewell-farewell/archive/2017/04.html">2017年4月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/farewell-farewell/archive/2017/03.html">2017年3月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/farewell-farewell/archive/2017/02.html">2017年2月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/farewell-farewell/archive/2017/01.html">2017年1月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/farewell-farewell/archive/2016/12.html">2016年12月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/farewell-farewell/archive/2016/11.html">2016年11月 (18)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/farewell-farewell/archive/2016/10.html">2016年10月 (15)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/farewell-farewell/archive/2016/09.html">2016年9月 (14)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/farewell-farewell/archive/2016/07.html">2016年7月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/farewell-farewell/archive/2016/06.html">2016年6月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/farewell-farewell/archive/2016/05.html">2016年5月 (19)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/farewell-farewell/archive/2016/04.html">2016年4月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_13" href="http://www.cnblogs.com/farewell-farewell/archive/2016/03.html">2016年3月 (16)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_14" href="http://www.cnblogs.com/farewell-farewell/archive/2016/02.html">2016年2月 (38)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_15" href="http://www.cnblogs.com/farewell-farewell/archive/2016/01.html">2016年1月 (6)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/farewell-farewell/p/6219689.html#3661004">1. Re:opencv3——ANN算法的使用</a></li>
+        <li class="recent_comment_body">@胡力我之前使用的opencv3是完全正确的...</li>
+        <li class="recent_comment_author">--Not-Bad</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/farewell-farewell/p/6219689.html#3660952">2. Re:opencv3——ANN算法的使用</a></li>
+        <li class="recent_comment_body">bp-&gt;setLayerSizes 显示setLayerSizes 不是成员函数是什么原因 感谢告知</li>
+        <li class="recent_comment_author">--胡力</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/farewell-farewell/p/6290886.html#3606562">3. Re:Android中Adapter总结</a></li>
+        <li class="recent_comment_body">》》》《《《</li>
+        <li class="recent_comment_author">--Not-Bad</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#3580895">4. Re:OpenCV——识别印刷体数字</a></li>
+        <li class="recent_comment_body">@漂流瓶的你注意一下代码中的图片，应该是你选择的样本图片的问题。...</li>
+        <li class="recent_comment_author">--阿飞的小蝴蝶蝶</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html#3579842">5. Re:OpenCV——识别印刷体数字</a></li>
+        <li class="recent_comment_body">你好，我也是没有将数字识别出来，可以请教一下吗？谢谢你</li>
+        <li class="recent_comment_author">--漂流瓶的</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/farewell-farewell/p/6290271.html">1. Android Studio 连接真机调试(4108)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/5905107.html">2. OpenCV——使用ROI进行图像切割(3817)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html">3. OpenCV——识别印刷体数字(3702)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/6086853.html">4. 科大讯飞离线语音识别安装与运行(1950)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/5902899.html">5. Python学习笔记5（字符串与正则表达式）(1621)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html">1. OpenCV——识别印刷体数字(3)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/6219689.html">2. opencv3——ANN算法的使用(2)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/6290886.html">3. Android中Adapter总结(1)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/farewell-farewell/p/5887068.html">1. OpenCV——识别印刷体数字(2)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/5671711.html">2. Emacs入门快捷键(1)</a></li><li><a href="http://www.cnblogs.com/farewell-farewell/p/6046337.html">3. Python爬虫——抓取糗百段子(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+		<div class="clear"></div>
+		<div id="footer">
+			
+<!--done-->
+Copyright ©2017 Not-Bad
+		</div><!--end: footer -->
+	</div><!--end: sideBar 侧边栏容器 -->
+</div><!--end: home 自定义的最大容器 -->
+</center>
+
+
+</body></html>

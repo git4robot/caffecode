@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651 -->
+<html lang="ja" data-admin-domain="//blog.hatena.ne.jp" data-author="whg_res" data-avail-langs="ja en" data-blog="punyo-er-met.hateblo.jp" data-blog-host="punyo-er-met.hateblo.jp" data-blog-is-public="1" data-blog-name="いつもの作業の備忘録" data-blog-uri="http://punyo-er-met.hateblo.jp/" data-blog-uuid="10328537792364194697" data-blogs-uri-base="http://punyo-er-met.hateblo.jp" data-brand="hatenablog" data-data-layer="{&quot;hatenablog&quot;:{&quot;pro&quot;:&quot;free&quot;,&quot;router_type&quot;:&quot;blogs&quot;,&quot;page_id&quot;:&quot;entry&quot;,&quot;brand&quot;:&quot;hatenablog&quot;,&quot;analytics&quot;:{&quot;property_id&quot;:&quot;&quot;,&quot;non_sampling_property_id&quot;:&quot;UA-29716941-30&quot;,&quot;brand_property_id&quot;:&quot;&quot;,&quot;separated_property_id&quot;:&quot;UA-29716941-18&quot;}}}" data-device="pc" data-dont-recommend-pro="false" data-globalheader-color="b" data-globalheader-type="pc" data-has-touch-view="1" data-page="entry" data-plus-available="" data-pro="false" data-router-type="blogs" data-static-domain="https://cdn.blog.st-hatena.com" data-version="460b1843d6cae36bdcc834f2f881110a" itemscope="" itemtype="http://schema.org/Article" data-initial-state="{}"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/osd.js.下载"></script><script src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/ads"></script><script src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/ads(1)"></script><script async="" type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/dfp.config.json"></script><script type="text/javascript" async="" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/bid"></script><script async="" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/notices.count.json"></script>
+  
+
+  
+
+
+
+  
+
+
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=7; IE=9; IE=10; IE=11">
+  <title>【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録</title>
+
+  
+  <link rel="canonical" href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651">
+
+
+
+  
+  
+
+<meta itemprop="name" content="【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録">
+
+  <meta itemprop="image" content="https://cdn.blog.st-hatena.com/images/theme/og-image-1500.png">
+
+
+  <meta property="og:title" content="【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録">
+<meta property="og:type" content="article">
+  <meta property="og:url" content="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651">
+
+  
+  
+  
+  <meta property="og:image" content="https://cdn.blog.st-hatena.com/images/theme/og-image-1500.png">
+
+    <meta property="og:description" content="前回の記事でWindows環境でCaffeを利用できるようにした。これを別プロジェクトからAPI的に利用したかったので実施した。実力不足で不恰好になっているため、改善方法は継続して調査。作成したプログラムは少し重いがGitHubで公開中なので、本ページの最後から辿ってもらいたい。 ０．方針 本来ならlibcaffeプロジェクトで作成するlibファイルを別プロジェクトから参照できるようにすべきだが、どうしてもVisualStudioでの設定が出来なかった。そのため前回の記事でコンパイルしたCaffeの中にあるcaffeプロジェクトをDLL作成用に変更し、libcaffeのラッパーを作成する。ちな…">
+<meta property="og:site_name" content="いつもの作業の備忘録">
+
+  <meta property="article:published_time" content="1459696611">
+
+    <meta property="article:tag" content="deep learning">
+    <meta property="article:tag" content="c++">
+    <meta property="article:tag" content="visual studio">
+    <meta property="article:tag" content="caffe">
+      <meta name="twitter:card" content="summary">  <meta name="twitter:title" content="【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録">    <meta name="twitter:description" content="前回の記事でWindows環境でCaffeを利用できるようにした。これを別プロジェクトからAPI的に利用したかったので実施した。実力不足で不恰好になっているため、改善方法は継続して調査。作成したプログラムは少し重いがGitHubで公開中なので、本ページの最後から辿ってもらいたい。 ０．方針 本来ならlibcaffeプロ…">  <meta name="twitter:app:name:iphone" content="はてなブログアプリ">
+  <meta name="twitter:app:id:iphone" content="583299321">
+  <meta name="twitter:app:url:iphone" content="hatenablog:///open?uri=http%3A%2F%2Fpunyo-er-met.hateblo.jp%2Fentry%2F2016%2F04%2F04%2F001651">
+  
+    <meta name="description" content="前回の記事でWindows環境でCaffeを利用できるようにした。これを別プロジェクトからAPI的に利用したかったので実施した。実力不足で不恰好になっているため、改善方法は継続して調査。作成したプログラムは少し重いがGitHubで公開中なので、本ページの最後から辿ってもらいたい。 ０．方針 本来ならlibcaffeプロ…">
+
+  
+<script id="facebook-jssdk" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/sdk.js.下载"></script><script async="" type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/gpt.js.下载"></script><script async="" type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/audience"></script><script async="" type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/amzn_ads.js.下载"></script><script async="" type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/jstag"></script><script type="text/javascript" async="" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/analytics.js.下载"></script><script async="" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/gtm.js.下载"></script><script>
+(function() {
+  var html = document.documentElement;
+  if (!html) return;
+  var json = html.getAttribute('data-data-layer');
+  if (!json) return;
+  var value = JSON.parse(json);
+  if (!value) return;
+
+  if (!window.dataLayer) {
+    window.dataLayer = [];
+  }
+  window.dataLayer.push(value);
+})();
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P4CXTW');</script>
+<!-- End Google Tag Manager -->
+
+
+
+
+
+  <link rel="shortcut icon" href="https://cdn.blog.st-hatena.com/images/favicon.ico">
+<link rel="icon" sizes="192x192" href="https://cdn.blog.st-hatena.com/images/common/meta-icon-global.png">
+
+  
+<link rel="alternate" type="application/atom+xml" title="Atom" href="http://punyo-er-met.hateblo.jp/feed">
+<link rel="alternate" type="application/rss+xml" title="RSS2.0" href="http://punyo-er-met.hateblo.jp/rss">
+<link rel="alternate" type="application/json+oembed" href="http://hatenablog.com/oembed?url=http%3A%2F%2Fpunyo-er-met.hateblo.jp%2Fentry%2F2016%2F04%2F04%2F001651&amp;format=json" title="oEmbed Profile of 【Caffe】C++でCaffeをAPI的に使う">
+<link rel="alternate" type="text/xml+oembed" href="http://hatenablog.com/oembed?url=http%3A%2F%2Fpunyo-er-met.hateblo.jp%2Fentry%2F2016%2F04%2F04%2F001651&amp;format=xml" title="oEmbed Profile of 【Caffe】C++でCaffeをAPI的に使う">
+  
+  <link rel="author" href="http://www.hatena.ne.jp/whg_res/">
+
+
+  
+    <link rel="stylesheet" type="text/css" href="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/blog.css">
+
+    
+  <link rel="stylesheet" type="text/css" href="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/60259e1e0f1b1699d20acd19d8d8ccb5e4192cb8">
+  
+
+  
+
+  <script></script>
+
+  
+<style>
+  div#google_afc_user,
+  div.google-afc-user-container,
+  div.google_afc_image,
+  div.google_afc_blocklink {
+      display: block !important;
+  }
+</style>
+
+
+  <style>
+.entry-content img {
+border : 1px solid #DADADA ;
+border-bottom : 1px solid #757575 ;
+box-shadow : 0 2px 4px rgba(0, 0, 0, 0.2) ;
+}
+</style>
+<script type="text/javascript" charset="utf-8" async="" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/button.fbaa419ee3b1f63d563b4dc1677c1aa4.js.下载"></script><script src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/pubads_impl_120.js.下载" async=""></script><script src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/entries.json" type="text/javascript"></script><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, "hiragino kaku gothic pro",meiryo,"ms pgothic",sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}.fb_link img{border:none}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_reset .fb_dialog_legacy{overflow:visible}.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}.fb_dialog_content{background:#fff;color:#333}.fb_dialog_close_icon{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent}.fb_dialog_close_icon:active{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent}.fb_dialog_loader{background-color:#f6f7f9;border:1px solid #606060;font-size:24px;padding:20px}.fb_dialog_top_left,.fb_dialog_top_right,.fb_dialog_bottom_left,.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}.fb_dialog_top_left{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}.fb_dialog_top_right{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}.fb_dialog_bottom_left{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}.fb_dialog_bottom_right{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}.fb_dialog_vert_left,.fb_dialog_vert_right,.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}.fb_dialog_vert_left,.fb_dialog_vert_right{width:10px;height:100%}.fb_dialog_vert_left{margin-left:-10px}.fb_dialog_vert_right{right:0;margin-right:-10px}.fb_dialog_horiz_top,.fb_dialog_horiz_bottom{width:100%;height:10px}.fb_dialog_horiz_top{margin-top:-10px}.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{-webkit-transform:none;height:100%;margin:0;overflow:visible;position:absolute;top:-10000px;left:0;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{width:auto;height:auto;min-height:initial;min-width:initial;background:none}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{color:#fff;display:block;padding-top:20px;clear:both;font-size:18px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;bottom:0;left:0;right:0;top:0;width:100%;min-height:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#4966A6), color-stop(.5, #355492), to(#2A4887));border:1px solid #29487d;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset, rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f6f7f9;border:1px solid #555;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-repeat:no-repeat;background-position:50% 50%;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_hide_iframes iframe{position:relative;left:-10000px}.fb_iframe_widget_loader{position:relative;display:inline-block}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}.fb_iframe_widget_loader .FB_Loader{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}</style></head>
+
+  <body class="page-entry category-deep-learning category-c++ category-visual-studio category-caffe">
+    
+    <div id="header-container">
+     <div id="sp-suggest" style="display: none;"><a id="sp-suggest-link" href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651#">スマートフォン用の表示で見る</a></div>
+    </div>
+
+    
+
+<div class="quote-box">
+  <div class="tooltip-quote tooltip-quote-star" style="display: block;">
+    <i class="blogicon-star" title="引用スターをつける"></i>
+  </div>
+  <div class="tooltip-quote tooltip-quote-stock">
+    <i class="blogicon-quote" title="引用をストック"></i>
+  </div>
+  <div class="tooltip-quote tooltip-quote-tweet js-tooltip-quote-tweet">
+    <a class="js-tweet-quote" target="_blank" data-track-name="quote-tweet" data-track-once=""><i class="blogicon-twitter" title="引用してツイートする"></i></a>
+  </div>
+</div>
+
+<div class="message-box" id="quote-star-message-box" style="display: none; position: absolute;">
+  スターをつけました
+</div>
+
+<div class="quote-stock-panel" id="quote-stock-message-box" style="position: absolute; z-index: 3000">
+  <div class="message-box" id="quote-stock-succeeded-message" style="display: none">
+    <p>引用をストックしました</p>
+    <button class="btn btn-primary" id="quote-stock-show-editor-button" data-track-name="curation-quote-edit-button">ストック一覧を見る</button>
+    <button class="btn quote-stock-close-message-button">閉じる</button>
+  </div>
+
+  <div class="message-box" id="quote-login-required-message" style="display: none">
+    <p>引用するにはまずログインしてください</p>
+    <button class="btn btn-primary" id="quote-login-button">ログイン</button>
+    <button class="btn quote-stock-close-message-button">閉じる</button>
+  </div>
+
+  <div class="error-box" id="quote-stock-failed-message" style="display: none">
+    <p>引用をストックできませんでした。再度お試しください</p>
+    <button class="btn quote-stock-close-message-button">閉じる</button>
+  </div>
+
+  <div class="error-box" id="unstockable-quote-message-box" style="display: none; position: absolute; z-index: 3000;">
+    <p>限定公開記事のため引用できません。</p>
+  </div>
+</div>
+
+<script type="x-underscore-template" id="js-requote-button-template">
+  <div class="requote-button js-requote-button">
+    <button class="requote-button-btn tipsy-top" title="引用する"><i class="blogicon-quote"></i></button>
+  </div>
+</script>
+
+
+
+    <div id="globalheader-container" data-brand="hatenablog">
+  <iframe id="globalheader" height="37" frameborder="0" allowtransparency="true" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/saved_resource.html"></iframe>
+</div>
+
+
+    
+    <div id="hidden-subscribe-button">
+      <div class="hatena-follow-button-box btn-subscribe js-hatena-follow-button-box">
+
+  <a href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651#" class="hatena-follow-button js-hatena-follow-button">
+    <span class="subscribing">
+      <span class="foreground">読者です</span>
+      <span class="background">読者をやめる</span>
+    </span>
+    <span class="unsubscribing" data-track-name="profile-widget-subscribe-button" data-track-once="">
+      <span class="foreground">読者になる</span>
+      <span class="background">読者になる</span>
+    </span>
+  </a>
+  <div class="subscription-count-box js-subscription-count-box">
+    <i></i>
+    <u></u>
+    <span class="subscription-count js-subscription-count">
+    </span>
+  </div>
+</div>
+
+    </div>
+
+    <div id="container">
+      <div id="container-inner">
+        <header id="blog-title" data-brand="hatenablog">
+  <div id="blog-title-inner">
+    <div id="blog-title-content">
+      <h1 id="title"><a href="http://punyo-er-met.hateblo.jp/">いつもの作業の備忘録</a></h1>
+      
+        <h2 id="blog-description">作業を忘れがちな自分のためのブログ</h2>
+      
+    </div>
+  </div>
+</header>
+
+        
+
+        
+        
+
+
+
+
+<div id="content" class="hfeed">
+  <div id="content-inner">
+    <div id="wrapper">
+      <div id="main">
+        <div id="main-inner">
+          
+  <article class="entry no-entry sleeping-ads" style="display: block !important;">
+    <div class="entry-inner">
+      <div class="entry-content">
+        
+        <div id="google_afc_user_container_0" class="sleeping-ad" data-google-query-id="CKiN_qPKntQCFYceKgodjwwOKg"><div id="google_ads_iframe_/4374287/blo_pc_com_6_3328_0_no_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/4374287/blo_pc_com_6_3328_0_no_0" title="3rd party ad content" name="google_ads_iframe_/4374287/blo_pc_com_6_3328_0_no_0" width="336" height="280" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" style="border: 0px; vertical-align: bottom;" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/saved_resource(1).html"></iframe></div></div>
+        <script>
+  var hatenadfp = hatenadfp || {};
+  hatenadfp.adUnits = hatenadfp.adUnits || [];
+  hatenadfp.adUnits.push(
+    
+      
+      
+      { unitName: 'blo_pc_com_6_3328_0_no', size: [[300, 250], [336, 280]], divId: 'google_afc_user_container_0' }
+    
+  );
+  hatenadfp.isNGContent = false;
+  
+</script>
+
+
+
+        
+        <p class="sleeping-ads-notice" style="display: none;">この広告は、90日以上更新していないブログに表示しています。</p>
+      </div>
+    </div>
+  </article>
+
+
+
+          
+  
+  <!-- google_ad_section_start -->
+  <!-- rakuten_ad_target_begin -->
+  
+  
+  
+
+  
+
+  
+    
+      
+        <article class="entry hentry js-entry-article date-first autopagerize_page_element chars-4400 words-400 mode-hatena entry-odd" id="entry-10328537792369613184" data-keyword-campaign="" data-uuid="10328537792369613184" data-publication-type="entry">
+  <div class="entry-inner">
+    <header class="entry-header">
+    <div class="entry-date date first">
+    <a href="http://punyo-er-met.hateblo.jp/archive/2016/04/04" rel="nofollow">
+      <time pubdate="" datetime="2016-04-03T15:16:51Z" title="2016-04-03T15:16:51Z">
+        <span class="date-year">2016</span><span class="hyphen">-</span><span class="date-month">04</span><span class="hyphen">-</span><span class="date-day">04</span>
+      </time>
+    </a>
+  </div>
+  <h1 class="entry-title">
+  <a href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651" class="entry-title-link bookmark">【Caffe】C++でCaffeをAPI的に使う</a>
+</h1>
+
+  
+  
+
+  <div class="entry-categories categories">
+    
+    <a href="http://punyo-er-met.hateblo.jp/archive/category/deep%20learning" class="entry-category-link category-deep learning">deep learning</a>
+    
+    <a href="http://punyo-er-met.hateblo.jp/archive/category/c%2B%2B" class="entry-category-link category-c++">c++</a>
+    
+    <a href="http://punyo-er-met.hateblo.jp/archive/category/visual%20studio" class="entry-category-link category-visual studio">visual studio</a>
+    
+    <a href="http://punyo-er-met.hateblo.jp/archive/category/caffe" class="entry-category-link category-caffe">caffe</a>
+    
+  </div>
+
+
+  
+
+  
+
+</header>
+
+    
+
+    <div class="entry-content">
+  
+    <p>前回の記事で<a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows">Windows</a>環境でCaffeを利用できるようにした。これを別プロジェクトから<a class="keyword" href="http://d.hatena.ne.jp/keyword/API">API</a>的に利用したかったので実施した。実力不足で不恰好になっているため、改善方法は継続して調査。<s>作成したプログラムは少し重いが<a class="keyword" href="http://d.hatena.ne.jp/keyword/GitHub">GitHub</a>で公開中なので、本ページの最後から辿ってもらいたい。</s><br>
+</p>
+
+<div class="section">
+    <h4>０．方針</h4>
+    <p>本来ならlibcaffeプロジェクトで作成するlibファイルを別プロジェクトから参照できるようにすべきだが、どうしてもVisualStudioでの設定が出来なかった。そのため前回の記事で<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%B3%A5%F3%A5%D1%A5%A4%A5%EB">コンパイル</a>したCaffeの中にあるcaffeプロジェクトをDLL作成用に変更し、libcaffeのラッパーを作成する。ちなみに、解決できていないエラーは以下のようなもの。レイヤーの読み込みがうまくいっていないらしい。<br>
+<a href="http://stackoverflow.com/questions/30325108/caffe-layer-creation-failure">c++ - Caffe layer creation failure - Stack Overflow</a><br>
+<a href="https://groups.google.com/forum/#!topic/caffe-users/Py6IwMQvtqo/discussion">Google グループ</a><br>
+</p>
+
+</div>
+<div class="section">
+    <h4>１．caffeプロジェクトをDLL出力に変更</h4>
+    <p>下記サイトを参考にcaffeプロジェクトの出力をDLLに変更。ただし、今回の<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%D7%A5%EA%A5%D7%A5%ED%A5%BB%A5%C3%A5%B5">プリプロセッサ</a>はCAFFE_WRAPとした。<br>
+<a href="http://fa11enprince.hatenablog.com/entry/2014/06/20/015808">Visual C++でのDLLの一般的な作成方法(暗黙的リンク) - Gobble up pudding</a><br>
+</p>
+
+</div>
+<div class="section">
+    <h4>２．caffeプロジェクトにcaffe_wrapper.cpp/caffe_wrapper.hを作成</h4>
+    <p>DLLのソースを記述。外部から呼べる関数run_test()はMNISTの数字識別を行う関数を利用させていただいている。この関数内ではlibcaffeの関数を自由に使うことが出来るので、CaffeAPIを使ったプログラミングはこの中で行うことになる。もともとあったcaffe.cppは使わないので削除。<br>
+※このlibcaffeを直接利用するcaffeプロジェクトと同じものを自作できれば問題ないのだがどうしても設定が違っているようでうまくいかなかった。</p><p><b>caffe_wrapper.cpp</b></p>
+<pre class="code lang-cpp" data-lang="cpp" data-unlink=""><span class="synPreProc">#include </span><span class="synConstant">"caffe_wrapper.h"</span>
+<span class="synPreProc">#include </span><span class="synConstant">&lt;stdexcept&gt;</span>
+
+<span class="synType">namespace</span> CaffeUtil
+{
+	caffe_wrapper::caffe_wrapper(){
+
+	}
+
+	<span class="synType">void</span> caffe_wrapper::run_test(string img_path, string model_path, string def_path){
+		<span class="synComment">// get a testing image and display</span>
+		Mat img = imread(img_path);
+		cvtColor(img, img, CV_BGR2GRAY);
+		imshow(<span class="synConstant">"img"</span>, img);
+		waitKey(<span class="synConstant">1</span>);
+
+		<span class="synComment">// Set up Caffe</span>
+		Caffe::set_mode(Caffe::GPU);
+		<span class="synType">int</span> device_id = <span class="synConstant">0</span>;
+		Caffe::SetDevice(device_id);
+		LOG(INFO) &lt;&lt; <span class="synConstant">"Using GPU"</span>;
+
+		<span class="synComment">// Load net</span>
+		Net&lt;<span class="synType">float</span>&gt; net(def_path, TEST);
+		string model_file = model_path;
+		net.CopyTrainedLayersFrom(model_file);
+
+		<span class="synComment">// set the patch for testing</span>
+		vector&lt;Mat&gt; patches;
+		patches.push_back(img);
+
+		<span class="synComment">// push vector&lt;Mat&gt; to data layer</span>
+		<span class="synType">float</span> loss = <span class="synConstant">0.0</span>;
+		boost::shared_ptr&lt;MemoryDataLayer&lt;<span class="synType">float</span>&gt; &gt; memory_data_layer;
+		memory_data_layer = boost::static_pointer_cast&lt;MemoryDataLayer&lt;<span class="synType">float</span>&gt;&gt;(net.layer_by_name(<span class="synConstant">"data"</span>));
+
+		vector&lt;<span class="synType">int</span>&gt; labels(patches.size());
+		memory_data_layer-&gt;AddMatVector(patches, labels);
+
+		<span class="synComment">// Net forward</span>
+		<span class="synType">const</span> vector&lt;Blob&lt;<span class="synType">float</span>&gt;*&gt; &amp; results = net.ForwardPrefilled(&amp;loss);
+		<span class="synType">float</span> *output = results[<span class="synConstant">1</span>]-&gt;mutable_cpu_data();
+
+		<span class="synComment">// Display the output</span>
+		<span class="synStatement">for</span> (<span class="synType">int</span> i = <span class="synConstant">0</span>; i &lt; <span class="synConstant">10</span>; i++) {
+			printf(<span class="synConstant">"Probability to be Number </span><span class="synSpecial">%d</span><span class="synConstant"> is </span><span class="synSpecial">%.3f\n</span><span class="synConstant">"</span>, i, output[i]);
+		}
+		waitKey(<span class="synConstant">0</span>);
+	}
+}
+</pre><p><b>caffe_wrapper.h</b></p>
+<pre class="code lang-cpp" data-lang="cpp" data-unlink=""><span class="synPreProc">#pragma once</span>
+<span class="synPreProc">#ifdef CAFFE_WRAP</span>
+<span class="synPreProc">#define CWDLL_API __declspec(dllexport)</span>
+<span class="synPreProc">#else</span>
+<span class="synPreProc">#define CWDLL_API __declspec(dllimport)</span>
+<span class="synPreProc">#endif</span>
+
+<span class="synPreProc">#include </span><span class="synConstant">&lt;string&gt;</span>
+<span class="synPreProc">#include </span><span class="synConstant">"caffe/caffe.hpp"</span>
+<span class="synPreProc">#include </span><span class="synConstant">"caffe/util/io.hpp"</span>
+<span class="synPreProc">#include </span><span class="synConstant">"caffe/blob.hpp"</span>
+<span class="synPreProc">#include </span><span class="synConstant">"opencv2/core/core.hpp"</span>
+<span class="synPreProc">#include </span><span class="synConstant">"opencv2/highgui/highgui.hpp"</span>
+<span class="synPreProc">#include </span><span class="synConstant">"opencv2/imgproc/imgproc.hpp"</span>
+<span class="synPreProc">#include </span><span class="synConstant">"boost/smart_ptr/shared_ptr.hpp"</span>
+<span class="synPreProc">#include </span><span class="synConstant">"caffe/layers/memory_data_layer.hpp"</span>
+
+<span class="synComment">// Caffe's required library</span>
+<span class="synPreProc">#pragma comment(lib, </span><span class="synConstant">"libcaffe.lib"</span><span class="synPreProc">)</span>
+
+<span class="synComment">// enable namespace</span>
+<span class="synStatement">using</span> <span class="synType">namespace</span> std;
+<span class="synStatement">using</span> <span class="synType">namespace</span> cv;
+<span class="synStatement">using</span> <span class="synType">namespace</span> boost;
+<span class="synStatement">using</span> <span class="synType">namespace</span> caffe;
+<span class="synType">namespace</span> CaffeUtil
+{
+
+	<span class="synType">class</span> CWDLL_API caffe_wrapper
+	{
+	<span class="synStatement">public</span>:
+		<span class="synComment">// コンストラクタ＆デストラクタ</span>
+		caffe_wrapper();
+		~caffe_wrapper() {};
+
+		<span class="synComment">// テスト処理実行関数</span>
+		<span class="synType">void</span> run_test(string img_path, string model_path, string def_path);
+
+	};
+
+}
+</pre>
+</div>
+<div class="section">
+    <h4>３．DLL利用側プロジェクト作成</h4>
+    <p>新規プロジェクトcaffe_userを作成する。通常のコンソールプロジェクトでOK。以下に示す内容でDLLを利用するソース（main.cpp）を記述。<br>
+追加のインクルード<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%C7%A5%A3%A5%EC%A5%AF%A5%C8">ディレクト</a>リ、追加のライブラリ<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%C7%A5%A3%A5%EC%A5%AF%A5%C8">ディレクト</a>リにCUDA、CuDNN、<a class="keyword" href="http://d.hatena.ne.jp/keyword/OpenCV">OpenCV</a>、Boostなど3rdParty製ライブラリのパスを通す。これらはlibcaffeをビルドする際にNuGetで取得しNugetPackagesの<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%C7%A5%A3%A5%EC%A5%AF%A5%C8">ディレクト</a>リに保存されているはずである。同じものである必要があるため注意深くパスを通す。また、追加の依存ファイルにcaffe.libを追加。</p><p><b>main.cpp</b></p>
+<pre class="code lang-cpp" data-lang="cpp" data-unlink=""><span class="synPreProc">#include </span><span class="synConstant">"../caffe/caffe_wrapper.h"</span>
+<span class="synPreProc">#include </span><span class="synConstant">&lt;iostream&gt;</span>
+<span class="synPreProc">#include </span><span class="synConstant">&lt;iomanip&gt;</span>
+<span class="synPreProc">#include </span><span class="synConstant">&lt;vector&gt;</span>
+
+<span class="synStatement">using</span> <span class="synType">namespace</span> CaffeUtil;
+
+<span class="synType">int</span> main()
+{
+	caffe_wrapper *cw = <span class="synStatement">new</span> caffe_wrapper();
+	string input =	<span class="synConstant">"..</span><span class="synSpecial">\\</span><span class="synConstant">..</span><span class="synSpecial">\\</span><span class="synConstant">..</span><span class="synSpecial">\\</span><span class="synConstant">data</span><span class="synSpecial">\\</span><span class="synConstant">images</span><span class="synSpecial">\\</span><span class="synConstant">mnist_0.png"</span>;
+	string model =	<span class="synConstant">"..</span><span class="synSpecial">\\</span><span class="synConstant">..</span><span class="synSpecial">\\</span><span class="synConstant">..</span><span class="synSpecial">\\</span><span class="synConstant">data</span><span class="synSpecial">\\</span><span class="synConstant">mnist</span><span class="synSpecial">\\</span><span class="synConstant">lenet_iter_10000.caffemodel"</span>;
+	string def =	<span class="synConstant">"..</span><span class="synSpecial">\\</span><span class="synConstant">..</span><span class="synSpecial">\\</span><span class="synConstant">..</span><span class="synSpecial">\\</span><span class="synConstant">data</span><span class="synSpecial">\\</span><span class="synConstant">mnist</span><span class="synSpecial">\\</span><span class="synConstant">lenet_test-memory-1.prototxt"</span>;
+	cw-&gt;run_test(input, model, def);
+
+	<span class="synStatement">return</span> <span class="synConstant">0</span>;
+}
+</pre>
+</div>
+<div class="section">
+    <h4>４．ビルド＆実行</h4>
+    <p>ビルドはlibcaffe→caffe→caffe_userの順で実行する。最終的にcaffe_user.exeが出来るのでそれを実行すると文字認識のプログラムが走る。<br>
+★注意★実行時には各種dllが必要なため、dllと同じフォルダにcaffe_user.exeを配置して実行すること。<br>
+<s><br>
+参考までに私が作成したプロジェクトを以下のサイトにアップロードする。細かなインクルード・リンクまわりやプロジェクトの設定で説明し切れていないものがあると思うので参照していただきたい。<br>
+<a href="https://github.com/whg-res/caffe-from_c/">GitHub - whg-res/caffe-from_c: a suggestion to use caffe in windows from C</a><br>
+</s></p><br>
+<p>※参考<br>
+<a href="http://fa11enprince.hatenablog.com/entry/2014/06/20/015808">http://fa11enprince.hatenablog.com/entry/2014/06/20/015808</a><br>
+<a href="https://initialneil.wordpress.com/2015/07/15/caffe-vs2013-opencv-in-windows-tutorial-i/">https://initialneil.wordpress.com/2015/07/15/caffe-vs2013-opencv-in-windows-tutorial-i/</a><br>
+<a href="https://github.com/whg-res/caffe-from_c/">https://github.com/whg-res/caffe-from_c/</a></p>
+
+</div>
+  
+</div>
+
+    
+  <footer class="entry-footer">
+    
+    <p class="entry-footer-section">
+  <span class="author vcard"><span class="fn" data-load-nickname="1" data-user-name="whg_res">whg_res</span></span>
+  <span class="entry-footer-time"><a href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651"><time data-relative="" datetime="2016-04-03T15:16:51Z" title="2016-04-03T15:16:51Z" pubdate="" class="updated">1年前</time></a></span>
+</p>
+
+    
+  <div class="hatena-star-container">
+  <span class="hatena-star-comment-container"><img src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/comment.gif" tabindex="0" alt="Comments" title="Comments" class="hatena-star-comment-button" style="cursor: pointer; margin: 0px; padding: 0px; border: none; vertical-align: middle; display: none;"></span><span class="hatena-star-star-container"><img src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/hatena-star-add-button.png" tabindex="0" alt="Add Star" title="Add Star" class="hatena-star-add-button" style="cursor: pointer; margin: 0px 3px; padding: 0px; border: none; vertical-align: middle;"><a href="http://blog.hatena.ne.jp/cvl-robot/"><span class="hatena-big-star-star-container"><img src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/profile.gif" tabindex="0" class="hatena-star-user" style="padding: 0px; border: none;"><img src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/star.gif" tabindex="0" class="hatena-star-star" style="padding: 0px; border: none;" alt="cvl-robot" title=""></span></a></span></div>
+  <div class="hatena-star-metadata" style="display: none">
+    <a class="hatena-star-permalink" href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651">【Caffe】C++でCaffeをAPI的に使う</a>
+  </div>
+
+
+    
+<div class="social-buttons">
+  
+  
+    <div class="social-button-item">
+      <iframe class="hatena-bookmark-button-frame" title="この記事をはてなブックマークに追加" frameborder="0" scrolling="no" width="84" height="40" src="javascript:false" style="width: 84px; height: 40px;" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/saved_resource(2).html"></iframe>
+    </div>
+  
+  
+    <div class="social-button-item">
+      <div class="fb-share-button fb_iframe_widget" data-layout="box_count" data-href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651" fb-xfbml-state="rendered" fb-iframe-plugin-query="app_id=719729204785177&amp;container_width=0&amp;href=http%3A%2F%2Fpunyo-er-met.hateblo.jp%2Fentry%2F2016%2F04%2F04%2F001651&amp;layout=box_count&amp;locale=ja_JP&amp;sdk=joey"><span style="vertical-align: top; width: 0px; height: 0px; overflow: hidden;"><iframe name="f15bb8ae9ea69d4" width="1000px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" title="fb:share_button Facebook Social Plugin" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/share_button.html" style="border: none; visibility: visible; width: 0px; height: 0px;"></iframe></span></div>
+    </div>
+  
+  
+    <div class="social-button-item">
+      <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" title="Twitter Tweet Button" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/tweet_button.b3226572cee17eb8b0f0dfc053da78fc.ja.html" style="position: absolute; visibility: hidden; width: 0px; height: 0px;" data-url="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651"></iframe>
+    </div>
+  
+  
+  
+  
+  
+</div>
+
+    
+  
+    
+    <div class="google-afc-image test-google-rectangle-ads blog_user_a">
+      
+      <script>
+  var hatenadfp = hatenadfp || {};
+  hatenadfp.adUnits = hatenadfp.adUnits || [];
+  hatenadfp.adUnits.push(
+    
+      
+      
+      { unitName: 'blog_user', size: [[300, 250], [336, 280], [468, 60], ["fluid"]], divId: 'google_afc_user_container_1', allowContentMatch: true }
+    
+  );
+  hatenadfp.isNGContent = false;
+  
+</script>
+
+      <div id="google_afc_user_container_1" class="google-afc-user-container  google_afc_blocklink2_5 google_afc_boder" data-google-query-id="CPDfi6TKntQCFRUfKgods3sMfQ"><div id="google_ads_iframe_/4374287/blog_user_0__container__" style="border: 0pt none; display: inline-block; width: 336px; height: 280px;"><iframe frameborder="0" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/container.html" id="google_ads_iframe_/4374287/blog_user_0" title="3rd party ad content" name="" scrolling="no" marginwidth="0" marginheight="0" width="336" height="280" data-is-safeframe="true" style="border: 0px; vertical-align: bottom;"></iframe></div></div>
+      
+        <a href="http://blog.hatena.ne.jp/guide/pro" class="open-pro-modal" data-guide-pro-modal-ad-url="http://hatenablog.com/guide/pro/modal/ad">広告を非表示にする</a>
+      
+      
+    </div>
+  
+
+
+    <div class="customized-footer">
+      
+
+        
+
+        
+
+          <div class="entry-footer-modules" id="entry-footer-secondary-modules">        </div>
+        
+
+      
+    </div>
+    
+  <div class="comment-box">
+    
+    <ul class="comment">
+      <li class="read-more-comments" style="display: none;"><a>もっと読む</a></li>
+    </ul>
+    
+      <a class="leave-comment-title">コメントを書く</a>
+    
+  </div>
+
+  </footer>
+
+  </div>
+</article>
+
+      
+      
+    
+  
+
+  
+  <!-- rakuten_ad_target_end -->
+  <!-- google_ad_section_end -->
+  
+  
+  
+  <div class="pager pager-permalink permalink">
+    
+      
+      <span class="pager-prev">
+        <a href="http://punyo-er-met.hateblo.jp/entry/2016/04/10/103632" rel="prev">
+          <span class="pager-arrow">« </span>
+          【C#】ウィンドウ内での画面遷移をコント…
+        </a>
+      </span>
+    
+    
+      
+      <span class="pager-next">
+        <a href="http://punyo-er-met.hateblo.jp/entry/2016/03/27/110656" rel="next">
+          【Caffe】Windows7にCaffeをインストール
+          <span class="pager-arrow"> »</span>
+        </a>
+      </span>
+    
+  </div>
+
+
+  
+
+
+
+        </div>
+      </div>
+
+      <aside id="box1">
+  <div id="box1-inner">
+  </div>
+</aside>
+
+    </div><!-- #wrapper -->
+
+    
+<aside id="box2">
+  
+  <div id="box2-inner">
+    
+      
+
+<div class="hatena-module hatena-module-profile">
+  <div class="hatena-module-title">
+    プロフィール
+  </div>
+  <div class="hatena-module-body">
+    
+    <a href="http://punyo-er-met.hateblo.jp/about" class="profile-icon-link">
+      <img src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/profile(1).gif" alt="id:whg_res" class="profile-icon">
+    </a>
+    
+
+    
+    <span class="id">
+      <a href="http://punyo-er-met.hateblo.jp/about" class="hatena-id-link"><span data-load-nickname="1" data-user-name="whg_res">id:whg_res</span></a>
+      
+  
+    
+    
+  
+
+
+    </span>
+    
+
+    
+
+    
+
+    
+      <div class="hatena-follow-button-box btn-subscribe js-hatena-follow-button-box">
+
+  <a href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651#" class="hatena-follow-button js-hatena-follow-button">
+    <span class="subscribing">
+      <span class="foreground">読者です</span>
+      <span class="background">読者をやめる</span>
+    </span>
+    <span class="unsubscribing" data-track-name="profile-widget-subscribe-button" data-track-once="">
+      <span class="foreground">読者になる</span>
+      <span class="background">読者になる</span>
+    </span>
+  </a>
+  <div class="subscription-count-box js-subscription-count-box">
+    <i></i>
+    <u></u>
+    <span class="subscription-count js-subscription-count">
+    </span>
+  </div>
+</div>
+
+    
+
+    
+
+    
+  </div>
+</div>
+
+    
+      <div class="hatena-module hatena-module-search-box">
+  <div class="hatena-module-title">
+    検索
+  </div>
+  <div class="hatena-module-body">
+    <form class="search-form" role="search" action="http://punyo-er-met.hateblo.jp/search" method="get">
+      <input type="text" name="q" class="search-module-input" value="" placeholder="記事を検索" required="">
+      <input type="submit" value="検索" class="search-module-button">
+    </form>
+  </div>
+</div>
+
+    
+      <div class="hatena-module hatena-module-recent-entries ">
+  <div class="hatena-module-title">
+    <a href="http://punyo-er-met.hateblo.jp/archive">
+      最新記事
+    </a>
+  </div>
+  <div class="hatena-module-body">
+    <ul class="recent-entries hatena-urllist ">
+  
+  
+    
+    <li class="urllist-item recent-entries-item">
+      <div class="urllist-item-inner recent-entries-item-inner">
+        
+          
+          <a href="http://punyo-er-met.hateblo.jp/entry/2017/02/16/004049" class="urllist-title-link recent-entries-title-link  urllist-title recent-entries-title">【Caffe】回帰問題を解く</a>
+
+
+          
+          
+
+                </div>
+    </li>
+  
+    
+    <li class="urllist-item recent-entries-item">
+      <div class="urllist-item-inner recent-entries-item-inner">
+        
+          
+          <a href="http://punyo-er-met.hateblo.jp/entry/2017/02/11/211650" class="urllist-title-link recent-entries-title-link  urllist-title recent-entries-title">【Caffe】C++でのMemoryDataLayerの扱い方</a>
+
+
+          
+          
+
+                </div>
+    </li>
+  
+    
+    <li class="urllist-item recent-entries-item">
+      <div class="urllist-item-inner recent-entries-item-inner">
+        
+          
+          <a href="http://punyo-er-met.hateblo.jp/entry/2016/06/12/103007" class="urllist-title-link recent-entries-title-link  urllist-title recent-entries-title">【Python】Python Imaging Libraryインストール</a>
+
+
+          
+          
+
+                </div>
+    </li>
+  
+    
+    <li class="urllist-item recent-entries-item">
+      <div class="urllist-item-inner recent-entries-item-inner">
+        
+          
+          <a href="http://punyo-er-met.hateblo.jp/entry/2016/04/10/103632" class="urllist-title-link recent-entries-title-link  urllist-title recent-entries-title">【C#】ウィンドウ内での画面遷移をコントロール切り替えで実装</a>
+
+
+          
+          
+
+                </div>
+    </li>
+  
+    
+    <li class="urllist-item recent-entries-item">
+      <div class="urllist-item-inner recent-entries-item-inner">
+        
+          
+          <a href="http://punyo-er-met.hateblo.jp/entry/2016/04/04/001651" class="urllist-title-link recent-entries-title-link  urllist-title recent-entries-title">【Caffe】C++でCaffeをAPI的に使う</a>
+
+
+          
+          
+
+                </div>
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+    
+      
+
+<div class="hatena-module hatena-module-archive" data-archive-type="default" data-archive-url="http://punyo-er-met.hateblo.jp/archive">
+  <div class="hatena-module-title">
+    <a href="http://punyo-er-met.hateblo.jp/archive">月別アーカイブ</a>
+  </div>
+  <div class="hatena-module-body">
+  
+
+  
+    
+    
+      <ul class="hatena-urllist">
+        
+          <li class="archive-module-year" data-year="2017">
+            <div class="archive-module-button">
+              <span class="archive-module-hide-button">▼</span>
+              <span class="archive-module-show-button">▶</span>
+            </div>
+            <a href="http://punyo-er-met.hateblo.jp/archive/2017" class="archive-module-year-title">
+              2017 (2)
+            </a>
+            <ul class="archive-module-months">
+              
+                <li class="archive-module-month">
+                  <a href="http://punyo-er-met.hateblo.jp/archive/2017/2" class="archive-module-month-title">
+                    2017 / 2 (2)
+                  </a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          <li class="archive-module-year archive-module-year-hidden" data-year="2016">
+            <div class="archive-module-button">
+              <span class="archive-module-hide-button">▼</span>
+              <span class="archive-module-show-button">▶</span>
+            </div>
+            <a href="http://punyo-er-met.hateblo.jp/archive/2016" class="archive-module-year-title">
+              2016 (17)
+            </a>
+            <ul class="archive-module-months">
+              
+                <li class="archive-module-month">
+                  <a href="http://punyo-er-met.hateblo.jp/archive/2016/6" class="archive-module-month-title">
+                    2016 / 6 (1)
+                  </a>
+                </li>
+              
+                <li class="archive-module-month">
+                  <a href="http://punyo-er-met.hateblo.jp/archive/2016/4" class="archive-module-month-title">
+                    2016 / 4 (2)
+                  </a>
+                </li>
+              
+                <li class="archive-module-month">
+                  <a href="http://punyo-er-met.hateblo.jp/archive/2016/3" class="archive-module-month-title">
+                    2016 / 3 (8)
+                  </a>
+                </li>
+              
+                <li class="archive-module-month">
+                  <a href="http://punyo-er-met.hateblo.jp/archive/2016/2" class="archive-module-month-title">
+                    2016 / 2 (6)
+                  </a>
+                </li>
+              
+            </ul>
+          </li>
+        
+      </ul>
+    
+  
+
+
+</div>
+</div>
+
+    
+    
+  </div>
+</aside>
+
+
+  </div>
+</div>
+
+
+
+
+
+        
+
+        
+  <script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/hatena_dfp2.js.下载"></script>
+
+
+        
+
+      </div>
+    </div>
+    
+<footer id="footer" data-brand="hatenablog">
+  <div id="footer-inner">
+    <address>
+      <a href="http://punyo-er-met.hateblo.jp/">
+        <img src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/blog-icon-noimage.png" width="16" height="16" alt="いつもの作業の備忘録">
+        <span class="footer-address-name">いつもの作業の備忘録</span>
+      </a>
+    </address>
+    <p class="services">
+      Powered by <a href="http://hatenablog.com/">Hatena Blog</a>
+      |
+        <a href="http://www.hatena.ne.jp/faq/report/blog?target_label=whg_res&amp;target_url=http%3A%2F%2Fblog.hatena.ne.jp%2Fgo%3Fblog%3Dhttp%253A%252F%252Fpunyo-er-met.hateblo.jp%252Fentry%252F2016%252F04%252F04%252F001651&amp;location=http%3A%2F%2Fblog.hatena.ne.jp%2Fgo%3Fblog%3Dhttp%253A%252F%252Fpunyo-er-met.hateblo.jp%252Fentry%252F2016%252F04%252F04%252F001651" class="report-abuse-link test-report-abuse-link" target="_blank">ブログを報告する</a>
+    </p>
+  </div>
+</footer>
+
+
+    
+
+    
+  <script src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/HatenaStar.js.下载"></script>
+
+
+    
+  <div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div><iframe name="fb_xdm_frame_http" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" id="fb_xdm_frame_http" aria-hidden="true" title="Facebook Cross Domain Communication Frame" tabindex="-1" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/0F7S7QWJ0Ac.html" style="border: none;"></iframe><iframe name="fb_xdm_frame_https" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" id="fb_xdm_frame_https" aria-hidden="true" title="Facebook Cross Domain Communication Frame" tabindex="-1" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/0F7S7QWJ0Ac(1).html" style="border: none;"></iframe></div></div><div style="position: absolute; top: -10000px; height: 0px; width: 0px;"><div></div></div></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+  
+    js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&appId=719729204785177&version=v2.7";
+  
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));</script>
+
+
+    
+
+
+
+    
+  <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+
+<script src="https://apis.google.com/js/platform.js" async="" defer="" gapi_processed="true">
+  { lang: 'ja', "parsetags": "explicit" }
+</script>
+<script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/bookmark_button.js.下载" charset="utf-8" async="async"></script>
+
+
+
+  <script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/react-with-addons.min.js.下载"></script>
+  <script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/react-dom.min.js.下载"></script>
+
+
+<script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/jquery.min.js.下载"></script>
+<script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/jquery-ui.1.10.0.custom.min.js.下载"></script>
+<script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/jquery.flot.js.下载"></script>
+<script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/jquery.flot.time.js.下载"></script>
+
+
+
+
+<script id="hatenablog-js" data-env="production" type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/hatenablog.js.下载" crossorigin="anonymous"></script><div style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; display: none;"></div>
+<script type="text/javascript" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/texts-ja.js.下载"></script>
+
+
+  <script type="text/javascript">Hatena.Diary.GlobalHeader.init()</script>
+
+
+<script src="https://www.google.com/recaptcha/api.js" async="" defer=""></script>
+
+
+
+
+    
+
+
+
+
+
+  
+
+
+<div id="cboxOverlay" style="display: none;"></div><div id="colorbox" class="" role="dialog" tabindex="-1" style="display: none;"><div id="cboxWrapper"><div><div id="cboxTopLeft" style="float: left;"></div><div id="cboxTopCenter" style="float: left;"></div><div id="cboxTopRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxMiddleLeft" style="float: left;"></div><div id="cboxContent" style="float: left;"><div id="cboxTitle" style="float: left;"></div><div id="cboxCurrent" style="float: left;"></div><button type="button" id="cboxPrevious"></button><button type="button" id="cboxNext"></button><button type="button" id="cboxSlideshow"></button><div id="cboxLoadingOverlay" style="float: left;"></div><div id="cboxLoadingGraphic" style="float: left;"></div></div><div id="cboxMiddleRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxBottomLeft" style="float: left;"></div><div id="cboxBottomCenter" style="float: left;"></div><div id="cboxBottomRight" style="float: left;"></div></div></div><div style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div></div><div style="top: -9999px; z-index: -9999;"></div><iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" src="javascript:document.write(&quot;&quot;);try { window.parent.document; }catch (e) { document.domain=&quot;punyo-er-met.hateblo.jp&quot;; }window.parent.__twttr.sandbox.i14963867454112180910();" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;" title="Twitter analytics iframe" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/saved_resource(3).html"></iframe><iframe id="google_osd_static_frame_532510904008" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;" src="./【Caffe】C++でCaffeをAPI的に使う - いつもの作業の備忘録_files/saved_resource(4).html"></iframe><div style="color: rgb(0, 0, 0); position: absolute; display: none; z-index: 10002; left: 0px; top: 0px; background-color: rgb(255, 255, 255); border: 0px; padding: 0px; text-align: center;"><div style="text-align: left; margin: 0px; padding: 0px;"></div></div></body></html>

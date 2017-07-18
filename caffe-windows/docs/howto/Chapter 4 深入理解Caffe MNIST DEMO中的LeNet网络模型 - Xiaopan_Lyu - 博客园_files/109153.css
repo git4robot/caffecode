@@ -1,0 +1,17 @@
+h1 {
+    margin:0;
+    font-size: 150%;
+    color:rgb(0,150,100);
+    font-weight:bold;
+}
+h2 {
+    margin:0;
+    font-size: 120%;
+    color:rgb(0,100,255);
+    font-weight:normal;
+}
+h3 {
+    font-size: 100%;
+    font-weight:normal;
+    color:rgb(50,150,50);
+}

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/bundle-Minyx2_Lite.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/bundle-Minyx2_Lite-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/justany/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/justany/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/justany/wlwmanifest.xml">
+<script async="" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/encoder.js.下载"></script><script src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'justany', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+<script src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/bundle-Minyx2_Lite.js.下载" language="javascript" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+
+<div id="container">
+    <a class="minyx" href="http://www.cnblogs.com/">代码改变世界</a>
+    <ul id="topMnu">
+        <!-- 统计数据 -->
+        <li>
+            
+                <div id="blog_stats">
+Posts - 92, 
+Articles - 0, 
+Comments - 400
+<!----></div>
+            
+        </li>
+        <!-- 这边可以增加一些链接 -->
+        <!-- 博客园 -->
+        <li><a href="http://www.cnblogs.com/">Cnblogs</a></li>
+        <!-- 管理 -->
+        <li id="topMnu-dashboard">
+            <a id="lnkDashboard" href="http://www.cnblogs.com/justany/admin/EditPosts.aspx">Dashboard</a></li>
+        <li>
+            <a id="lnkLogin" href="http://passport.cnblogs.com/login.aspx?ReturnUrl=http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html">Login</a></li>
+    </ul>
+
+    <script type="text/javascript">
+        var m = window.__blog.topMenuRendered;
+        if (m) { m(__$("topMnu")); }
+    </script>
+
+    <div id="header">
+        <ul id="menu">
+            <!-- 首页，当前section加上current类 -->
+            <li id="menu-home" class="current">
+                <a id="lnkHome" href="http://www.cnblogs.com/justany/">Home</a></li>
+            <!-- 联系 -->
+            <li id="menu-contact">
+                <a id="lnkContact" href="http://space.cnblogs.com/msg/send/Justany_WhiteSnow">Contact</a></li>
+            <!-- 相册 -->
+            <li id="menu-gallary">
+                <a id="lnkGallery" href="http://www.cnblogs.com/justany/gallery.html">Gallery</a></li>
+            <!-- Rss订阅 -->
+            <li id="rss">
+                <a id="lnkRss" href="http://www.cnblogs.com/justany/rss">RSS</a></li>
+        </ul>
+        <div id="newmsg"></div>
+        <h1>
+            <!-- 主标题 -->
+            <a id="lnkBlogTitle" href="http://www.cnblogs.com/justany/">(1 &lt;&lt; -1) - 1</a>
+            <!-- 子标题 -->
+            <small>
+                突破极限</small>
+        </h1>
+    </div>
+
+    <script type="text/javascript">
+        var m = window.__blog.headerRendered;
+        if (m) { m(__$("header")); }
+    </script>
+
+    <div id="wrapper">
+        <div id="content">
+            <script type="text/javascript">
+                var m = window.__blog.preRenderPosts;
+                if (m) { m(); }
+            </script>
+            
+<div id="post_detail">
+<div class="post" id="post">
+    <a name="top"></a>
+    <h2><a id="cb_post_title_url" href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html">OpenCV 2.4+ C++ SVM文字识别</a></h2>
+    <small>2012-11-27 09:26 by Justany_WhiteSnow, <span id="post_view_count">23992</span> 阅读, <span id="post_comment_count">13</span> 评论, <a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#" onclick="AddToWz(2789767);return false;">收藏</a>,  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=2789767" rel="nofollow">编辑</a></small>
+    <div class="entry">
+        <div id="cnblogs_post_body"><p><span style="font-size: 14pt;"><strong>预备知识</strong></span></p>
+<p>下面两个都不是必备知识，但是如果你想了解更多内容，可参考这两篇文章。</p>
+<p><a class="titlelink" href="http://www.cnblogs.com/justany/archive/2012/11/23/2784125.html">OpenCV 2.4+ C++ SVM介绍</a></p>
+<p><a class="titlelink" href="http://www.cnblogs.com/justany/archive/2012/11/26/2788509.html">OpenCV 2.4+ C++ SVM线性不可分处理</a></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>SVM划分的意义</strong></span></p>
+<p>到此，我们已经对SVM有一定的了解了。可是这有什么用呢？回到上一篇文章结果图：</p>
+<p style="text-align: center;"><iframe id="iframe_0.20677282222773696" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/saved_resource.html" style="border: none; width: 20px; height: 20px;" frameborder="0" scrolling="no"></iframe></p>
+<p>这个结果图的意义在于，他成功从二维划分了分类的区域。于是如果以后，有一个新的样本在绿色区域，那么我们就可以把他当成是绿色的点。</p>
+<p>由于这可以像更高维度推广，所以如果我们能对样品映射成高维度空间的点，当有足够多的样品时，我们同样可以找到一个高维度的超平面划分，使得同一类样品的映射点在同一区域，于是当有新样品落在这些区域是，我们可以把它当成是这一类型的样本。</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>通俗一点</strong></span></p>
+<p>可能我们能更加通俗一点。比如我们来识别男性和女性。</p>
+<p>我们发现男性和女性可能头发长度不一样，可能胸围不一样，于是我们对样本个体产生这样的一种映射：</p>
+<p>　　　　人 —&gt; （头发长度, 胸围）</p>
+<p>于是我们将每个样品映射到二维平面，其中“头发的长度”和“胸围的长度”分别是x轴和y轴。我们把这些样品丢给SVM学习，则他会寻找出一个合理的x和y的区域来划分男性和女性。</p>
+<p>当然，也有可能有些男的头发比女的还长，有的男性的胸围比女性还大，这些就是错分点，它们也影响着划分。</p>
+<p>最后，当我们把一个人映射到这个二维空间时，SVM就可以根据以往的学习，猜一猜这个人到底是什么性别。</p>
+<p>我们学到了什么呢？</p>
+<blockquote>
+<p>好吧，特征要找准一点，否则可能遇到下面的悲剧……</p>
+</blockquote>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/2012112620593654.jpg" alt=""></p>
+<p>如果这是老板，你可就死翘翘了……</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>简单的文字识别</strong></span></p>
+<p>当然计算机没那么厉害能看出你的胸围或者头发长短。他需要一些他能读懂的东西，特别计算机通常“看到”的是下面的这种东东……</p>
+<p style="text-align: center;"><iframe id="iframe_0.8589489679322178" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/saved_resource(1).html" style="border: none; width: 20px; height: 20px;" frameborder="0" scrolling="no"></iframe></p>
+<p>我们需要对文字找到他的特征，来映射到高维空间。</p>
+<p>还记得小学时候练字的米字格么？这似乎暗示了我们，虽然每个人写的字千差万别，但是他们却具有一定的特点。</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/2012112621064776.jpg" alt=""></p>
+<p>我们尝试这样做，取一个字，选取一个包含该字的正方形区域，将这个正方形区域分割成8*8个小格，统计每个小格中像素的数量，以这些数量为维度进行映射。</p>
+<p>OK，明白了原理让我们开始吧。</p>
+<blockquote>
+<p>被提醒了，那么补充一句：这个例子在实际中用来辨认是不可行的。</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>样本获取</strong></span></p>
+<p>由于通常文字样本都是白底黑字的，而手写也可以直接获取写入的数据而无视背景，所以我们并不需要对样本进行提取，但我们需要对他定位，并弄成合适的大小。</p>
+<p>比如，你没法避免有人这么写字……</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/2012112621215282.jpg" alt=""></p>
+<p>坑爹啊，好好的那么大地方你就躲在左上角……</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>开始定位</strong></span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">void</span> getROI(Mat&amp; src, Mat&amp;<span style="color: #000000;"> dst){
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> left, right, top, bottom;
+    left </span>=<span style="color: #000000;"> src.cols;
+    right </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    top </span>=<span style="color: #000000;"> src.rows;
+    bottom </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">得到区域</span>
+    <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i=<span style="color: #800080;">0</span>; i&lt;src.rows; i++<span style="color: #000000;">)
+    {
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j=<span style="color: #800080;">0</span>; j&lt;src.cols; j++<span style="color: #000000;">)
+        {
+            </span><span style="color: #0000ff;">if</span>(src.at&lt;uchar&gt;(i, j) &gt; <span style="color: #800080;">0</span><span style="color: #000000;">)
+            {
+                </span><span style="color: #0000ff;">if</span>(j&lt;left) left =<span style="color: #000000;"> j;
+                </span><span style="color: #0000ff;">if</span>(j&gt;right) right =<span style="color: #000000;"> j;
+                </span><span style="color: #0000ff;">if</span>(i&lt;top) top =<span style="color: #000000;"> i;
+                </span><span style="color: #0000ff;">if</span>(i&gt;bottom) bottom =<span style="color: #000000;"> i;
+            }
+        }
+    }
+
+    </span><span style="color: #0000ff;">int</span> width = right -<span style="color: #000000;"> left;
+    </span><span style="color: #0000ff;">int</span> height = bottom -<span style="color: #000000;"> top;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">创建存储矩阵</span>
+    dst =<span style="color: #000000;"> Mat::zeros(width, height, CV_8UC1);
+
+    Rect dstRect(left, top, width, height);
+    dst(dstRect);
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>这段代码通过遍历所有图像矩阵的元素，来获取该样本的定位和大小。并把样本提取出来。</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>重新缩放</strong></span></p>
+<div class="cnblogs_code">
+<pre><span>Mat&nbsp;dst&nbsp;=&nbsp;Mat::zeros(8,&nbsp;8,&nbsp;CV_8UC1);</span><br>resize(src, dst, dst.size());</pre>
+</div>
+<p>进行缩放，把所有样本变成8*8的大小。为了简便，我们把像素多少变成了像素的灰度值。</p>
+<p>resize的API：</p>
+<blockquote>
+<p>调整图片大小</p>
+<dl class="function"><dt id="void resize(InputArray src, OutputArray dst, Size dsize, double fx, double fy, int interpolation)"><strong>C++:</strong><tt class="descname">&nbsp;</tt>void&nbsp;<tt class="descname"><span class="highlighted">resize</span></tt><big>(</big>InputArray&nbsp;<strong>src</strong>, OutputArray&nbsp;<strong>dst</strong>, Size&nbsp;<strong>dsize</strong>, double&nbsp;<strong>fx</strong>=0, double&nbsp;<strong>fy</strong>=0, int&nbsp;<strong>interpolation</strong>=INTER_LINEAR&nbsp;<big>)</big></dt><dt></dt></dl><dl class="pyoldfunction"><dd>
+<table class="docutils field-list" frame="void" rules="none"><colgroup><col class="field-name"><col class="field-body"></colgroup>
+<tbody valign="top">
+<tr class="field"><th class="field-name">参数</th>
+<td class="field-body">
+<ul class="first last simple">
+<li><strong>src</strong>&nbsp;– 输入图像。</li>
+<li><strong>dst</strong>&nbsp;– 输出图像；它有一个<tt class="docutils literal"><span class="pre">dsize</span></tt>&nbsp;(当其不为0时) 或者这个size由&nbsp;<tt class="docutils literal"><span class="pre">src.size()，</span></tt><tt class="docutils literal"><span class="pre">fx</span></tt>和<tt class="docutils literal"><span class="pre">fy算出</span></tt>。<tt class="docutils literal"><span class="pre">dst</span></tt>的类型和<tt class="docutils literal"><span class="pre">src相同。</span></tt></li>
+<li><strong>dsize</strong>&nbsp;–
+<p>输出图像的大小，如果取值为0，则：</p>
+<div class="math">
+<p><iframe id="iframe_0.34047972647085833" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/saved_resource(2).html" style="border: none; width: 20px; height: 20px;" frameborder="0" scrolling="no"></iframe></p>
+</div>
+<p><tt class="docutils literal"><span class="pre">dsize</span></tt>或者<tt class="docutils literal"><span class="pre">fx<span style="font-family: Verdana, Arial, Helvetica, sans-serif;">和</span></span></tt><tt class="docutils literal"><span class="pre">fy</span></tt>必须有一种大小决定方法不为0。</p>
+</li>
+<li><strong>fx</strong>&nbsp;–
+<p>水平轴缩放因子，当取值为0时，则为：</p>
+<div class="math">
+<p><iframe id="iframe_0.24335345880546844" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/saved_resource(3).html" style="border: none; width: 20px; height: 20px;" frameborder="0" scrolling="no"></iframe></p>
+</div>
+</li>
+<li><strong>fy</strong>&nbsp;–
+<p><span>垂直轴缩放因子，当取值为0时，则为：</span></p>
+<div class="math">
+<p><iframe id="iframe_0.21041802156338063" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/saved_resource(4).html" style="border: none; width: 20px; height: 20px;" frameborder="0" scrolling="no"></iframe></p>
+</div>
+</li>
+<li><strong>interpolation</strong>&nbsp;–
+<p>插值方法</p>
+<ul>
+<li><strong>INTER_NEAREST</strong>&nbsp;- 最近邻值插入方法。</li>
+<li><strong>INTER_LINEAR</strong>&nbsp;- 双线性插值（默认方式）。</li>
+<li><strong>INTER_AREA</strong>&nbsp;-&nbsp;<span>使用象素关系重采样。当图像缩小时候，该方法可以避免波纹出现。当图像放大时，类似于 CV_INTER_NN 方法。</span></li>
+<li><strong>INTER_CUBIC</strong>&nbsp;-&nbsp;<span>立方插值。</span></li>
+<li><strong>INTER_LANCZOS4</strong>&nbsp;- 8x8的<span>Lanczos插入方法。</span></li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl></blockquote>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>准备样本数据</strong></span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>Mat data = Mat::zeros(total, <span style="color: #800080;">64</span>, CV_32FC1);    <span style="color: #008000;">//</span><span style="color: #008000;">样本数据矩阵  </span>
+Mat res = Mat::zeros(total, <span style="color: #800080;">1</span>, CV_32SC1);    <span style="color: #008000;">//</span><span style="color: #008000;">样本标签矩阵</span>
+<span style="color: #000000;">
+res.at</span>&lt;<span style="color: #0000ff;">double</span>&gt;(k, <span style="color: #800080;">1</span>) = label;    <span style="color: #008000;">//</span><span style="color: #008000;">对第k个样本添加分类标签
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">对第k个样本添加数据</span>
+<span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i&lt;<span style="color: #800080;">8</span>; i++<span style="color: #000000;">)  {  
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">int</span> j = <span style="color: #800080;">0</span>; j&lt;<span style="color: #800080;">8</span>; j++<span style="color: #000000;">)  {  
+        res.at</span>&lt;<span style="color: #0000ff;">double</span>&gt;(k, i * <span style="color: #800080;">8</span> + j) = dst.at&lt;<span style="color: #0000ff;">double</span>&gt;<span style="color: #000000;">(i, j);  
+    }  
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>将刚刚的结果，输入样本，并加上标签。</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>训练</strong></span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>CvSVM svm =<span style="color: #000000;"> CvSVM();   
+CvSVMParams param;   
+CvTermCriteria criteria;  
+  
+criteria</span>= cvTermCriteria(CV_TERMCRIT_EPS, <span style="color: #800080;">1000</span><span style="color: #000000;">,  FLT_EPSILON);   
+param</span>= CvSVMParams(CvSVM::C_SVC, CvSVM::RBF, <span style="color: #800080;">10.0</span>, <span style="color: #800080;">8.0</span>, <span style="color: #800080;">1.0</span>, <span style="color: #800080;">10.0</span>, <span style="color: #800080;">0.5</span>, <span style="color: #800080;">0.1</span><span style="color: #000000;">, NULL, criteria);   
+  
+svm.train(data, res, Mat(), Mat(), param);  
+svm.save( </span><span style="color: #800000;">"</span><span style="color: #800000;">SVM_DATA.xml</span><span style="color: #800000;">"</span> );  </pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>开始训练并保存训练数据。</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>使用</strong></span></p>
+<div class="cnblogs_code">
+<pre>CvSVM svm =<span style="color: #000000;"> CvSVM();   
+svm.load( </span><span style="color: #800000;">"</span><span style="color: #800000;">SVM_DATA.xml</span><span style="color: #800000;">"</span><span style="color: #000000;"> );
+svm.predict(m);        </span><span style="color: #008000;">//</span><span style="color: #008000;">对样本向量m检测</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;<span style="font-size: 14pt;"><strong>参考资料</strong></span></p>
+<p>&nbsp;<a href="http://blog.csdn.net/firefight/article/details/6452188">使用OPENCV训练手写数字识别分类器</a> .&nbsp;firefight .&nbsp;<span>2011-05-28</span></p></div><div id="MySignature"></div>
+        <div class="clear"></div>
+        <div id="blog_post_info_block">
+        <div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(2789767,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;cf0f1a7e-7d4d-e111-aa3f-842b2b196315&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/justany/" target="_blank"><img src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/u372204.jpg" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/justany/">Justany_WhiteSnow</a><br>
+            <a href="http://home.cnblogs.com/u/justany/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/justany/followers">粉丝 - 342</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;cf0f1a7e-7d4d-e111-aa3f-842b2b196315&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(2789767,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">9</span>
+    </div>
+    <div class="buryit" onclick="votePost(2789767,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+        <div class="clear"></div>
+        <div id="post_next_prev"><a href="http://www.cnblogs.com/justany/archive/2012/11/26/2788509.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/justany/archive/2012/11/26/2788509.html" title="发布于2012-11-26 09:49">OpenCV 2.4+ C++ SVM线性不可分处理</a><br><a href="http://www.cnblogs.com/justany/archive/2012/11/29/2793547.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/justany/archive/2012/11/29/2793547.html" title="发布于2012-11-29 08:21">关联数据入门——LMF</a><br></div>
+    </div>
+</div>
+    <ul class="postmetadata">
+        <li class="icon_cat" id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/justany/category/429717.html" target="_blank">Computer Vision</a></li>
+        <li class="icon_bullet" id="EntryTag">标签: <a href="http://www.cnblogs.com/justany/tag/OpenCV/">OpenCV</a></li>
+    </ul>
+</div>
+<script type="text/javascript">var allowComments=true,cb_blogId=131804,cb_entryId=2789767,cb_blogApp=currentBlogApp,cb_blogUserGuid='cf0f1a7e-7d4d-e111-aa3f-842b2b196315',cb_entryCreatedDate='2012/11/27 9:26:00';loadViewCount(cb_entryId);</script>
+<script type="text/javascript">
+    var m = window.__blog.postRendered;
+    if (m) { m(__$("post")); }
+</script>
+<script type="text/javascript">
+    var m = window.__blog.postRenderPosts;
+    if (m) { m(); }
+</script>
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<a class="addcomment" href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#comment_tip">Add your comment</a>
+<h3 id="comments"></h3>
+<div class="feedbackNoItems"></div>
+
+
+<ol class="commentlist" id="commentList">	
+
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563641" class="layer">#1楼</a><a name="2563641" id="comment_anchor_2563641"></a></cite> <a id="a_comment_author_2563641" href="http://www.cnblogs.com/cmt/" target="_blank">博客园团队</a> <a href="http://msg.cnblogs.com/send/%E5%8D%9A%E5%AE%A2%E5%9B%AD%E5%9B%A2%E9%98%9F" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-11-27 10:40</span></small>
+			</h5>
+			<div id="comment_body_2563641" class="blog_comment_body">您好！<br>“推荐”按钮被您隐藏了，建议显示出来。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2563641,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2563641,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2563641_avatar" style="display:none;">http://pic.cnblogs.com/face/35695/20140318223943.png</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563671" class="layer">#2楼</a><a name="2563671" id="comment_anchor_2563671"></a>[<span class="louzhu">楼主</span>]</cite> <a id="a_comment_author_2563671" href="http://www.cnblogs.com/justany/" target="_blank">Justany_WhiteSnow</a> <a href="http://msg.cnblogs.com/send/Justany_WhiteSnow" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-11-27 10:54</span></small>
+			</h5>
+			<div id="comment_body_2563671" class="blog_comment_body"><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563641" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2563641);">@</a>
+博客园团队<br><fieldset class="comment_quote"><legend><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563641" title="查看引用原文">引用</a></legend>您好！<br>“推荐”按钮被您隐藏了，建议显示出来。</fieldset><br>我才发现~貌似是模板原因，谢了~</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2563671,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2563671,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2563671_avatar" style="display:none;">http://pic.cnblogs.com/face/u372204.jpg?id=20165031</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563764" class="layer">#3楼</a><a name="2563764" id="comment_anchor_2563764"></a></cite> <a id="a_comment_author_2563764" href="http://www.cnblogs.com/ronny/" target="_blank">☆Ronny丶</a> <a href="http://msg.cnblogs.com/send/%E2%98%86Ronny%E4%B8%B6" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-11-27 11:40</span></small>
+			</h5>
+			<div id="comment_body_2563764" class="blog_comment_body">基本想法是对的，但是文本的切割，并且使用文字密度特征，哈哈，我会告诉你，如果转换成实际产品，识别率能有70% 算不错了...</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2563764,&#39;Digg&#39;,this)">支持(1)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2563764,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2563764_avatar" style="display:none;">http://pic.cnblogs.com/face/378920/20140307144548.png</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563766" class="layer">#4楼</a><a name="2563766" id="comment_anchor_2563766"></a>[<span class="louzhu">楼主</span>]</cite> <a id="a_comment_author_2563766" href="http://www.cnblogs.com/justany/" target="_blank">Justany_WhiteSnow</a> <a href="http://msg.cnblogs.com/send/Justany_WhiteSnow" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-11-27 11:42</span></small>
+			</h5>
+			<div id="comment_body_2563766" class="blog_comment_body"><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563764" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2563764);">@</a>
+☆Ronny丶<br><fieldset class="comment_quote"><legend><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563764" title="查看引用原文">引用</a></legend>基本想法是对的，但是文本的切割，并且使用文字密度特征，哈哈，我会告诉你，如果转换成实际产品，识别率能有70% 算不错了...</fieldset><br>这个肯定是不行的。这只是一个简单的实例而已。当然，我没说特意指出这在实际中是不可行的是我的疏忽。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2563766,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2563766,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2563766_avatar" style="display:none;">http://pic.cnblogs.com/face/u372204.jpg?id=20165031</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563772" class="layer">#5楼</a><a name="2563772" id="comment_anchor_2563772"></a></cite> <a id="a_comment_author_2563772" href="http://www.cnblogs.com/ronny/" target="_blank">☆Ronny丶</a> <a href="http://msg.cnblogs.com/send/%E2%98%86Ronny%E4%B8%B6" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-11-27 11:44</span></small>
+			</h5>
+			<div id="comment_body_2563772" class="blog_comment_body"><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563766" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2563766);">@</a>
+Justany_WhiteSnow<br>哈哈，没有别的意思，正好前段时间接触了一个OCR的CASE，所以了解了一些。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2563772,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2563772,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2563772_avatar" style="display:none;">http://pic.cnblogs.com/face/378920/20140307144548.png</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563794" class="layer">#6楼</a><a name="2563794" id="comment_anchor_2563794"></a>[<span class="louzhu">楼主</span>]</cite> <a id="a_comment_author_2563794" href="http://www.cnblogs.com/justany/" target="_blank">Justany_WhiteSnow</a> <a href="http://msg.cnblogs.com/send/Justany_WhiteSnow" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-11-27 11:57</span></small>
+			</h5>
+			<div id="comment_body_2563794" class="blog_comment_body"><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563772" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2563772);">@</a>
+☆Ronny丶<br><fieldset class="comment_quote"><legend><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563772" title="查看引用原文">引用</a></legend>@Justany_WhiteSnow<br>哈哈，没有别的意思，正好前段时间接触了一个OCR的CASE，所以了解了一些。</fieldset><br>目测是在弄Machine Vision吧</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2563794,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2563794,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2563794_avatar" style="display:none;">http://pic.cnblogs.com/face/u372204.jpg?id=20165031</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563811" class="layer">#7楼</a><a name="2563811" id="comment_anchor_2563811"></a></cite> <a id="a_comment_author_2563811" href="http://www.cnblogs.com/ronny/" target="_blank">☆Ronny丶</a> <a href="http://msg.cnblogs.com/send/%E2%98%86Ronny%E4%B8%B6" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-11-27 12:12</span></small>
+			</h5>
+			<div id="comment_body_2563811" class="blog_comment_body"><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2563794" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2563794);">@</a>
+Justany_WhiteSnow<br>嗯嗯，计算机视觉方向~</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2563811,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2563811,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2563811_avatar" style="display:none;">http://pic.cnblogs.com/face/378920/20140307144548.png</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2568205" class="layer">#8楼</a><a name="2568205" id="comment_anchor_2568205"></a></cite> <a id="a_comment_author_2568205" href="http://www.cnblogs.com/wangziming520/" target="_blank">wangziming</a> <a href="http://msg.cnblogs.com/send/wangziming" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2012-12-02 10:50</span></small>
+			</h5>
+			<div id="comment_body_2568205" class="blog_comment_body">写的不错，谢谢分享哈！</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2568205,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2568205,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2568205_avatar" style="display:none;">http://pic.cnblogs.com/face/u415996.jpg?id=05163046</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2628578" class="layer">#9楼</a><a name="2628578" id="comment_anchor_2628578"></a></cite> <a id="a_comment_author_2628578" href="http://home.cnblogs.com/u/415822/" target="_blank">风荷星雨</a> <a href="http://msg.cnblogs.com/send/%E9%A3%8E%E8%8D%B7%E6%98%9F%E9%9B%A8" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2013-03-06 09:18</span></small>
+			</h5>
+			<div id="comment_body_2628578" class="blog_comment_body">刚开始接触svm，看了三篇楼主关于svm的文章，很有帮助。在此感谢。<br><br>小弟不才，准备样本数据的代码“res.at&lt;double&gt;(k, i * 8 + j) = dst.at&lt;double&gt;(i, j);  ”是不是应该为“data.at&lt;double&gt;(k, i * 8 + j) = dst.at&lt;double&gt;(i, j);  ”<br><br>再次感谢楼主提供的学习资料</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2628578,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2628578,&#39;Bury&#39;,this)">反对(0)</a></div>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2628644" class="layer">#10楼</a><a name="2628644" id="comment_anchor_2628644"></a>[<span class="louzhu">楼主</span>]</cite> <a id="a_comment_author_2628644" href="http://www.cnblogs.com/justany/" target="_blank">Justany_WhiteSnow</a> <a href="http://msg.cnblogs.com/send/Justany_WhiteSnow" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2013-03-06 10:00</span></small>
+			</h5>
+			<div id="comment_body_2628644" class="blog_comment_body"><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2628578" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2628578);">@</a>
+风荷星雨<br><fieldset class="comment_quote"><legend><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#2628578" title="查看引用原文">引用</a></legend>刚开始接触svm，看了三篇楼主关于svm的文章，很有帮助。在此感谢。<br><br>小弟不才，准备样本数据的代码“res.at&lt;double&gt;(k, i * 8 + j) = dst.at&lt;double&gt;(i, j);  ”是不是应该为“data.at&lt;double&gt;(k, i * 8 + j) = dst.at&lt;double&gt;(i, j);  ”<br><br>再次感谢楼主提供的学习资料</fieldset><br>目测应该是错了，谢谢提醒。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2628644,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2628644,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2628644_avatar" style="display:none;">http://pic.cnblogs.com/face/u372204.jpg?id=20165031</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#3103138" class="layer">#11楼</a><a name="3103138" id="comment_anchor_3103138"></a></cite> <a id="a_comment_author_3103138" href="http://www.cnblogs.com/Johnson13/" target="_blank">蚌蚌头</a> <a href="http://msg.cnblogs.com/send/%E8%9A%8C%E8%9A%8C%E5%A4%B4" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2015-01-08 21:14</span></small>
+			</h5>
+			<div id="comment_body_3103138" class="blog_comment_body">非常受用，向博主学习！！</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3103138,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3103138,&#39;Bury&#39;,this)">反对(0)</a></div>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#3306377" class="layer">#12楼</a><a name="3306377" id="comment_anchor_3306377"></a></cite> <a id="a_comment_author_3306377" href="http://home.cnblogs.com/u/837338/" target="_blank">mayflower</a> <a href="http://msg.cnblogs.com/send/mayflower" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2015-11-14 11:29</span></small>
+			</h5>
+			<div id="comment_body_3306377" class="blog_comment_body">您好，正在学习您的文章，可是图片显示不出来，能不能麻烦帮组解决？！~谢谢</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3306377,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3306377,&#39;Bury&#39;,this)">反对(0)</a></div>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+		<li class="alt">
+			<h5>
+				<cite><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#3531877" class="layer">#13楼</a><a name="3531877" id="comment_anchor_3531877"></a><span id="comment-maxId" style="display:none;">3531877</span><span id="comment-maxDate" style="display:none;">2016/10/14 22:53:17</span></cite> <a id="a_comment_author_3531877" href="http://www.cnblogs.com/tanHuan/" target="_blank">一晌贪欢</a> <a href="http://msg.cnblogs.com/send/%E4%B8%80%E6%99%8C%E8%B4%AA%E6%AC%A2" title="发送站内短消息" class="sendMsg2This">&nbsp;</a><small> <span class="comment_date">2016-10-14 22:53</span></small>
+			</h5>
+			<div id="comment_body_3531877" class="blog_comment_body">博主，有完整的工程分享不，或者字体样本数据？</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3531877,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3531877,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3531877_avatar" style="display:none;">http://pic.cnblogs.com/face/738150/20150331110252.png</span>
+			<div class="opt_comment"><span class="comment_actions"></span></div>
+		</li>
+	
+</ol>
+
+<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.grapecity.com.cn/enterprise-solutions/huozige/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=huozige&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/24442-20170531232906555-989803912.png" alt="huozige"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/570796/" target="_blank">17位谷歌Android开发专家是如何看待Kotlin的？</a><br> ·  <a href="http://news.cnblogs.com/n/570795/" target="_blank">英特尔CEO看好自动驾驶 称能帮助寻找失踪儿童</a><br> ·  <a href="http://news.cnblogs.com/n/570793/" target="_blank">Facebook/Twitter/YouTube将直播Ariana Grande公益演唱会</a><br> ·  <a href="http://news.cnblogs.com/n/570792/" target="_blank">工信部放大招！烦人的App推送终于有人治了</a><br> ·  <a href="http://news.cnblogs.com/n/570791/" target="_blank">支付宝官方回应：梭梭树不受地震影响</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/24442-20170601093816602-1429765193.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+        </div>
+
+        <script type="text/javascript">
+            var m = window.__blog.contentRendered;
+            if (m) { m(__$("content")); }
+        </script>
+
+        <div id="sidebar">
+            
+<div id="about">
+<div>
+<h2 id="about_title">About</h2>
+<div id="about_body">
+<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/justany/">Justany_WhiteSnow</a><br>园龄：<a href="http://home.cnblogs.com/u/justany/" title="入园时间：2012-02-02">5年4个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/justany/followers/">342</a><br>关注：<a href="http://home.cnblogs.com/u/justany/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;cf0f1a7e-7d4d-e111-aa3f-842b2b196315&#39;)">+加关注</a></div></div></div>
+<script type="text/javascript">loadBlogNews();</script>
+</div>
+</div>
+</div>
+
+            <script type="text/javascript">
+                var m = window.__blog.aboutRendered;
+                if (m) { m(__$("about")); }
+            </script>
+            
+<div id="mySearchWrapper">
+    <div id="mySearch">
+        <input type="image" src="./OpenCV 2.4+ C++ SVM文字识别 - Justany_WhiteSnow - 博客园_files/btnsearch.gif" id="btnZzk" class="submit" onclick="zzk_go();return false;">
+        <label class="lb_search"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="keyword"></label>
+    </div>
+</div>
+
+            <script type="text/javascript">
+                var m = window.__blog.searchFormRendered;
+                if (m) { m(__$("searchform")); }
+            </script>
+            <div id="sideMain">
+            <div id="side-recent-comments">
+        <h2>最新评论</h2>
+        <ul class="voice">
+                <li>
+                    <a href="http://www.cnblogs.com/justany/p/3279717.html#3674530">Re:NodeJS + PhantomJS 抓取页面信息以及截图</a>
+                    <br>
+                    <a class="child" href="http://www.cnblogs.com/justany/p/3279717.html#3674530">
+                        我想问下楼主这个js可以用用结合java语言截取svg图吗 或者img图
+                        -- 咬金程
+                    </a>
+                </li>
+                <li>
+                    <a href="http://www.cnblogs.com/justany/archive/2013/01/14/2857793.html#3601639">Re:Javascript图像处理——边缘梯度计算</a>
+                    <br>
+                    <a class="child" href="http://www.cnblogs.com/justany/archive/2013/01/14/2857793.html#3601639">
+                        看不到公式哎
+                        -- sangle
+                    </a>
+                </li>
+                <li>
+                    <a href="http://www.cnblogs.com/justany/archive/2012/12/06/2804211.html#3571282">Re:GIST特征描述符使用</a>
+                    <br>
+                    <a class="child" href="http://www.cnblogs.com/justany/archive/2012/12/06/2804211.html#3571282">
+                        正要用gist特征，非常感谢，成功
+                        -- SuperSonicxxx
+                    </a>
+                </li>
+                <li>
+                    <a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#3531877">Re:OpenCV 2.4+ C++ SVM文字识别</a>
+                    <br>
+                    <a class="child" href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html#3531877">
+                        博主，有完整的工程分享不，或者字体样本数据？
+                        -- 一晌贪欢
+                    </a>
+                </li>
+                <li>
+                    <a href="http://www.cnblogs.com/justany/archive/2012/11/01/the_keyword_this_in_javascript.html#3487091">Re:Javascript中this关键字详解</a>
+                    <br>
+                    <a class="child" href="http://www.cnblogs.com/justany/archive/2012/11/01/the_keyword_this_in_javascript.html#3487091">
+                        其实就是直接调用函数，该函数内的this为window。
+作为对象的方法调用时this指向该对象。
+                        -- Amomentiny
+                    </a>
+                </li>
+        </ul>
+    </div></div>
+            <div id="sideRight">
+            <div id="side-archives">
+        <h2>随笔档案</h2>
+        <ul class="date">
+                <li><a href="http://www.cnblogs.com/justany/archive/2016/09.html">2016年9月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2015/07.html">2015年7月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2015/06.html">2015年6月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2015/05.html">2015年5月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2015/04.html">2015年4月(4)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2015/01.html">2015年1月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2014/12.html">2014年12月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2014/11.html">2014年11月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2014/09.html">2014年9月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2014/02.html">2014年2月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2014/01.html">2014年1月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/11.html">2013年11月(5)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/09.html">2013年9月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/08.html">2013年8月(2)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/07.html">2013年7月(1)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/06.html">2013年6月(2)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/05.html">2013年5月(3)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/04.html">2013年4月(3)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/03.html">2013年3月(3)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/02.html">2013年2月(5)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2013/01.html">2013年1月(23)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2012/12.html">2012年12月(9)</a></li>
+                <li><a href="http://www.cnblogs.com/justany/archive/2012/11.html">2012年11月(21)</a></li>
+        </ul>
+    </div></div>
+            <div id="sideLeft">
+            <div id="side-calendar">
+        <h2>日历</h2>
+        <div id="blog-calendar"><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2012/10/01&#39;);return false;">&lt;</a></td><td align="center">2012年11月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2012/12/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/01.html"><u>1</u></a></td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/02.html"><u>2</u></a></td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/04.html"><u>4</u></a></td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/05.html"><u>5</u></a></td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/06.html"><u>6</u></a></td><td align="center">7</td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/08.html"><u>8</u></a></td><td align="center">9</td><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/10.html"><u>10</u></a></td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/12.html"><u>12</u></a></td><td align="center">13</td><td align="center">14</td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/15.html"><u>15</u></a></td><td align="center">16</td><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/17.html"><u>17</u></a></td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/21.html"><u>21</u></a></td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/22.html"><u>22</u></a></td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/23.html"><u>23</u></a></td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/26.html"><u>26</u></a></td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/27.html"><u>27</u></a></td><td align="center">28</td><td align="center"><a href="http://www.cnblogs.com/justany/archive/2012/11/29.html"><u>29</u></a></td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div>
+    </div><div id="side-categories">
+        <h2>随笔分类</h2>
+        <ul class="folder">
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/429717.html">Computer Vision(34)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/428723.html">Data Mining(2)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/426261.html">Date Structures(7)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/439696.html">GAE(1)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/450684.html">Java(3)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/424650.html">Javascript(62)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/507549.html">NodeJS(5)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/425214.html">Semantic Web(4)</a>
+                </li>
+                <li>
+                    
+                    <a href="http://www.cnblogs.com/justany/category/467633.html">TDD &amp; BDD(1)</a>
+                </li>
+        </ul>
+    </div><div id="side-top-posts-custom">
+    <h2>推荐排行榜</h2>
+    <div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/justany/archive/2012/11/01/the_keyword_this_in_javascript.html">1. Javascript中this关键字详解(20)</a></li><li><a href="http://www.cnblogs.com/justany/p/3429097.html">2. 高级Javascript调试——console.table()(12)</a></li><li><a href="http://www.cnblogs.com/justany/archive/2013/01/22/2868076.html">3. jQuery data(11)</a></li><li><a href="http://www.cnblogs.com/justany/archive/2012/12/25/2831945.html">4. Javascript图像处理(9)</a></li><li><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html">5. OpenCV 2.4+ C++ SVM文字识别(9)</a></li></ul></div>
+</div><div id="side-top-posts">
+    <h2>阅读排行榜</h2>
+    <div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/justany/p/3279717.html">1. NodeJS + PhantomJS 抓取页面信息以及截图(38990)</a></li><li><a href="http://www.cnblogs.com/justany/archive/2012/11/01/the_keyword_this_in_javascript.html">2. Javascript中this关键字详解(36100)</a></li><li><a href="http://www.cnblogs.com/justany/archive/2012/11/23/2784125.html">3. OpenCV 2.4+ C++ SVM介绍(31563)</a></li><li><a href="http://www.cnblogs.com/justany/archive/2012/11/27/2789767.html">4. OpenCV 2.4+ C++ SVM文字识别(23992)</a></li><li><a href="http://www.cnblogs.com/justany/p/4457958.html">5. HLS视频点播&amp;直播初探(23962)</a></li></ul></div>
+</div>    
+    
+    
+    
+
+
+</div>
+            
+                <div id="sideContainer"></div>
+                <script type="text/javascript">
+                    $.ajax({
+                        url: '/' + currentBlogApp + '/mvc/blog/Minyx2_Lite_SideColumn.aspx',
+                        data: '{}',
+                        type: 'post',
+                        dataType: 'text',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data) {
+                                $("#sideContainer").html(data);
+                                loadBlogDefaultCalendar();
+                                loadBlogSideBlocks();
+                                var m = window.__blog.sideContainerRendered;
+                                if (m) { m(__$("sideContainer")); }
+                                window.__blog.sidebar.__layout();
+                            }
+                        }
+                    });
+
+                </script>
+            
+        </div>
+
+        <script type="text/javascript">
+            var m = window.__blog.sidebarRendered;
+            if (m) { m(__$("sidebar")); }
+        </script>
+
+        <div id="footer">
+            
+<p id="logoFoot">
+    <a href="http://www.spiga.com.mx/" title="Agencia Interactiva Spiga">www.spiga.com.mx</a>
+</p>
+<div class="footText">
+<p>
+Copyright ©2017 Justany_WhiteSnow
+</p>
+<p>
+<a href="http://www.cnblogs.com/">博客园</a>
+</p>
+</div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var m = window.__blog.wrapperRendered;
+        if (m) { m(__$("wrapper")); }
+    </script>
+
+</div>
+<script type="text/javascript">
+    var m = window.__blog.containerRendered;
+    if (m) { m(__$("container")); }
+</script>
+
+
+</body></html>

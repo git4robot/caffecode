@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)http://www.cnblogs.com/denny402/p/5032839.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/bundle-coffee.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/bundle-coffee-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/denny402/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/denny402/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/denny402/wlwmanifest.xml">
+<script async="" src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/encoder.js.下载"></script><script src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'denny402', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/denny402/"><img id="blogLogo" src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/denny402/">denny的学习专栏</a></h1>
+<h2>徐其华</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="navigator">
+			
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+	<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/denny402/">首页</a></li>
+	<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+	<li><a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/denny402">联系</a></li>
+	<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+	<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/denny402/rss">订阅</a>
+	<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/denny402/rss"><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/xml.gif" alt="订阅"></a></li>
+</ul>
+
+
+			<div class="blogStats">
+				
+				<div id="blog_stats">
+<!--done-->
+随笔- 136&nbsp;
+文章- 0&nbsp;
+评论- 825&nbsp;
+</div>
+				
+			</div><!--end: blogStats -->
+		</div><!--end: navigator 博客导航栏 -->
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/denny402/p/5032839.html">在opencv3中的机器学习算法练习：对OCR进行分类</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>OCR&nbsp;（Optical Character Recognition，光学字符识别），我们这个练习就是对OCR英文字母进行识别。得到一张OCR图片后，提取出字符相关的ROI图像，并且大小归一化，整个图像的像素值序列可以直接作为特征。但直接将整个图像作为特征数据维度太高，计算量太大，所以也可以进行一些降维处理，减少输入的数据量。</p>
+<p>处理过程一般这样：先对原图像进行裁剪，得到字符的ROI图像，二值化。然后将图像分块，统计每个小块中非0像素的个数，这样就形成了一个较小的矩阵，这矩阵就是新的特征了。opencv为我们提供了一些这样的数据，放在</p>
+<p>\opencv\sources\samples\data\letter-recognition.data</p>
+<p>这个文件里，打开看看：</p>
+<p><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/140867-20151209143241699-1880246693.png" alt=""></p>
+<p>每一行代表一个样本。第一列大写的字母，就是标注，随后的16列就是该字母的特征向量。这个文件中总共有20000行样本，共分类26类（26个字母）。</p>
+<p>我们将这些数据读取出来后，分成两部分，第一部分16000个样本作为训练样本，训练出分类器后，对这16000个训练数据和余下的4000个数据分别进行测试，得到训练精度和测试精度。其中adaboost比较特殊一点，训练和测试样本各为10000.</p>
+<p>完整代码为：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;90e8fcf6-4787-4fbe-8fb3-599a0c3696e5&#39;)"><img id="code_img_closed_90e8fcf6-4787-4fbe-8fb3-599a0c3696e5" class="code_img_closed" src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/ContractedBlock.gif" alt="" style="display: none;"><img id="code_img_opened_90e8fcf6-4787-4fbe-8fb3-599a0c3696e5" class="code_img_opened" style="" onclick="cnblogs_code_hide(&#39;90e8fcf6-4787-4fbe-8fb3-599a0c3696e5&#39;,event)" src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_90e8fcf6-4787-4fbe-8fb3-599a0c3696e5" class="cnblogs_code_hide" style="display: block;"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>#include <span style="color: #800000;">"</span><span style="color: #800000;">stdafx.h</span><span style="color: #800000;">"</span><span style="color: #000000;">
+#include </span><span style="color: #800000;">"</span><span style="color: #800000;">opencv2\opencv.hpp</span><span style="color: #800000;">"</span><span style="color: #000000;">
+#include </span>&lt;iostream&gt;
+<span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> cv;
+</span><span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> cv::ml;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 读取文件数据</span>
+<span style="color: #0000ff;">bool</span> read_num_class_data(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp; filename, <span style="color: #0000ff;">int</span> var_count,Mat* _data, Mat*<span style="color: #000000;"> _responses)
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> M = <span style="color: #800080;">1024</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">char</span> buf[M + <span style="color: #800080;">2</span><span style="color: #000000;">];
+
+    Mat el_ptr(</span><span style="color: #800080;">1</span><span style="color: #000000;">, var_count, CV_32F);
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i;
+    vector</span>&lt;<span style="color: #0000ff;">int</span>&gt;<span style="color: #000000;"> responses;
+
+    _data</span>-&gt;<span style="color: #000000;">release();
+    _responses</span>-&gt;<span style="color: #000000;">release();
+    FILE </span>*<span style="color: #000000;">f;
+    fopen_s(</span>&amp;f, filename.c_str(), <span style="color: #800000;">"</span><span style="color: #800000;">rt</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">f)
+    {
+        cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Could not read the database </span><span style="color: #800000;">"</span> &lt;&lt; filename &lt;&lt;<span style="color: #000000;"> endl;
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (;;)
+    {
+        </span><span style="color: #0000ff;">char</span>*<span style="color: #000000;"> ptr;
+        </span><span style="color: #0000ff;">if</span> (!fgets(buf, M, f) || !strchr(buf, <span style="color: #800000;">'</span><span style="color: #800000;">,</span><span style="color: #800000;">'</span><span style="color: #000000;">))
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        responses.push_back((</span><span style="color: #0000ff;">int</span>)buf[<span style="color: #800080;">0</span><span style="color: #000000;">]);
+        ptr </span>= buf + <span style="color: #800080;">2</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i &lt; var_count; i++<span style="color: #000000;">)
+        {
+            </span><span style="color: #0000ff;">int</span> n = <span style="color: #800080;">0</span><span style="color: #000000;">;
+            sscanf_s(ptr, </span><span style="color: #800000;">"</span><span style="color: #800000;">%f%n</span><span style="color: #800000;">"</span>, &amp;el_ptr.at&lt;<span style="color: #0000ff;">float</span>&gt;(i), &amp;<span style="color: #000000;">n);
+            ptr </span>+= n + <span style="color: #800080;">1</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (i &lt;<span style="color: #000000;"> var_count)
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        _data</span>-&gt;<span style="color: #000000;">push_back(el_ptr);
+    }
+    fclose(f);
+    Mat(responses).copyTo(</span>*<span style="color: #000000;">_responses);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">准备训练数据</span>
+Ptr&lt;TrainData&gt; prepare_train_data(<span style="color: #0000ff;">const</span> Mat&amp; data, <span style="color: #0000ff;">const</span> Mat&amp; responses, <span style="color: #0000ff;">int</span><span style="color: #000000;"> ntrain_samples)
+{
+    Mat sample_idx </span>= Mat::zeros(<span style="color: #800080;">1</span><span style="color: #000000;">, data.rows, CV_8U);
+    Mat train_samples </span>= sample_idx.colRange(<span style="color: #800080;">0</span><span style="color: #000000;">, ntrain_samples);
+    train_samples.setTo(Scalar::all(</span><span style="color: #800080;">1</span><span style="color: #000000;">));
+
+    </span><span style="color: #0000ff;">int</span> nvars =<span style="color: #000000;"> data.cols;
+    Mat var_type(nvars </span>+ <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">, CV_8U);
+    var_type.setTo(Scalar::all(VAR_ORDERED));
+    var_type.at</span>&lt;uchar&gt;(nvars) =<span style="color: #000000;"> VAR_CATEGORICAL;
+
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> TrainData::create(data, ROW_SAMPLE, responses,
+        noArray(), sample_idx, noArray(), var_type);
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">设置迭代条件</span>
+inline TermCriteria TC(<span style="color: #0000ff;">int</span> iters, <span style="color: #0000ff;">double</span><span style="color: #000000;"> eps)
+{
+    </span><span style="color: #0000ff;">return</span> TermCriteria(TermCriteria::MAX_ITER + (eps &gt; <span style="color: #800080;">0</span> ? TermCriteria::EPS : <span style="color: #800080;">0</span><span style="color: #000000;">), iters, eps);
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">分类预测</span>
+<span style="color: #0000ff;">void</span> test_and_save_classifier(<span style="color: #0000ff;">const</span> Ptr&lt;StatModel&gt;&amp; model,    <span style="color: #0000ff;">const</span> Mat&amp; data, <span style="color: #0000ff;">const</span> Mat&amp;<span style="color: #000000;"> responses,
+    </span><span style="color: #0000ff;">int</span> ntrain_samples, <span style="color: #0000ff;">int</span><span style="color: #000000;"> rdelta)
+{
+    </span><span style="color: #0000ff;">int</span> i, nsamples_all =<span style="color: #000000;"> data.rows;
+    </span><span style="color: #0000ff;">double</span> train_hr = <span style="color: #800080;">0</span>, test_hr = <span style="color: #800080;">0</span><span style="color: #000000;">;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> compute prediction error on train and test data</span>
+    <span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i &lt; nsamples_all; i++<span style="color: #000000;">)
+    {
+        Mat sample </span>=<span style="color: #000000;"> data.row(i);
+
+        </span><span style="color: #0000ff;">float</span> r = model-&gt;<span style="color: #000000;">predict(sample);
+        r </span>= std::abs(r + rdelta - responses.at&lt;<span style="color: #0000ff;">int</span>&gt;(i)) &lt;= FLT_EPSILON ? <span style="color: #800080;">1</span>.f : <span style="color: #800080;">0</span><span style="color: #000000;">.f;
+
+        </span><span style="color: #0000ff;">if</span> (i &lt;<span style="color: #000000;"> ntrain_samples)
+            train_hr </span>+=<span style="color: #000000;"> r;
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+            test_hr </span>+=<span style="color: #000000;"> r;
+    }
+
+    test_hr </span>/= nsamples_all -<span style="color: #000000;"> ntrain_samples;
+    train_hr </span>= ntrain_samples &gt; <span style="color: #800080;">0</span> ? train_hr / ntrain_samples : <span style="color: #800080;">1</span><span style="color: #000000;">.;
+
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Recognition rate: train = %.1f%%, test = %.1f%%\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        train_hr</span>*<span style="color: #800080;">100</span>., test_hr*<span style="color: #800080;">100</span><span style="color: #000000;">.);
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">随机树分类</span>
+<span style="color: #0000ff;">bool</span> build_rtrees_classifier(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> data_filename)
+{
+    Mat data;
+    Mat responses;
+    read_num_class_data(data_filename, </span><span style="color: #800080;">16</span>, &amp;data, &amp;<span style="color: #000000;">responses);
+
+    </span><span style="color: #0000ff;">int</span> nsamples_all =<span style="color: #000000;"> data.rows;
+    </span><span style="color: #0000ff;">int</span> ntrain_samples = (<span style="color: #0000ff;">int</span>)(nsamples_all*<span style="color: #800080;">0.8</span><span style="color: #000000;">);
+
+    Ptr</span>&lt;RTrees&gt;<span style="color: #000000;"> model;
+    Ptr</span>&lt;TrainData&gt; tdata =<span style="color: #000000;"> prepare_train_data(data, responses, ntrain_samples);
+    model </span>=<span style="color: #000000;"> RTrees::create();
+    model</span>-&gt;setMaxDepth(<span style="color: #800080;">10</span><span style="color: #000000;">);
+    model</span>-&gt;setMinSampleCount(<span style="color: #800080;">10</span><span style="color: #000000;">);
+    model</span>-&gt;setRegressionAccuracy(<span style="color: #800080;">0</span><span style="color: #000000;">);
+    model</span>-&gt;setUseSurrogates(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+    model</span>-&gt;setMaxCategories(<span style="color: #800080;">15</span><span style="color: #000000;">);
+    model</span>-&gt;<span style="color: #000000;">setPriors(Mat());
+    model</span>-&gt;setCalculateVarImportance(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+    model</span>-&gt;setActiveVarCount(<span style="color: #800080;">4</span><span style="color: #000000;">);
+    model</span>-&gt;setTermCriteria(TC(<span style="color: #800080;">100</span>, <span style="color: #800080;">0.01f</span><span style="color: #000000;">));
+    model</span>-&gt;<span style="color: #000000;">train(tdata);
+    test_and_save_classifier(model, data, responses, ntrain_samples, </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of trees: </span><span style="color: #800000;">"</span> &lt;&lt; model-&gt;getRoots().size() &lt;&lt;<span style="color: #000000;"> endl;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Print variable importance</span>
+    Mat var_importance = model-&gt;<span style="color: #000000;">getVarImportance();
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">var_importance.empty())
+    {
+        </span><span style="color: #0000ff;">double</span> rt_imp_sum = sum(var_importance)[<span style="color: #800080;">0</span><span style="color: #000000;">];
+        printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">var#\timportance (in %%):\n</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">int</span> i, n = (<span style="color: #0000ff;">int</span><span style="color: #000000;">)var_importance.total();
+        </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i &lt; n; i++<span style="color: #000000;">)
+            printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">%-2d\t%-4.1f\n</span><span style="color: #800000;">"</span>, i, <span style="color: #800080;">100</span>.f*var_importance.at&lt;<span style="color: #0000ff;">float</span>&gt;(i) /<span style="color: #000000;"> rt_imp_sum);
+    }
+
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">adaboost分类</span>
+<span style="color: #0000ff;">bool</span> build_boost_classifier(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> data_filename)
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> class_count = <span style="color: #800080;">26</span><span style="color: #000000;">;
+    Mat data;
+    Mat responses;
+    Mat weak_responses;
+
+    read_num_class_data(data_filename, </span><span style="color: #800080;">16</span>, &amp;data, &amp;<span style="color: #000000;">responses);
+    </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> i, j, k;
+    Ptr</span>&lt;Boost&gt;<span style="color: #000000;"> model;
+
+    </span><span style="color: #0000ff;">int</span> nsamples_all =<span style="color: #000000;"> data.rows;
+    </span><span style="color: #0000ff;">int</span> ntrain_samples = (<span style="color: #0000ff;">int</span>)(nsamples_all*<span style="color: #800080;">0.5</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">int</span> var_count =<span style="color: #000000;"> data.cols;
+
+    Mat new_data(ntrain_samples</span>*class_count, var_count + <span style="color: #800080;">1</span><span style="color: #000000;">, CV_32F);
+    Mat new_responses(ntrain_samples</span>*class_count, <span style="color: #800080;">1</span><span style="color: #000000;">, CV_32S);
+
+    </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i &lt; ntrain_samples; i++<span style="color: #000000;">)
+    {
+        </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">float</span>* data_row = data.ptr&lt;<span style="color: #0000ff;">float</span>&gt;<span style="color: #000000;">(i);
+        </span><span style="color: #0000ff;">for</span> (j = <span style="color: #800080;">0</span>; j &lt; class_count; j++<span style="color: #000000;">)
+        {
+            </span><span style="color: #0000ff;">float</span>* new_data_row = (<span style="color: #0000ff;">float</span>*)new_data.ptr&lt;<span style="color: #0000ff;">float</span>&gt;(i*class_count +<span style="color: #000000;"> j);
+            memcpy(new_data_row, data_row, var_count</span>*<span style="color: #0000ff;">sizeof</span>(data_row[<span style="color: #800080;">0</span><span style="color: #000000;">]));
+            new_data_row[var_count] </span>= (<span style="color: #0000ff;">float</span><span style="color: #000000;">)j;
+            new_responses.at</span>&lt;<span style="color: #0000ff;">int</span>&gt;(i*class_count + j) = responses.at&lt;<span style="color: #0000ff;">int</span>&gt;(i) == j + <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        }
+    }
+
+    Mat var_type(</span><span style="color: #800080;">1</span>, var_count + <span style="color: #800080;">2</span><span style="color: #000000;">, CV_8U);
+    var_type.setTo(Scalar::all(VAR_ORDERED));
+    var_type.at</span>&lt;uchar&gt;(var_count) = var_type.at&lt;uchar&gt;(var_count + <span style="color: #800080;">1</span>) =<span style="color: #000000;"> VAR_CATEGORICAL;
+
+    Ptr</span>&lt;TrainData&gt; tdata =<span style="color: #000000;"> TrainData::create(new_data, ROW_SAMPLE, new_responses,
+        noArray(), noArray(), noArray(), var_type);
+    vector</span>&lt;<span style="color: #0000ff;">double</span>&gt; priors(<span style="color: #800080;">2</span><span style="color: #000000;">);
+    priors[</span><span style="color: #800080;">0</span>] = <span style="color: #800080;">1</span><span style="color: #000000;">;
+    priors[</span><span style="color: #800080;">1</span>] = <span style="color: #800080;">26</span><span style="color: #000000;">;
+
+    model </span>=<span style="color: #000000;"> Boost::create();
+    model</span>-&gt;<span style="color: #000000;">setBoostType(Boost::GENTLE);
+    model</span>-&gt;setWeakCount(<span style="color: #800080;">100</span><span style="color: #000000;">);
+    model</span>-&gt;setWeightTrimRate(<span style="color: #800080;">0.95</span><span style="color: #000000;">);
+    model</span>-&gt;setMaxDepth(<span style="color: #800080;">5</span><span style="color: #000000;">);
+    model</span>-&gt;setUseSurrogates(<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+    model</span>-&gt;<span style="color: #000000;">setPriors(Mat(priors));
+    model</span>-&gt;<span style="color: #000000;">train(tdata);
+    Mat temp_sample(</span><span style="color: #800080;">1</span>, var_count + <span style="color: #800080;">1</span><span style="color: #000000;">, CV_32F);
+    </span><span style="color: #0000ff;">float</span>* tptr = temp_sample.ptr&lt;<span style="color: #0000ff;">float</span>&gt;<span style="color: #000000;">();
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> compute prediction error on train and test data</span>
+    <span style="color: #0000ff;">double</span> train_hr = <span style="color: #800080;">0</span>, test_hr = <span style="color: #800080;">0</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (i = <span style="color: #800080;">0</span>; i &lt; nsamples_all; i++<span style="color: #000000;">)
+    {
+        </span><span style="color: #0000ff;">int</span> best_class = <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">double</span> max_sum = -<span style="color: #000000;">DBL_MAX;
+        </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">float</span>* ptr = data.ptr&lt;<span style="color: #0000ff;">float</span>&gt;<span style="color: #000000;">(i);
+        </span><span style="color: #0000ff;">for</span> (k = <span style="color: #800080;">0</span>; k &lt; var_count; k++<span style="color: #000000;">)
+            tptr[k] </span>=<span style="color: #000000;"> ptr[k];
+
+        </span><span style="color: #0000ff;">for</span> (j = <span style="color: #800080;">0</span>; j &lt; class_count; j++<span style="color: #000000;">)
+        {
+            tptr[var_count] </span>= (<span style="color: #0000ff;">float</span><span style="color: #000000;">)j;
+            </span><span style="color: #0000ff;">float</span> s = model-&gt;<span style="color: #000000;">predict(temp_sample, noArray(), StatModel::RAW_OUTPUT);
+            </span><span style="color: #0000ff;">if</span> (max_sum &lt;<span style="color: #000000;"> s)
+            {
+                max_sum </span>=<span style="color: #000000;"> s;
+                best_class </span>= j + <span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+            }
+        }
+
+        </span><span style="color: #0000ff;">double</span> r = std::abs(best_class - responses.at&lt;<span style="color: #0000ff;">int</span>&gt;(i)) &lt; FLT_EPSILON ? <span style="color: #800080;">1</span> : <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (i &lt;<span style="color: #000000;"> ntrain_samples)
+            train_hr </span>+=<span style="color: #000000;"> r;
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+            test_hr </span>+=<span style="color: #000000;"> r;
+    }
+
+    test_hr </span>/= nsamples_all -<span style="color: #000000;"> ntrain_samples;
+    train_hr </span>= ntrain_samples &gt; <span style="color: #800080;">0</span> ? train_hr / ntrain_samples : <span style="color: #800080;">1</span><span style="color: #000000;">.;
+    printf(</span><span style="color: #800000;">"</span><span style="color: #800000;">Recognition rate: train = %.1f%%, test = %.1f%%\n</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        train_hr</span>*<span style="color: #800080;">100</span>., test_hr*<span style="color: #800080;">100</span><span style="color: #000000;">.);
+
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Number of trees: </span><span style="color: #800000;">"</span> &lt;&lt; model-&gt;getRoots().size() &lt;&lt;<span style="color: #000000;"> endl;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">多层感知机分类（ANN）</span>
+<span style="color: #0000ff;">bool</span> build_mlp_classifier(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> data_filename)
+{
+    </span><span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> class_count = <span style="color: #800080;">26</span><span style="color: #000000;">;
+    Mat data;
+    Mat responses;
+
+    read_num_class_data(data_filename, </span><span style="color: #800080;">16</span>, &amp;data, &amp;<span style="color: #000000;">responses);
+    Ptr</span>&lt;ANN_MLP&gt;<span style="color: #000000;"> model;
+
+    </span><span style="color: #0000ff;">int</span> nsamples_all =<span style="color: #000000;"> data.rows;
+    </span><span style="color: #0000ff;">int</span> ntrain_samples = (<span style="color: #0000ff;">int</span>)(nsamples_all*<span style="color: #800080;">0.8</span><span style="color: #000000;">);
+    Mat train_data </span>= data.rowRange(<span style="color: #800080;">0</span><span style="color: #000000;">, ntrain_samples);
+    Mat train_responses </span>=<span style="color: #000000;"> Mat::zeros(ntrain_samples, class_count, CV_32F);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1. unroll the responses</span>
+    cout &lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Unrolling the responses...\n</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">int</span> i = <span style="color: #800080;">0</span>; i &lt; ntrain_samples; i++<span style="color: #000000;">)
+    {
+        </span><span style="color: #0000ff;">int</span> cls_label = responses.at&lt;<span style="color: #0000ff;">int</span>&gt;(i) -<span style="color: #800000;">'</span><span style="color: #800000;">A</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        train_responses.at</span>&lt;<span style="color: #0000ff;">float</span>&gt;(i, cls_label) = <span style="color: #800080;">1</span><span style="color: #000000;">.f;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2. train classifier</span>
+    <span style="color: #0000ff;">int</span> layer_sz[] = { data.cols, <span style="color: #800080;">100</span>, <span style="color: #800080;">100</span><span style="color: #000000;">, class_count };
+    </span><span style="color: #0000ff;">int</span> nlayers = (<span style="color: #0000ff;">int</span>)(<span style="color: #0000ff;">sizeof</span>(layer_sz) / <span style="color: #0000ff;">sizeof</span>(layer_sz[<span style="color: #800080;">0</span><span style="color: #000000;">]));
+    Mat layer_sizes(</span><span style="color: #800080;">1</span><span style="color: #000000;">, nlayers, CV_32S, layer_sz);
+
+</span><span style="color: #0000ff;">#if</span> 1
+    <span style="color: #0000ff;">int</span> method =<span style="color: #000000;"> ANN_MLP::BACKPROP;
+    </span><span style="color: #0000ff;">double</span> method_param = <span style="color: #800080;">0.001</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> max_iter = <span style="color: #800080;">300</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">#else</span>
+    <span style="color: #0000ff;">int</span> method =<span style="color: #000000;"> ANN_MLP::RPROP;
+    </span><span style="color: #0000ff;">double</span> method_param = <span style="color: #800080;">0.1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">int</span> max_iter = <span style="color: #800080;">1000</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">#endif</span><span style="color: #000000;">
+
+    Ptr</span>&lt;TrainData&gt; tdata =<span style="color: #000000;"> TrainData::create(train_data, ROW_SAMPLE, train_responses);
+    model </span>=<span style="color: #000000;"> ANN_MLP::create();
+    model</span>-&gt;<span style="color: #000000;">setLayerSizes(layer_sizes);
+    model</span>-&gt;setActivationFunction(ANN_MLP::SIGMOID_SYM, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    model</span>-&gt;setTermCriteria(TC(max_iter, <span style="color: #800080;">0</span><span style="color: #000000;">));
+    model</span>-&gt;<span style="color: #000000;">setTrainMethod(method, method_param);
+    model</span>-&gt;<span style="color: #000000;">train(tdata);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">K最近邻分类</span>
+<span style="color: #0000ff;">bool</span> build_knearest_classifier(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp; data_filename, <span style="color: #0000ff;">int</span><span style="color: #000000;"> K)
+{
+    Mat data;
+    Mat responses;
+    read_num_class_data(data_filename, </span><span style="color: #800080;">16</span>, &amp;data, &amp;<span style="color: #000000;">responses);
+    </span><span style="color: #0000ff;">int</span> nsamples_all =<span style="color: #000000;"> data.rows;
+    </span><span style="color: #0000ff;">int</span> ntrain_samples = (<span style="color: #0000ff;">int</span>)(nsamples_all*<span style="color: #800080;">0.8</span><span style="color: #000000;">);
+
+    Ptr</span>&lt;TrainData&gt; tdata =<span style="color: #000000;"> prepare_train_data(data, responses, ntrain_samples);
+    Ptr</span>&lt;KNearest&gt; model =<span style="color: #000000;"> KNearest::create();
+    model</span>-&gt;<span style="color: #000000;">setDefaultK(K);
+    model</span>-&gt;setIsClassifier(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+    model</span>-&gt;<span style="color: #000000;">train(tdata);
+
+    test_and_save_classifier(model, data, responses, ntrain_samples, </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">贝叶斯分类</span>
+<span style="color: #0000ff;">bool</span> build_nbayes_classifier(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> data_filename)
+{
+    Mat data;
+    Mat responses;
+    read_num_class_data(data_filename, </span><span style="color: #800080;">16</span>, &amp;data, &amp;<span style="color: #000000;">responses);
+
+    </span><span style="color: #0000ff;">int</span> nsamples_all =<span style="color: #000000;"> data.rows;
+    </span><span style="color: #0000ff;">int</span> ntrain_samples = (<span style="color: #0000ff;">int</span>)(nsamples_all*<span style="color: #800080;">0.8</span><span style="color: #000000;">);
+
+    Ptr</span>&lt;NormalBayesClassifier&gt;<span style="color: #000000;"> model;
+    Ptr</span>&lt;TrainData&gt; tdata =<span style="color: #000000;"> prepare_train_data(data, responses, ntrain_samples);
+    model </span>=<span style="color: #000000;"> NormalBayesClassifier::create();
+    model</span>-&gt;<span style="color: #000000;">train(tdata);
+
+    test_and_save_classifier(model, data, responses, ntrain_samples, </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">svm分类</span>
+<span style="color: #0000ff;">bool</span> build_svm_classifier(<span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span>&amp;<span style="color: #000000;"> data_filename)
+{
+    Mat data;
+    Mat responses;
+    read_num_class_data(data_filename, </span><span style="color: #800080;">16</span>, &amp;data, &amp;<span style="color: #000000;">responses);
+
+    </span><span style="color: #0000ff;">int</span> nsamples_all =<span style="color: #000000;"> data.rows;
+    </span><span style="color: #0000ff;">int</span> ntrain_samples = (<span style="color: #0000ff;">int</span>)(nsamples_all*<span style="color: #800080;">0.8</span><span style="color: #000000;">);
+
+    Ptr</span>&lt;SVM&gt;<span style="color: #000000;"> model;
+    Ptr</span>&lt;TrainData&gt; tdata =<span style="color: #000000;"> prepare_train_data(data, responses, ntrain_samples);
+    model </span>=<span style="color: #000000;"> SVM::create();
+    model</span>-&gt;<span style="color: #000000;">setType(SVM::C_SVC);
+    model</span>-&gt;<span style="color: #000000;">setKernel(SVM::LINEAR);
+    model</span>-&gt;setC(<span style="color: #800080;">1</span><span style="color: #000000;">);
+    model</span>-&gt;<span style="color: #000000;">train(tdata);
+
+    test_and_save_classifier(model, data, responses, ntrain_samples, </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+{
+    </span><span style="color: #0000ff;">string</span> data_filename = <span style="color: #800000;">"</span><span style="color: #800000;">E:/opencv/opencv/sources/samples/data/letter-recognition.data</span><span style="color: #800000;">"</span>;  <span style="color: #008000;">//</span><span style="color: #008000;">字母数据</span>
+<span style="color: #000000;">
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">svm分类：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    build_svm_classifier(data_filename);
+
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">贝叶斯分类：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl; 
+    build_nbayes_classifier(data_filename);
+
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">K最近邻分类：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    build_knearest_classifier(data_filename,</span><span style="color: #800080;">10</span><span style="color: #000000;">);    
+
+    cout </span>&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">随机树分类：</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+    build_rtrees_classifier(data_filename);
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">cout &lt;&lt; "adaboost分类：" &lt;&lt; endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">build_boost_classifier(data_filename);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">cout &lt;&lt; "ANN（多层感知机)分类：" &lt;&lt; endl;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">build_mlp_classifier(data_filename);</span>
+}</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<span class="cnblogs_code_collapse" style="display: none;">View Code</span></div>
+<p>由于adaboost分类和 ann分类速度非常慢，因此我在main函数里把这两个分类注释掉了，大家有兴趣和时间可以测试一下。</p>
+<p>结果：</p>
+<p><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/140867-20151209145324074-1767591991.png" alt=""></p>
+<p>从结果显示来看，测试的四种分类算法中，KNN（最近邻）分类精度是最高的。所以说，对ocr进行识别，还是用knn最好。</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/denny402/category/716241.html" target="_blank">opencv</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/denny402/tag/opencv3/">opencv3</a>, <a href="http://www.cnblogs.com/denny402/tag/ml/">ml</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5032839,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;71830865-4f7c-df11-ba8f-001cf0cd104b&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/denny402/" target="_blank"><img src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/denny402/">denny402</a><br>
+            <a href="http://home.cnblogs.com/u/denny402/followees">关注 - 2</a><br>
+            <a href="http://home.cnblogs.com/u/denny402/followers">粉丝 - 489</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;71830865-4f7c-df11-ba8f-001cf0cd104b&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5032839,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(5032839,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/denny402/p/5032490.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/denny402/p/5032490.html" title="发布于2015-12-09 13:05">在opencv3中实现机器学习之：利用逻辑斯谛回归（logistic regression)分类</a><br><a href="http://www.cnblogs.com/denny402/p/5033380.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/denny402/p/5033380.html" title="发布于2015-12-09 16:52">利用opencv3中的kmeans实现抠图功能</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2015-12-09 14:56</span> <a href="http://www.cnblogs.com/denny402/">denny402</a> 阅读(<span id="post_view_count">4375</span>) 评论(<span id="post_comment_count">4</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5032839" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/denny402/p/5032839.html#" onclick="AddToWz(5032839);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=72158,cb_entryId=5032839,cb_blogApp=currentBlogApp,cb_blogUserGuid='71830865-4f7c-df11-ba8f-001cf0cd104b',cb_entryCreatedDate='2015/12/9 14:56:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<!--done-->
+<br>
+<div class="feedback_area_title">评论</div>
+<div class="feedbackNoItems"></div>
+	
+
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/denny402/p/5032839.html#3353048" class="layer">#1楼</a><a name="3353048" id="comment_anchor_3353048"></a> <span class="comment_date">2016-01-23 16:23</span> | <a id="a_comment_author_3353048" href="http://home.cnblogs.com/u/664998/" target="_blank">GeneralJing</a> <a href="http://msg.cnblogs.com/send/GeneralJing" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3353048" class="blog_comment_body">为什么我在编译程序的时候，model-&gt;setMaxDepth(10);<br>	model-&gt;setMinSampleCount(10);<br>	model-&gt;setRegressionAccuracy(0);<br>	model-&gt;setUseSurrogates(false);<br>	model-&gt;setMaxCategories(15);<br>	model-&gt;setPriors(Mat());<br>	model-&gt;setCalculateVarImportance(true);<br>	model-&gt;setActiveVarCount(4);<br>	model-&gt;setTermCriteria(TC(100, 0.01f));<br>都不能识别？我把他们都注销了，然后在随机树的运行中却报错了？</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3353048,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3353048,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/denny402/p/5032839.html#3353515" class="layer">#2楼</a><a name="3353515" id="comment_anchor_3353515"></a>[<span class="louzhu">楼主</span>] <span class="comment_date">2016-01-25 09:33</span> | <a id="a_comment_author_3353515" href="http://www.cnblogs.com/denny402/" target="_blank">denny402</a> <a href="http://msg.cnblogs.com/send/denny402" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3353515" class="blog_comment_body">首先检查一下你的opencv版本，升级到最高版本。然后引入命名空间：using namespace cv::ml;</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3353515,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3353515,&#39;Bury&#39;,this)">反对(0)</a></div>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/denny402/p/5032839.html#3371405" class="layer">#3楼</a><a name="3371405" id="comment_anchor_3371405"></a> <span class="comment_date">2016-03-03 20:30</span> | <a id="a_comment_author_3371405" href="http://www.cnblogs.com/zjutzz/" target="_blank">ChrisZZ</a> <a href="http://msg.cnblogs.com/send/ChrisZZ" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3371405" class="blog_comment_body">setPriors函数到底该怎么用呢？priors是表示训练样本的权值分布吗？</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3371405,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3371405,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3371405_avatar" style="display:none;">http://pic.cnblogs.com/face/495962/20140506231331.png</span>
+			</div>
+		</div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;<span class="comment_actions"></span>
+				</div>
+				<a href="http://www.cnblogs.com/denny402/p/5032839.html#3371406" class="layer">#4楼</a><a name="3371406" id="comment_anchor_3371406"></a><span id="comment-maxId" style="display:none;">3371406</span><span id="comment-maxDate" style="display:none;">2016/3/3 20:31:20</span> <span class="comment_date">2016-03-03 20:31</span> | <a id="a_comment_author_3371406" href="http://www.cnblogs.com/zjutzz/" target="_blank">ChrisZZ</a> <a href="http://msg.cnblogs.com/send/ChrisZZ" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+			</div>
+			<div class="feedbackCon">
+				<div id="comment_body_3371406" class="blog_comment_body">看你的代码，都没有指定setPriors为某个特定的参数，想知道这个东西该怎么用</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3371406,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(3371406,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_3371406_avatar" style="display:none;">http://pic.cnblogs.com/face/495962/20140506231331.png</span>
+			</div>
+		</div>
+	<div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/denny402/p/5032839.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/denny402/p/5032839.html#top">返回顶部</a></div>
+<div id="comment_form_container"><div class="login_tips">注册用户登录后才能发表评论，请 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login(&#39;commentform&#39;);">登录</a> 或 <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，<a href="http://www.cnblogs.com/">访问</a>网站首页。</div></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://cn.udacity.com/mlnd/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=MLND03" target="_blank">【推荐】Google机器学习认证项目首推价末班车</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.grapecity.com.cn/enterprise-solutions/huozige/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=huozige&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/24442-20170531232906555-989803912.png" alt="huozige"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/570794/" target="_blank">你大概不知道 现代FPS游戏源于一位英国特工</a><br> ·  <a href="http://news.cnblogs.com/n/570843/" target="_blank">天猫又和努比亚京东开撕 什么情况？</a><br> ·  <a href="http://news.cnblogs.com/n/570842/" target="_blank">开始量产！富士康内部爆料iPhone 8/7S细节：完美</a><br> ·  <a href="http://news.cnblogs.com/n/570841/" target="_blank">安卓漏洞悬赏突然提升至20万美元：竟和中国安全研究员有关</a><br> ·  <a href="http://news.cnblogs.com/n/570840/" target="_blank">交易量爆表：全球最大比特币交易所Coinbase拟融资</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./在opencv3中的机器学习算法练习：对OCR进行分类 - denny402 - 博客园_files/24442-20170601093816602-1429765193.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/denny402/">denny402</a><br>园龄：<a href="http://home.cnblogs.com/u/denny402/" title="入园时间：2010-06-20">6年11个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/denny402/followers/">489</a><br>关注：<a href="http://home.cnblogs.com/u/denny402/followees/">2</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;71830865-4f7c-df11-ba8f-001cf0cd104b&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center"><a href="http://www.cnblogs.com/denny402/archive/2017/06/01.html"><u>1</u></a></td><td align="center"><a href="http://www.cnblogs.com/denny402/archive/2017/06/02.html"><u>2</u></a></td><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/denny402/archive/2017/06/03.html"><u>3</u></a></td></tr><tr><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/denny402/archive/2017/06/04.html"><u>4</u></a></td><td class="CalTodayDay" align="center">5</td><td align="center">6</td><td align="center">7</td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/denny402/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/denny402/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/denny402/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/denny402/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/denny402/tag/" title="我的博客的标签列表">我的标签</a></li>
+<li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="http://www.cnblogs.com/denny402/p/5032839.html#">更多链接</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/denny402/tag/python/">python</a>(34)</li><li><a href="http://www.cnblogs.com/denny402/tag/caffe/">caffe</a>(33)</li><li><a href="http://www.cnblogs.com/denny402/tag/tensorflow/">tensorflow</a>(12)</li><li><a href="http://www.cnblogs.com/denny402/tag/opencv3/">opencv3</a>(10)</li><li><a href="http://www.cnblogs.com/denny402/tag/mvc/">mvc</a>(9)</li><li><a href="http://www.cnblogs.com/denny402/tag/matlab/">matlab</a>(9)</li><li><a href="http://www.cnblogs.com/denny402/tag/MVC3/">MVC3</a>(8)</li><li><a href="http://www.cnblogs.com/denny402/tag/mnist/">mnist</a>(7)</li><li><a href="http://www.cnblogs.com/denny402/tag/ajax/">ajax</a>(7)</li><li><a href="http://www.cnblogs.com/denny402/tag/geos/">geos</a>(6)</li><li><a href="http://www.cnblogs.com/denny402/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/denny402/category/759199.html">caffe(34)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/denny402/category/992909.html">caffe2</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/denny402/category/755007.html">GDAL(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/denny402/category/755912.html">GEOS(6)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/denny402/category/716239.html">matlab(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/denny402/category/716241.html">opencv(19)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/denny402/category/760630.html">Python(25)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/denny402/category/879083.html">tensorflow(12)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/denny402/archive/2017/06.html">2017年6月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/denny402/archive/2017/03.html">2017年3月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/denny402/archive/2016/09.html">2016年9月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/denny402/archive/2016/07.html">2016年7月 (8)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/denny402/archive/2016/01.html">2016年1月 (33)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/denny402/archive/2015/12.html">2015年12月 (29)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/denny402/archive/2015/11.html">2015年11月 (10)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/denny402/archive/2015/07.html">2015年7月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/denny402/archive/2014/10.html">2014年10月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/denny402/archive/2014/07.html">2014年7月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/denny402/archive/2013/10.html">2013年10月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/denny402/archive/2013/08.html">2013年8月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/denny402/archive/2013/07.html">2013年7月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_13" href="http://www.cnblogs.com/denny402/archive/2013/06.html">2013年6月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_14" href="http://www.cnblogs.com/denny402/archive/2011/04.html">2011年4月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_15" href="http://www.cnblogs.com/denny402/archive/2010/06.html">2010年6月 (3)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/denny402/p/5082341.html#3706600">1. Re:Caffe学习系列(11)：图像数据转换成db（leveldb/lmdb)文件</a></li>
+        <li class="recent_comment_body">@lxy0719  你的问题解决了  我的一样的错误</li>
+        <li class="recent_comment_author">--zjy20170604</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/denny402/p/5686067.html#3706401">2. Re:caffe的python接口学习（7）：绘制loss和accuracy曲线</a></li>
+        <li class="recent_comment_body">Traceback (most recent call last): File "/home/liu/mnist/lossacu.py", line 52, in _accuracy += ......</li>
+        <li class="recent_comment_author">--孤风_1992</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/denny402/p/5684431.html#3706184">3. Re:caffe的python接口学习（4）：mnist实例---手写数字识别</a></li>
+        <li class="recent_comment_body">你好，为什么我运行之后没有结果啊？</li>
+        <li class="recent_comment_author">--孤风_1992</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/denny402/p/5106764.html#3705792">4. Re:Caffe学习系列(18): 绘制网络模型</a></li>
+        <li class="recent_comment_body">@zyzyzyzyzy同问，请问这个问题解决了吗？怎么解决啊？谢谢！...</li>
+        <li class="recent_comment_author">--NeoScofield</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/denny402/p/5106764.html#3705791">5. Re:Caffe学习系列(18): 绘制网络模型</a></li>
+        <li class="recent_comment_body">@鹿往森处走我的也是这样的情况，请问层主知道为什么会出现这样的问题吗？...</li>
+        <li class="recent_comment_author">--NeoScofield</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/denny402/p/5083300.html">1. Caffe学习系列(12)：训练和测试自己的图片(34188)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5070928.html">2. Caffe学习系列(2)：数据层及参数(31933)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5082341.html">3. Caffe学习系列(11)：图像数据转换成db（leveldb/lmdb)文件(29167)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5111018.html">4. Caffe学习系列(20)：用训练好的caffemodel来进行分类(27232)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5074049.html">5. Caffe学习系列(7)：solver及其配置(26398)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/denny402/p/5083300.html">1. Caffe学习系列(12)：训练和测试自己的图片(214)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5137534.html">2. Caffe学习系列(23)：如何将别人训练好的model用到自己的数据上(60)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5111018.html">3. Caffe学习系列(20)：用训练好的caffemodel来进行分类(43)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5685909.html">4. caffe的python接口学习（6）：用训练好的模型（caffemodel）来分类新的图片(41)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5088399.html">5. Caffe学习系列(13)：数据可视化环境（python接口)配置(38)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/denny402/p/5083300.html">1. Caffe学习系列(12)：训练和测试自己的图片(15)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5074049.html">2. Caffe学习系列(7)：solver及其配置(9)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5070928.html">3. Caffe学习系列(2)：数据层及参数(9)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5082341.html">4. Caffe学习系列(11)：图像数据转换成db（leveldb/lmdb)文件(7)</a></li><li><a href="http://www.cnblogs.com/denny402/p/5076285.html">5. Caffe学习系列(10)：命令行解析(6)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 denny402
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

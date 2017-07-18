@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- saved from url=(0147)http://s0.2mdn.net/ads/richmedia/studio/mu/templates/tetris/bootstrap-3/tetris.html?e=101&renderingType=2&leftOffset=0&topOffset=0&c=RIjhKruLRb&t=1 -->
+<html lang="en" class="wf-roboto-n4-active wf-active"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <title>Tetris Layout</title>
+  <meta data-template-name="CustomLightbox_Layout">
+  <!-- Required for studio to fetch the lightbox standard json schema during ad creation.
+       Note: A specific GWD version is expected by studio but has no effect on tetris behavior. -->
+  <meta name="generator" content="Google Web Designer 1.4.2.0915">
+  <link rel="stylesheet" href="./tetris.min.css">
+  <link rel="stylesheet" href="./tetris_layout.min.css">
+  <script src="./tetris_gdn_adapter.min.js.&#19979;&#36733;"></script>
+  <script src="./addata_util.js.&#19979;&#36733;"></script>
+  <script src="./Enabler_01_141.js.&#19979;&#36733;"></script>
+  <script src="http://www.gstatic.com/external_hosted/polymer/v1/CustomElements.min.js"></script>
+  <script src="./tetris.min.js.&#19979;&#36733;"></script>
+  <script src="./tetris_layout.min.js.&#19979;&#36733;"></script>
+  <script>
+    // TODO(rneale): b/24775203
+    Enabler.exit = Enabler.exitOverride;
+
+    window.disableEventBubbling = true;
+    function GdnLayout() {}
+    GdnLayout.getConfig =
+        studioinnovation.layouts.lightbox.tetris.gdnAdapter.
+        translateFromEnablerParams;
+
+    function GdnPreview() {}
+    GdnPreview.getConfig =
+        studioinnovation.layouts.lightbox.tetris.gdnAdapter.
+        translateFromDataObject;
+
+    var modulesLoadedHandler = function() {
+      new studioinnovation.layouts.lightbox.tetris.Tetris();
+    };
+
+    // Note: Must use explicit module names for Studio's static analysis during ad creation.
+    Enabler.loadModules([studio.module.ModuleId.CONFIGURABLE, studio.module.ModuleId.GDN],
+                        modulesLoadedHandler);
+
+    // Required for compatibility with the studio creation workflow.
+    Enabler.setHint('expansionMode', 'lightbox');
+  </script>
+  <script>
+    // This function is only used for Studio static parsing. It's used to support DBM custom video
+    // events.
+    function DBMReporting() {
+      studio.video.Reporter.attach("video_0", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_1", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_2", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_3", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_4", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_5", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_6", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_7", dummyVideoElem, true);
+      studio.video.Reporter.attach("video_8", dummyVideoElem, true);
+    }
+  </script>
+  <!-- Required for studio to fetch the lightbox standard json schema during ad creation -->
+  <script type="text/javascript" charset="UTF-8" src="./prod_studio_01_141_configurablemodule.js.&#19979;&#36733;"></script><script type="text/javascript" charset="UTF-8" src="./prod_studio_01_141_gdnmodule.js.&#19979;&#36733;"></script><link rel="stylesheet" href="./css(1)"><script type="text/javascript" charset="UTF-8" src="./webfont.js.&#19979;&#36733;"></script><style class="themer-font">.font-themed {
+  font-family: 'Roboto', 'HelveticaNeue-Light', 'HelveticaNeue', 'Roboto', 'Open Sans', 'Arial', sans-serif !important;
+}</style></head><body class="dark desktop chrome windows web"><div id="invitation" class="view-container"><div id="cta" class="view-container"><div class="invitation-presenter square custom"><div class="generated-background" style="background-image: linear-gradient(rgb(123, 123, 123) 30%, rgb(98, 98, 98) 100%);"></div><div class="caption-background"></div><div class="logo" style="background-image: url(&quot;http://tpc.googlesyndication.com/simgad/11069689998205892233&quot;);"></div><div class="overlay"></div><div class="accent" style="background: rgb(85, 85, 85);"></div><div class="expand-icon" style="background-color: rgb(85, 85, 85);"></div><div class="custom-invite contain"><div class="foreground" style="background-image: url(&quot;http://tpc.googlesyndication.com/simgad/14015736303572568753&quot;);"></div><div class="custom-background"><canvas class="image-blurrer" width="970" height="90"></canvas></div></div></div></div><div id="undefined" class="view-container"></div></div><div id="expanded" class="view-container" style="width: 100%; height: 100%; left: -9999px;"><div class="filmstrip-presenter landscape custom" style="background-color: rgb(98, 98, 98);"><header class="custom-header" style="background-image: url(&quot;http://tpc.googlesyndication.com/simgad/17970376705718792145&quot;); height: 121.25px;"></header><header class="generated-header" style="background-image: linear-gradient(rgb(123, 123, 123) 30%, rgb(98, 98, 98) 100%);"><div><div class="social-container"><div class="social-overlay-container"><div class="social-overlay"><div class="social-header"><div>&#19982;&#25105;&#20204;&#32852;&#31995;</div></div></div></div><div class="social-button"></div></div></div><div><div class="rotator narrow"><div class="logo shown"><img src="./11069689998205892233"></div><div class="text-cta-container"><div class="text-cta-rotator"></div></div></div></div></header><div class="content" style="top: 121.25px;"><div class="card-container one-card" style="right: 0px;"><tetris-video-card class="card primary"></tetris-video-card></div><div class="thumb-scroller portrait" style="background-image: linear-gradient(to top, rgb(123, 123, 123) 30%, rgb(98, 98, 98) 100%); width: 50px;"><div class="top-arrow"><div></div></div><div class="left-arrow hidden"><div></div></div><div class="thumb-container"><tetris-video-thumb class="thumb selected" style="width: 40px; height: 26px;"><div class="icon"></div></tetris-video-thumb></div><div class="right-arrow hidden"><div></div></div><div class="bottom-arrow"><div></div></div></div></div></div></div></body></html>

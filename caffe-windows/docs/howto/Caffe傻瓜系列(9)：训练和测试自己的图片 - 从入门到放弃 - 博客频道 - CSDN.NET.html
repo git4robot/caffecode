@@ -1,0 +1,1533 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0056)http://blog.csdn.net/langb2014/article/details/50458520/ -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+
+            <link rel="canonical" href="http://blog.csdn.net/langb2014/article/details/50458520/"> 
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/langb2014/article/details/50458520/#">
+       
+    <title>Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃
+        - 博客频道 - CSDN.NET</title>
+    
+    <meta name="description" content="在深度学习的实际应用中，我们经常用到的原始数据是图片文件，如jpg,jpeg,png,tif等格式的，而且有可能图片的大小还不一致。而在caffe中经常使用的数据类型是lmdb或leveldb，因此就产生了这样的一个问题：如何从原始图片文件转换成caffe中能够运行的db（leveldb/lmdb)文件？在caffe中，作者为我们提供了这样一个文件：convert_imageset.c">
+
+    <meta name="keywords" content="">
+
+   
+    <script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/blog_static_head.min.js.下载" type="text/javascript"></script>
+
+    
+        <!--new top-->
+       
+       
+        <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/style.css">
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/langb2014/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/default.css">
+ 
+
+
+
+
+    <link href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet">
+     
+         <link rel="stylesheet" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.css">
+
+     <script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/fuckadblock.js.下载" type="text/javascript" charset="utf-8"></script>
+         <script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/block.js.下载" type="text/javascript" charset="utf-8"></script>
+
+
+<script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/share.js.下载"></script><link rel="stylesheet" type="text/css" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/job_reco.css"><script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/wxLogin.js.下载"></script><link rel="stylesheet" type="text/css" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/style(1).css"><link type="text/css" rel="stylesheet" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/style(2).css"><script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/logger.js.下载"></script><link href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/bdsstyle.css" rel="stylesheet" type="text/css"><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link rel="stylesheet" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/share_style0_16.css"></head>
+
+
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><div id="MathJax_Message" style="display: none;"></div><iframe frameborder="0" style="display: none;" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/saved_resource.html"></iframe>
+       
+
+
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/html.js.下载" type="text/javascript"></script><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap unlogin">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge"><li>选择知识图谱</li></ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="display:none" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note">                      <div class="box"></div>                    <iframe src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/100x100.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/100x100.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname"></a><a class="set-nick" href="https://passport.csdn.net/account/profile">设置昵称<span class="write-icon"></span></a><span class="dec"><a class="fill-dec" href="http://my.csdn.net/" target="_blank">编辑自我介绍，让更多人了解你<span class="write-icon"></span></a></span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/langb2014">从入门到放弃</a></h2>
+            <h3>冰冻三尺，非一日之寒</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/langb2014?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/langb2014?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/langb2014/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "langb2014";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/langb2014";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://bss.csdn.net/m/topic/community_IoT/index" target="_blank">
+<font color="red"><strong>【CSDN 技术主题月】物联网全栈开发</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/broadview2006/article/details/72819924" target="_blank">
+<font color="blue"><strong>【评论送书】每周荐书：MySQL、Kafka、微信小程序</strong></font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="http://edu.csdn.net/huiyiCourse/series_detail/41?ref=blog&amp;loc=r0" target="_blank">
+<font color="red"><strong>【直播】Android 老司机带你开黑</strong></font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+
+
+
+
+
+
+<script type="text/javascript" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/category.js.下载"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=Caffe%e5%82%bb%e7%93%9c%e7%b3%bb%e5%88%97(9)%ef%bc%9a%e8%ae%ad%e7%bb%83%e5%92%8c%e6%b5%8b%e8%af%95%e8%87%aa%e5%b7%b1%e7%9a%84%e5%9b%be%e7%89%87&u=http://blog.csdn.net/langb2014/article/details/50458520/"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Repost"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/langb2014/article/details/50458520">
+        Caffe傻瓜系列(9)：训练和测试自己的图片            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_r">
+            <span class="link_postdate">2016-01-04 21:25</span>
+            <span class="link_view" title="阅读次数">5205人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(10)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;Caffe%e5%82%bb%e7%93%9c%e7%b3%bb%e5%88%97(9)%ef%bc%9a%e8%ae%ad%e7%bb%83%e5%92%8c%e6%b5%8b%e8%af%95%e8%87%aa%e5%b7%b1%e7%9a%84%e5%9b%be%e7%89%87&#39;,&#39;50458520&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" onclick="javascript:report(50458520,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody" style="" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[{&quot;name&quot;:&quot;人工智能开发框架知识库&quot;,&quot;url&quot;:&quot;http://lib.csdn.net/base/98?source=blogtop&quot;,&quot;logo&quot;:&quot;http://img.knowledge.csdn.net/upload/base/1490854772656_656.jpg&quot;}]}"> <a href="http://lib.csdn.net/base/98?source=blogtop" target="_blank"> <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/1490854772656_656.jpg"> <em><b>人工智能开发框架知识库</b></em> </a></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label onclick="GetCategoryArticles(&#39;5998589&#39;,&#39;langb2014&#39;,&#39;top&#39;,&#39;50458520&#39;);">
+                        <span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_fenlei&#39;]);">caffe<em>（91）</em></span>
+                      <img class="arrow-down" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a href="http://blog.csdn.net/langb2014/article/category/5998589" target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_5998589">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+
+  
+
+  
+  
+     
+
+
+<div id="article_content" class="article_content tracking-ad" data-mod="popu_307" data-dsm="post">
+
+<div style="top:0px">﻿﻿在深度学习的实际应用中，我们经常用到的原始数据是图片文件，如jpg,jpeg,png,tif等格式的，而且有可能图片的大小还不一致。而在caffe中经常使用的数据类型是lmdb或leveldb，因此就产生了这样的一个问题：如何从原始图片文件转换成caffe中能够运行的db（leveldb/lmdb)文件？前面文章有学习过着个数据由来和使用。</div>
+<p>在caffe中，作者为我们提供了这样一个文件：convert_imageset.cpp，存放在根目录下的tools文件夹下。编译之后，生成对应的可执行文件放在 buile/tools/ 下面，这个文件的作用就是用于将图片文件转换成caffe框架中能直接使用的db文件。</p>
+<p>该文件的使用格式：</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 678px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_1" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span>convert_imageset&nbsp;[FLAGS]&nbsp;ROOTFOLDER/&nbsp;LISTFILE&nbsp;DB_NAME&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_1_4441056" class="cpp" name="code" style="display: none;"> convert_imageset [FLAGS] ROOTFOLDER/ LISTFILE DB_NAME
+</pre>
+<p></p>
+<p>需要带四个参数：</p>
+<p>FLAGS: 图片参数组，后面详细介绍</p>
+<p>ROOTFOLDER/: 图片存放的绝对路径，从<a href="http://lib.csdn.net/base/linux" class="replace_word" title="Linux知识库" target="_blank" style="color:#df3434; font-weight:bold;">Linux</a>系统根目录开始</p>
+<p>LISTFILE: 图片文件列表清单，一般为一个txt文件，一行一张图片</p>
+<p>DB_NAME: 最终生成的db文件存放目录</p>
+<p>如果图片已经下载到本地电脑上了，那么我们首先需要创建一个图片列表清单，保存为txt</p>
+<p>本文以caffe程序中自带的图片为例，进行讲解，图片目录是 &nbsp;example/images/, 两张图片，一张为cat.jpg, 另一张为fish_bike.jpg，表示两个类别。</p>
+<p>我们创建一个sh脚本文件，调用linux命令来生成图片清单：</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 973px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_2" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_2" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;vi&nbsp;examples/images/create_filelist.sh</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_2_4539333" class="cpp" name="code" style="display: none;"># sudo vi examples/images/create_filelist.sh</pre>
+<p></p>
+<p>编辑这个文件,输入下面的代码并保存</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 1086px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_3" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_3" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=3&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;/usr/bin/env&nbsp;sh</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>DATA=examples/images&nbsp;&nbsp;</span></li><li class="alt"><span>echo&nbsp;<span class="string">"Create&nbsp;train.txt..."</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>rm&nbsp;-rf&nbsp;$DATA/train.txt&nbsp;&nbsp;</span></li><li class="alt"><span>find&nbsp;$DATA&nbsp;-name&nbsp;*cat.jpg&nbsp;|&nbsp;cut&nbsp;-d&nbsp;<span class="string">'/'</span><span>&nbsp;-f3&nbsp;|&nbsp;sed&nbsp;</span><span class="string">"s/$/&nbsp;1/"</span><span>&gt;&gt;$DATA/train.txt&nbsp;&nbsp;</span></span></li><li class=""><span>find&nbsp;$DATA&nbsp;-name&nbsp;*bike.jpg&nbsp;|&nbsp;cut&nbsp;-d&nbsp;<span class="string">'/'</span><span>&nbsp;-f3&nbsp;|&nbsp;sed&nbsp;</span><span class="string">"s/$/&nbsp;2/"</span><span>&gt;&gt;$DATA/tmp.txt&nbsp;&nbsp;</span></span></li><li class="alt"><span>cat&nbsp;$DATA/tmp.txt&gt;&gt;$DATA/train.txt&nbsp;&nbsp;</span></li><li class=""><span>rm&nbsp;-rf&nbsp;$DATA/tmp.txt&nbsp;&nbsp;</span></li><li class="alt"><span>echo&nbsp;<span class="string">"Done.."</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_3_8475264" class="cpp" name="code" style="display: none;"># /usr/bin/env sh
+DATA=examples/images
+echo "Create train.txt..."
+rm -rf $DATA/train.txt
+find $DATA -name *cat.jpg | cut -d '/' -f3 | sed "s/$/ 1/"&gt;&gt;$DATA/train.txt
+find $DATA -name *bike.jpg | cut -d '/' -f3 | sed "s/$/ 2/"&gt;&gt;$DATA/tmp.txt
+cat $DATA/tmp.txt&gt;&gt;$DATA/train.txt
+rm -rf $DATA/tmp.txt
+echo "Done.."</pre>
+<p></p>
+<p></p>
+<p></p>
+<p>这个脚本文件中，用到了rm,find, cut, sed,cat等linux命令。</p>
+<p>rm: 删除文件</p>
+<p>find: 寻找文件</p>
+<p>cut: 截取路径</p>
+<p>sed: 在每行的最后面加上标注。本例中将找到的*cat.jpg文件加入标注为1，找到的*bike.jpg文件加入标注为2</p>
+<p>cat: 将两个类别合并在一个文件里。</p>
+<p>最终生成如下的一个train.txt文件：</p>
+<div class="cnblogs_code">
+<pre>cat.jpg 1<span style="color:#000000">
+fish</span>-bike.jpg 2</pre>
+</div>
+<p>当然，图片很少的时候，手动编写这个列表清单文件就行了。但图片很多的情况，就需要用脚本文件来自动生成了。在以后的实际应用中，还需要生成相应的val.txt和test.txt文件，方法是一样的。</p>
+<p>生成的这个train.txt文件，就可以作为第三个参数，直接使用了。</p>
+<p>接下来，我们来了解一下FLAGS这个参数组，有些什么内容：</p>
+<p>-gray: 是否以灰度图的方式打开图片。程序调用<a href="http://lib.csdn.net/base/opencv" class="replace_word" title="OpenCV知识库" target="_blank" style="color:#df3434; font-weight:bold;">OpenCV</a>库中的imread()函数来打开图片，默认为false</p>
+<p>-shuffle: 是否随机打乱图片顺序。默认为false</p>
+<p>-backend:需要转换成的db文件格式，可选为leveldb或lmdb,默认为lmdb</p>
+<p>-resize_width/resize_height: 改变图片的大小。在运行中，要求所有图片的尺寸一致，因此需要改变图片大小。 程序调用opencv库的resize（）函数来对图片放大缩小，默认为0，不改变</p>
+<p>-check_size: 检查所有的数据是否有相同的尺寸。默认为false,不检查</p>
+<p>-encoded: 是否将原图片编码放入最终的数据中，默认为false</p>
+<p>-encode_type: 与前一个参数对应，将图片编码为哪一个格式：‘png','jpg'......</p>
+<p>好了，知道这些参数后，我们就可以调用命令来生成最终的lmdb格式数据了</p>
+<p>由于参数比较多，因此我们可以编写一个sh脚本来执行命令：</p>
+<p>首先，创建sh脚本文件：</p>
+<div class="cnblogs_code">
+<pre><span style="color:#0800">#</span><span style="color:#0800"> sudo vi examples/images/create_lmdb.sh</span></pre>
+</div>
+<p>编辑，输入下面的代码并保存</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 2049px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_4" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_4" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=4&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#!/usr/bin/en&nbsp;sh</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>DATA=examples/images&nbsp;&nbsp;</span></li><li class="alt"><span>rm&nbsp;-rf&nbsp;$DATA/img_train_lmdb&nbsp;&nbsp;</span></li><li class=""><span>build/tools/convert_imageset&nbsp;--shuffle&nbsp;\&nbsp;&nbsp;</span></li><li class="alt"><span>--resize_height=256&nbsp;--resize_width=256&nbsp;\&nbsp;&nbsp;</span></li><li class=""><span>/home/xxx/caffe/examples/images/&nbsp;$DATA/train.txt&nbsp;&nbsp;$DATA/img_train_lmdb&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_4_1190480" class="cpp" name="code" style="display: none;">#!/usr/bin/en sh
+DATA=examples/images
+rm -rf $DATA/img_train_lmdb
+build/tools/convert_imageset --shuffle \
+--resize_height=256 --resize_width=256 \
+/home/xxx/caffe/examples/images/ $DATA/train.txt  $DATA/img_train_lmdb</pre>
+<p></p>
+<p>设置参数-shuffle,打乱图片顺序。设置参数-resize_height和-resize_width将所有图片尺寸都变为256*256.</p>
+<p>/home/xxx/caffe/examples/images/ 为图片保存的绝对路径。</p>
+<p>最后，运行这个脚本文件</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 2304px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_5" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_5" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=5&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;sh&nbsp;examples/images/create_lmdb.sh</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_5_874053" class="cpp" name="code" style="display: none;"># sudo sh examples/images/create_lmdb.sh</pre>
+<p></p>
+<p>就会在examples/images/ 目录下生成一个名为 img_train_lmdb的文件夹，里面的文件就是我们需要的db文件了<span style="color:#000000; background-color:rgb(255,255,255)">。</span></p>
+<p><span style="color:#000000; background-color:rgb(255,255,255)">上面就将图像数据转换成db（leveldb/lmdb)文件了。</span></p>
+<p>===================================================================================================================================</p>
+<p>再从自己的原始图片到lmdb数据，再到训练和<a href="http://lib.csdn.net/base/softwaretest" class="replace_word" title="软件测试知识库" target="_blank" style="color:#df3434; font-weight:bold;">测试</a>模型的整个流程。</p>
+<p><strong>一、准备数据</strong></p>
+<p>有条件的同学，可以去imagenet的官网http://www.image-net.org/download-images，下载imagenet图片来训练。但是我没有下载，一个原因是注册账号的时候，验证码始终出不来（听说是google网站的验证码，而我是上不了google的）。第二个原因是数据太大了。。。</p>
+<p>我去网上找了一些其它的图片来代替，共有500张图片，分为大巴车、恐龙、大象、鲜花和马五个类，每个类100张。需要的同学，可到我的网盘下载：http://pan.baidu.com/s/1nuqlTnN</p>
+<p>编号分别以3，4，5，6，7开头，各为一类。我从其中每类选出20张作为测试，其余80张作为训练。因此最终训练图片400张，测试图片100张，共5类。我将图片放在caffe根目录下的data文件夹下面。即训练图片目录：data/re/train/ ,测试图片目录: data/re/test/</p>
+<p><strong>二、转换为lmdb格式</strong></p>
+<p>首先，在examples下面创建一个myfile的文件夹，来用存放配置文件和脚本文件。然后编写一个脚本create_filelist.sh，用来生成train.txt和test.txt清单文件</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 2755px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_6" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_6" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=6&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;mkdir&nbsp;examples/myfile</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#&nbsp;sudo&nbsp;vi&nbsp;examples/myfile/create_filelist.sh</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_6_5225471" class="cpp" name="code" style="display: none;"># sudo mkdir examples/myfile
+# sudo vi examples/myfile/create_filelist.sh</pre>
+<p></p>
+<p>编辑此文件，写入如下代码，并保存</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 2886px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_7" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_7" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=7&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#!/usr/bin/env&nbsp;sh</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>DATA=data/re/&nbsp;&nbsp;</span></li><li class="alt"><span>MY=examples/myfile&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>echo&nbsp;<span class="string">"Create&nbsp;train.txt..."</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>rm&nbsp;-rf&nbsp;$MY/train.txt&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">for</span><span>&nbsp;i&nbsp;in&nbsp;3&nbsp;4&nbsp;5&nbsp;6&nbsp;7&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">do</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>find&nbsp;$DATA/train&nbsp;-name&nbsp;$i*.jpg&nbsp;|&nbsp;cut&nbsp;-d&nbsp;<span class="string">'/'</span><span>&nbsp;-f4-5&nbsp;|&nbsp;sed&nbsp;</span><span class="string">"s/$/&nbsp;$i/"</span><span>&gt;&gt;$MY/train.txt&nbsp;&nbsp;</span></span></li><li class=""><span>done&nbsp;&nbsp;</span></li><li class="alt"><span>echo&nbsp;<span class="string">"Create&nbsp;test.txt..."</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>rm&nbsp;-rf&nbsp;$MY/test.txt&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">for</span><span>&nbsp;i&nbsp;in&nbsp;3&nbsp;4&nbsp;5&nbsp;6&nbsp;7&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">do</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>find&nbsp;$DATA/test&nbsp;-name&nbsp;$i*.jpg&nbsp;|&nbsp;cut&nbsp;-d&nbsp;<span class="string">'/'</span><span>&nbsp;-f4-5&nbsp;|&nbsp;sed&nbsp;</span><span class="string">"s/$/&nbsp;$i/"</span><span>&gt;&gt;$MY/test.txt&nbsp;&nbsp;</span></span></li><li class=""><span>done&nbsp;&nbsp;</span></li><li class="alt"><span>echo&nbsp;<span class="string">"All&nbsp;done"</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_7_7209555" class="cpp" name="code" style="display: none;">#!/usr/bin/env sh
+DATA=data/re/
+MY=examples/myfile
+
+echo "Create train.txt..."
+rm -rf $MY/train.txt
+for i in 3 4 5 6 7 
+do
+find $DATA/train -name $i*.jpg | cut -d '/' -f4-5 | sed "s/$/ $i/"&gt;&gt;$MY/train.txt
+done
+echo "Create test.txt..."
+rm -rf $MY/test.txt
+for i in 3 4 5 6 7
+do
+find $DATA/test -name $i*.jpg | cut -d '/' -f4-5 | sed "s/$/ $i/"&gt;&gt;$MY/test.txt
+done
+echo "All done"</pre>
+<p></p>
+<p>然后，运行此脚本</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 3287px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_8" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_8" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=8&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;sh&nbsp;examples/myfile/create_filelist.sh</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_8_3861485" class="cpp" name="code" style="display: none;"># sudo sh examples/myfile/create_filelist.sh</pre>
+<p></p>
+<p>成功的话，就会在examples/myfile/ 文件夹下生成train.txt和test.txt两个文本文件，里面就是图片的列表清单。</p>
+<p><img alt="" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/140867-20151228174246792-789024343.png" height="275" width="221" style="border:2px solid black"></p>
+<p>接着再编写一个脚本文件，调用convert_imageset命令来转换数据格式。</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 3705px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_9" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_9" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=9&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;vi&nbsp;examples/myfile/create_lmdb.sh</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_9_7133107" class="cpp" name="code" style="display: none;"># sudo vi examples/myfile/create_lmdb.sh
+</pre>
+<p></p>
+<p>插入：</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 3818px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_10" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_10" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=10&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#!/usr/bin/env&nbsp;sh</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>MY=examples/myfile&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>echo&nbsp;<span class="string">"Create&nbsp;train&nbsp;lmdb.."</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>rm&nbsp;-rf&nbsp;$MY/img_train_lmdb&nbsp;&nbsp;</span></li><li class=""><span>build/tools/convert_imageset&nbsp;\&nbsp;&nbsp;</span></li><li class="alt"><span>--shuffle&nbsp;\&nbsp;&nbsp;</span></li><li class=""><span>--resize_height=256&nbsp;\&nbsp;&nbsp;</span></li><li class="alt"><span>--resize_width=256&nbsp;\&nbsp;&nbsp;</span></li><li class=""><span>/home/xxx/caffe/data/re/&nbsp;\&nbsp;&nbsp;</span></li><li class="alt"><span>$MY/train.txt&nbsp;\&nbsp;&nbsp;</span></li><li class=""><span>$MY/img_train_lmdb&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>echo&nbsp;<span class="string">"Create&nbsp;test&nbsp;lmdb.."</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>rm&nbsp;-rf&nbsp;$MY/img_test_lmdb&nbsp;&nbsp;</span></li><li class=""><span>build/tools/convert_imageset&nbsp;\&nbsp;&nbsp;</span></li><li class="alt"><span>--shuffle&nbsp;\&nbsp;&nbsp;</span></li><li class=""><span>--resize_width=256&nbsp;\&nbsp;&nbsp;</span></li><li class="alt"><span>--resize_height=256&nbsp;\&nbsp;&nbsp;</span></li><li class=""><span>/home/xxx/caffe/data/re/&nbsp;\&nbsp;&nbsp;</span></li><li class="alt"><span>$MY/test.txt&nbsp;\&nbsp;&nbsp;</span></li><li class=""><span>$MY/img_test_lmdb&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>echo&nbsp;<span class="string">"All&nbsp;Done.."</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_10_1833191" class="cpp" name="code" style="display: none;">#!/usr/bin/env sh
+MY=examples/myfile
+
+echo "Create train lmdb.."
+rm -rf $MY/img_train_lmdb
+build/tools/convert_imageset \
+--shuffle \
+--resize_height=256 \
+--resize_width=256 \
+/home/xxx/caffe/data/re/ \
+$MY/train.txt \
+$MY/img_train_lmdb
+
+echo "Create test lmdb.."
+rm -rf $MY/img_test_lmdb
+build/tools/convert_imageset \
+--shuffle \
+--resize_width=256 \
+--resize_height=256 \
+/home/xxx/caffe/data/re/ \
+$MY/test.txt \
+$MY/img_test_lmdb
+
+echo "All Done.."</pre>
+<p></p>
+<p>因为图片大小不一，因此我统一转换成256*256大小。运行成功后，会在 examples/myfile下面生成两个文件夹img_train_lmdb和img_test_lmdb，分别用于保存图片转换后的lmdb文件。</p>
+<p><img alt="" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/140867-20151228174451276-1947429862.png"></p>
+<p><strong>三、计算均值并保存</strong></p>
+<p>图片减去均值再训练，会提高训练速度和精度。因此，一般都会有这个操作。</p>
+<p>caffe程序提供了一个计算均值的文件compute_image_mean.cpp，我们直接使用就可以了</p>
+<div class="cnblogs_code"><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 4562px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_11" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_11" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=11&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;build/tools/compute_image_mean&nbsp;examples/myfile/img_train_lmdb&nbsp;examples/myfile/mean.binaryproto</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_11_1200336" class="cpp" name="code" style="display: none;"># sudo build/tools/compute_image_mean examples/myfile/img_train_lmdb examples/myfile/mean.binaryproto
+</pre></div>
+<div class="cnblogs_code">compute_image_mean带两个参数，第一个参数是lmdb训练数据位置，第二个参数设定均值文件的名字及保存路径。运行成功后，会在 examples/myfile/ 下面生成一个mean.binaryproto的均值文件。</div>
+<p><strong>四、创建模型并编写配置文件</strong></p>
+<p>模型就用程序自带的caffenet模型，位置在&nbsp;models/bvlc_reference_caffenet/文件夹下, 将需要的两个配置文件，复制到myfile文件夹内</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 4753px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_12" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_12" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=12&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;cp&nbsp;models/bvlc_reference_caffenet/solver.prototxt&nbsp;examples/myfile/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#&nbsp;sudo&nbsp;cp&nbsp;models/bvlc_reference_caffenet/train_val.prototxt&nbsp;examples/myfile/</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_12_7328877" class="cpp" name="code" style="display: none;"># sudo cp models/bvlc_reference_caffenet/solver.prototxt examples/myfile/
+# sudo cp models/bvlc_reference_caffenet/train_val.prototxt examples/myfile/</pre>
+<p></p>
+<p>修改其中的solver.prototxt</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 4884px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_13" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_13" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=13&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;vi&nbsp;examples/myfile/solver.prototxt</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_13_1919493" class="cpp" name="code" style="display: none;"># sudo vi examples/myfile/solver.prototxt
+</pre>
+<p></p>
+<div class="cnblogs_code"><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 4953px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_14" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_14" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=14&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span>net:&nbsp;</span><span class="string">"examples/myfile/train_val.prototxt"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>test_iter:&nbsp;2&nbsp;&nbsp;</span></li><li class="alt"><span>test_interval:&nbsp;50&nbsp;&nbsp;</span></li><li class=""><span>base_lr:&nbsp;0.001&nbsp;&nbsp;</span></li><li class="alt"><span>lr_policy:&nbsp;<span class="string">"step"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>gamma:&nbsp;0.1&nbsp;&nbsp;</span></li><li class="alt"><span>stepsize:&nbsp;100&nbsp;&nbsp;</span></li><li class=""><span>display:&nbsp;20&nbsp;&nbsp;</span></li><li class="alt"><span>max_iter:&nbsp;500&nbsp;&nbsp;</span></li><li class=""><span>momentum:&nbsp;0.9&nbsp;&nbsp;</span></li><li class="alt"><span>weight_decay:&nbsp;0.005&nbsp;&nbsp;</span></li><li class=""><span>solver_mode:&nbsp;GPU&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_14_2475118" class="cpp" name="code" style="display: none;">net: "examples/myfile/train_val.prototxt"
+test_iter: 2
+test_interval: 50
+base_lr: 0.001
+lr_policy: "step"
+gamma: 0.1
+stepsize: 100
+display: 20
+max_iter: 500
+momentum: 0.9
+weight_decay: 0.005
+solver_mode: GPU</pre><br>
+</div>
+<div class="cnblogs_code">100个测试数据，batch_size为50，因此test_iter设置为2，就能全cover了。在训练过程中，调整学习率，逐步变小。</div>
+<p>修改train_val.protxt，只需要修改两个阶段的data层就可以了，其它可以不用管。</p>
+<p></p>
+<div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 5316px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_15" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_15" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=15&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span>name:&nbsp;</span><span class="string">"CaffeNet"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>layer&nbsp;{&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;name:&nbsp;<span class="string">"data"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;type:&nbsp;<span class="string">"Data"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;top:&nbsp;<span class="string">"data"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;top:&nbsp;<span class="string">"label"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;include&nbsp;{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;phase:&nbsp;TRAIN&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;transform_param&nbsp;{&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;mirror:&nbsp;<span class="keyword">true</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;crop_size:&nbsp;227&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;mean_file:&nbsp;<span class="string">"examples/myfile/mean.binaryproto"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;data_param&nbsp;{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;source:&nbsp;<span class="string">"examples/myfile/img_train_lmdb"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;batch_size:&nbsp;256&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;backend:&nbsp;LMDB&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li><li class="alt"><span>layer&nbsp;{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;name:&nbsp;<span class="string">"data"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;type:&nbsp;<span class="string">"Data"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;top:&nbsp;<span class="string">"data"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;top:&nbsp;<span class="string">"label"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;include&nbsp;{&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;phase:&nbsp;TEST&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;transform_param&nbsp;{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;mirror:&nbsp;<span class="keyword">false</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;crop_size:&nbsp;227&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;mean_file:&nbsp;<span class="string">"examples/myfile/mean.binaryproto"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;data_param&nbsp;{&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;source:&nbsp;<span class="string">"examples/myfile/img_test_lmdb"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;batch_size:&nbsp;50&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;backend:&nbsp;LMDB&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_15_1635303" class="cpp" name="code" style="display: none;">name: "CaffeNet"
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mirror: true
+    crop_size: 227
+    mean_file: "examples/myfile/mean.binaryproto"
+  }
+  data_param {
+    source: "examples/myfile/img_train_lmdb"
+    batch_size: 256
+    backend: LMDB
+  }
+}
+layer {
+  name: "data"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    mirror: false
+    crop_size: 227
+    mean_file: "examples/myfile/mean.binaryproto"
+  }
+  data_param {
+    source: "examples/myfile/img_test_lmdb"
+    batch_size: 50
+    backend: LMDB
+  }
+}</pre><br>
+<p></p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar">实际上就是修改两个data layer的mean_file和source这两个地方，其它都没有变化 。</div>
+</div>
+<p><strong>五、训练和测试</strong></p>
+<p>如果前面都没有问题，数据准备好了，配置文件也配置好了，这一步就比较简单了。</p>
+<div class="cnblogs_code"><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 438px; top: 6191px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_16" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_16" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=16&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="preprocessor">#&nbsp;sudo&nbsp;build/tools/caffe&nbsp;train&nbsp;-solver&nbsp;examples/myfile/solver.prototxt</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_16_2190928" class="cpp" name="code" style="display: none;"># sudo build/tools/caffe train -solver examples/myfile/solver.prototxt
+</pre></div>
+<div class="cnblogs_code">运行时间和最后的精确度，会根据机器配置，参数设置的不同而不同。我的是gpu+cudnn运行500次，大约8分钟，精度为95%。</div>
+<p><img alt="" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/140867-20151228181055292-564349920.png" style="border:1px solid black"></p>
+<p><span style="font-family:&quot;Microsoft YaHei&quot;; font-size:14px">http://www.cnblogs.com/denny402/p/5083300.html<br>
+</span></p>
+<p><span style="font-family:&quot;Microsoft YaHei&quot;; font-size:14px">=========================================================================================</span></p>
+<p><span style="font-family:Microsoft YaHei; font-size:14px; color:#FF0000">下面是我自己写的一个生成list脚本</span></p>
+<p><span style="font-family:Microsoft YaHei; font-size:14px; color:#FF0000">功能就是读取文件夹下面的文件夹名称作为类别并且将对应文件夹下面的图片包括路径输出到txt文件中。</span></p>
+<p></p>
+<div class="dp-highlighter bg_python"><div class="bar"><div class="tools"><b>[python]</b> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 462px; top: 6522px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_17" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_17" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=17&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-py"><li class="alt"><span><span class="comment">#&nbsp;/usr/bin/env&nbsp;sh</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>DATA=/home/x/git/data_list/data&nbsp;&nbsp;</span></li><li class="alt"><span>TxtPath=$DATA/../txt_list&nbsp;&nbsp;</span></li><li class=""><span>rm&nbsp;-rf&nbsp;$TxtPath/train.txt&nbsp;&nbsp;</span></li><li class="alt"><span>echo&nbsp;<span class="string">"Create&nbsp;train.txt..."</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">for</span><span>&nbsp;file_a&nbsp;</span><span class="keyword">in</span><span>&nbsp;${DATA}/*;&nbsp;do&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;temp_file=`basename&nbsp;$file_a`&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;path1=$DATA/${temp_file}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;$path1&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">#cd&nbsp;$path1</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;<span class="string">"xxxxxxxxxxxxxxx"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;find&nbsp;${path1}&nbsp;-name&nbsp;q*.png&nbsp;|&nbsp;sed&nbsp;<span class="string">"s/$/&nbsp;${temp_file}/"</span><span>&gt;&gt;$TxtPath/train.txt&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;$temp_file&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class=""><span>done&nbsp;&nbsp;</span></li><li class="alt"><span>echo&nbsp;<span class="string">"Done.."</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="2001719" snippet_file_name="blog_20161123_17_1351113" name="code" class="python" style="display: none;"># /usr/bin/env sh
+DATA=/home/x/git/data_list/data
+TxtPath=$DATA/../txt_list
+rm -rf $TxtPath/train.txt
+echo "Create train.txt..."  
+for file_a in ${DATA}/*; do  
+    temp_file=`basename $file_a`
+    path1=$DATA/${temp_file}
+    echo $path1
+    #cd $path1
+    echo "xxxxxxxxxxxxxxx"
+    find ${path1} -name q*.png | sed "s/$/ ${temp_file}/"&gt;&gt;$TxtPath/train.txt
+    echo $temp_file  
+done
+echo "Done.."</pre><br>
+<br>
+<p></p>
+<div style="top:816px">﻿﻿</div>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1496801884832">
+<a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/langb2014/article/details/50458520/#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+    
+<!--172.16.140.13-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" articleid="50458520">
+            <dl id="btnDigg" class="digg digg_disable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>3</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>1</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;/langb2014/article/details/50458014&#39;;">上一篇</span><a href="http://blog.csdn.net/langb2014/article/details/50458014" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">Caffe傻瓜系列(8)：命令行解析</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;/langb2014/article/details/50475441&#39;;">下一篇</span><a href="http://blog.csdn.net/langb2014/article/details/50475441" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">python出现Non-ASCII character '\xe7' in file ex6.py on line 1, but no encoding declare错误</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article">
+                    <h4></h4>
+                    <div class="similar_c" style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36" style="max-height:195px;">                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/haoji007/article/details/52776342" title="Caffe傻瓜系列(9)：训练和测试自己的图片" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">Caffe傻瓜系列(9)：训练和测试自己的图片</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/lanxueCC/article/details/52329708" title="用caffe训练测试自己的图片" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">用caffe训练测试自己的图片</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/lanxueCC/article/details/52485077" title="用caffe训练好的lenet_iter_10000.caffemodel测试单张mnist图片" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">用caffe训练好的lenet_iter_10000.caffemodel测试单张mnist图片</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/maweifei/article/details/53024380" title="【深度学习】笔记6:使用caffe中的CIFAR10网络模型和自己的图片数据训练自己的模型(步骤详解)" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">【深度学习】笔记6:使用caffe中的CIFAR10网络模型和自己的图片数据训练自己的模型(步骤详解)</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/Yan_Joy/article/details/54233548" title="Caffe-python interface 学习|网络训练、部署、测试" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">Caffe-python interface 学习|网络训练、部署、测试</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yiyisunshine/article/details/55210765" title="手把手教windows10+无Gpu+caffe下Mnist实例运行与测试自己的图片" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">手把手教windows10+无Gpu+caffe下Mnist实例运行与测试自己的图片</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/haluoluo211/article/details/52059405" title="caffe示例实现之4在MNIST手写数字数据集上训练与测试LeNet" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">caffe示例实现之4在MNIST手写数字数据集上训练与测试LeNet</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/ZhikangFu/article/details/53308452" title="caffe测试已经训练好的模型的迭代次数修改" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">caffe测试已经训练好的模型的迭代次数修改</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/qq_27923041/article/details/54139887" title="caffe学习系列：训练自己的图片集（超详细教程）" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">caffe学习系列：训练自己的图片集（超详细教程）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/s151506879/article/details/52130896" title="caffe示例实现之5用CaffeNet训练与测试自己的数据集" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">caffe示例实现之5用CaffeNet训练与测试自己的数据集</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+     <div>
+           
+
+         <script type="text/javascript">
+             /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+             var cpro_id = "u2843955";
+        </script>
+        <script type="text/javascript" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843955_0"><iframe id="iframeu2843955_0" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/hcgm.html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+    </div>
+
+<div id="suggest">
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/langb2014/svc/GetSuggestContent/50458520",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ 
+
+<div id="relate" data-mod="popu_218" class="tracking-ad" style="display: block;">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c"><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/deeplearning"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/1474966029376_376.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/deeplearning">深度学习知识库</a></h4><p><label><span>13156</span><em>关注</em><i>|</i><span>580</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/linux"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/1468390230134_134.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/linux">Linux知识库</a></h4><p><label><span>12286</span><em>关注</em><i>|</i><span>3982</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/opencv"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/1467269388326_326.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/opencv">OpenCV知识库</a></h4><p><label><span>4614</span><em>关注</em><i>|</i><span>1379</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/git"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/1460535308634_634.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/git">Git知识库</a></h4><p><label><span>6765</span><em>关注</em><i>|</i><span>615</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/softwaretest"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/1467193268346_346.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/softwaretest">软件测试知识库</a></h4><p><label><span>4840</span><em>关注</em><i>|</i><span>318</span><em>收录</em></label></p></dd></dl></div>
+</div>
+ 
+
+<dl class="blog-ass-articl tracking-ad" id="res-relatived" data-mod="popu_84"> 
+    <div class="embody embody_b" id="libkeyparent" style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+    
+    <div id="adCollege"> 
+    <div class="tracking-ad" data-mod="popu_84"><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4354" title="开发LinuxShell脚本程序（六）字符串、文件和命令" strategy="v4:content" target="_blank">开发LinuxShell脚本程序（六）字符串、文件和命令</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3991" title="开发LinuxShell脚本程序【一】" strategy="v4:content" target="_blank">开发LinuxShell脚本程序【一】</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4015" title="开发LinuxShell脚本程序（二）" strategy="v4:content" target="_blank">开发LinuxShell脚本程序（二）</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4016" title="开发LinuxShell脚本程序（三）" strategy="v4:content" target="_blank">开发LinuxShell脚本程序（三）</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4356" title="开发LinuxShell脚本程序（八）调试和debug 【课程结束】" strategy="v4:content" target="_blank">开发LinuxShell脚本程序（八）调试和debug 【课程结束】</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4352" title="开发LinuxShell脚本程序（四）参数解析和扩充" strategy="v4:content" target="_blank">开发LinuxShell脚本程序（四）参数解析和扩充</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4355" title="开发LinuxShell脚本程序（七） 正则式、sed和awk" strategy="v4:content" target="_blank">开发LinuxShell脚本程序（七） 正则式、sed和awk</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4353" title="开发LinuxShell脚本程序（五）参量、变量和函数" strategy="v4:content" target="_blank">开发LinuxShell脚本程序（五）参量、变量和函数</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2575" title="2016高薪Linux培训教程-shell脚本入门及正则表达式" strategy="v4:content" target="_blank">2016高薪Linux培训教程-shell脚本入门及正则表达式</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3344" title="Linux入门必备" strategy="v4:content" target="_blank">Linux入门必备</a></dd></div></div>  
+
+    
+
+     <script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/job_reco.js.下载" type="text/javascript"></script> 
+     <script type="text/javascript">
+         csdn.position.showEdu({
+             sourceType: "blog",
+             searchType: "detail",
+             searchKey: "50458520",
+                username: "",
+                recordcount: "10",
+                containerId: "adCollege" //容器DIV的id。 
+            });  
+        </script> 
+   
+</dl>
+
+
+
+
+
+    <div id="ad_cen">        
+                <div>
+                                    <div class="tracking-ad" data-view="true" data-mod="ad_popu_199" data-mtp="43" data-order="114" data-con="ad_content_1843" style="width: 960px; height: 90px;">
+                                             <script type="text/javascript">
+                                                 /*博客内容页下方Banner2-960*90，创建于,2016-11-28*/
+                                                 var cpro_id = "u2831143";
+                                            </script>
+                                            <script type="text/javascript" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2831143_0"><iframe id="iframeu2831143_0" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/hcgm(1).html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+                                   </div>
+                    </div>
+    </div>  
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+<div class="tracking-ad" data-view="true" data-mod="ad_popu_72" data-mtp="62" data-order="40" data-con="ad_content_2072">
+                 <script id="popuLayer_js_q" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/popuLayer.js.下载" defer="defer" type="text/javascript"></script>
+            <div id="layerd" style="position: fixed; bottom: 0px; right: 0px; line-height: 0px; z-index: 1000; width: 300px; height: 278px;">
+    	            <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 --><div id="cpro_u2895327"><iframe id="iframeu2895327_0" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/hcgm(2).html" width="300" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:300px;height:250px" allowtransparency="true"></iframe></div></div>
+            <script>  document.getElementById("popuLayer_js_q").onload=function(){      var styObjd=styObj={width:"300px","height":parseInt(250)+28};window.CSDN.Layer.PopuLayer("#layerd",{storageName:"layerd",styleObj:styObjd,total:50,expoire:1000*60});  }</script><!-- 投放代码 --><script type="text/javascript">                /*服务器频道首页置顶Banner960*90，创建于2014-7-3*/    (window.cproArray = window.cproArray || []).push({        id: "u2895327"      });  </script>  <script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script>
+     
+</div>
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><dl class="comment_item comment_topic" id="comment_item_6781816"><dt class="comment_head" floor="4">4楼 <span class="user"><a class="username" href="http://blog.csdn.net/u012361289" target="_blank">xixixixihahahaha333</a> <span class="ptime">2017-04-26 11:27发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6781816" username="u012361289"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u012361289" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_u012361289.jpg" width="40" height="40"></a></dd><dd class="comment_body">博主，sh文件创建失败怎么办，sudo方法也试过了，还是不行，不用命令直接创建的sh文件不能运行。麻烦给我这个菜鸟解答一下，谢谢啦</dd><dl class="comment_item comment_reply" id="comment_item_6785053"><dt class="comment_head" floor="4">Re: <span class="user"><a class="username" href="http://blog.csdn.net/langb2014" target="_blank">langb2014</a> <span class="ptime">2017-04-27 12:36发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6785053" username="langb2014"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/langb2014" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_langb2014.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复xixixixihahahaha333：你是什么系统？为什么不能用？报什么错？</dd><dl class="comment_item comment_reply" id="comment_item_6786887"><dt class="comment_head" floor="1">Re: <span class="user"><a class="username" href="http://blog.csdn.net/u012361289" target="_blank">xixixixihahahaha333</a> <span class="ptime">2017-04-28 08:58发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6786887" username="u012361289"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u012361289" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_u012361289.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复langb2014：已经解决了，谢谢啦，不过我生成的文本中，图片list没有以6开头的图片和标签6，其他的图片list都正常，怎么回事？</dd></dl></dl></dl><dl class="comment_item comment_topic" id="comment_item_6714379"><dt class="comment_head" floor="3">3楼 <span class="user"><a class="username" href="http://blog.csdn.net/DoveJay" target="_blank">DoveJay</a> <span class="ptime">2017-03-29 21:02发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6714379" username="DoveJay"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/DoveJay" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_dovejay.jpg" width="40" height="40"></a></dd><dd class="comment_body">有抄袭嫌疑，实例出自该博客http://www.cnblogs.com/denny402/p/5083300.html，却没有引用。</dd><dl class="comment_item comment_reply" id="comment_item_6715326"><dt class="comment_head" floor="3">Re: <span class="user"><a class="username" href="http://blog.csdn.net/langb2014" target="_blank">langb2014</a> <span class="ptime">2017-03-30 09:41发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6715326" username="langb2014"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/langb2014" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_langb2014.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复DoveJay：这篇是转载，但是非完全转载，之前是在其他地方找到的，分割线也将那一部分分开了，谢谢提供链接，我加一下</dd></dl></dl><dl class="comment_item comment_topic" id="comment_item_6641904"><dt class="comment_head" floor="2">2楼 <span class="user"><a class="username" href="http://blog.csdn.net/u013837566" target="_blank">viviayi</a> <span class="ptime">2017-03-01 14:53发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6641904" username="u013837566"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u013837566" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_u013837566.jpg" width="40" height="40"></a></dd><dd class="comment_body">博主，按照上面的方法，出现错误cudaSuccess(11 vs. 0) invalid arguement<br>请问这是为什么？百度上有人说是test的batch_size 和solver的test_iter设置有问题，但是我是按照上面的2*50设置的呀</dd><dl class="comment_item comment_reply" id="comment_item_6642144"><dt class="comment_head" floor="2">Re: <span class="user"><a class="username" href="http://blog.csdn.net/u013837566" target="_blank">viviayi</a> <span class="ptime">2017-03-01 15:58发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6642144" username="u013837566"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u013837566" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_u013837566.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复viviayi：已解决，在caffe编译的时候makefile文件中有关CUDA_ARCH := -gencode=arch=compute_20,code=sm_20 -gencode=arch=compute_30,code=sm_30 -gencode=arch=compute_35,code=sm_35 -gencode=arch=compute_50,code=sm_50的警告问题</dd><dl class="comment_item comment_reply" id="comment_item_6643630"><dt class="comment_head" floor="1">Re: <span class="user"><a class="username" href="http://blog.csdn.net/langb2014" target="_blank">langb2014</a> <span class="ptime">2017-03-02 10:00发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6643630" username="langb2014"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/langb2014" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_langb2014.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复viviayi：你用的什么显卡？</dd></dl></dl></dl><dl class="comment_item comment_topic" id="comment_item_6483964"><dt class="comment_head" floor="1">1楼 <span class="user"><a class="username" href="http://blog.csdn.net/u013837566" target="_blank">viviayi</a> <span class="ptime">2016-12-14 19:14发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6483964" username="u013837566"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u013837566" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_u013837566.jpg" width="40" height="40"></a></dd><dd class="comment_body">博主很想问问您怎么使用训练得到的caffemodel啊，比如图像的分类吧，我如何输入一张图片，输出告诉我它是哪一类呢？因为我一直没用过python，可不可以就直接用终端实现呢，求傻瓜教程，拜托拜托</dd><dl class="comment_item comment_reply" id="comment_item_6488064"><dt class="comment_head" floor="1">Re: <span class="user"><a class="username" href="http://blog.csdn.net/langb2014" target="_blank">langb2014</a> <span class="ptime">2016-12-16 14:36发表</span>  <a href="http://blog.csdn.net/langb2014/article/details/50458520/#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6488064" username="langb2014"> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/langb2014/article/details/50458520/#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/langb2014" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/3_langb2014.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复viviayi：你看看我师弟这个调用脚本http://blog.csdn.net/u013066730/article/details/53690282</dd></dl></dl><div class="clear"></div></div>
+    <div id="comment_bar" style="display: none;">
+    </div>
+    <div id="comment_form"><div class="guest_link">您还没有登录,请<a href="javascript:void(0);" onclick="javascript:loginbox();">[登录]</a>或<a href="http://passport.csdn.net/account/register?from=http%3A%2F%2Fblog.csdn.net%2Flangb2014%2Farticle%2Fdetails%2F50458520%2F">[注册]</a></div></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '50458520';
+    var commentscount = 10;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="">
+
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Hadoop" href="http://g.csdn.net/5272865" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title="AWS" href="http://g.csdn.net/5272866" target="_blank" onclick="LogClickCount(this,336);">AWS</a>
+<a title="移动游戏" href="http://g.csdn.net/5272870" target="_blank" onclick="LogClickCount(this,336);">移动游戏</a>
+<a title="Java" href="http://g.csdn.net/5272871" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="Android" href="http://g.csdn.net/5272872" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://g.csdn.net/5272873" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="Swift" href="http://g.csdn.net/5272868" target="_blank" onclick="LogClickCount(this,336);">Swift</a>
+<a title="智能硬件" href="http://g.csdn.net/5272869" target="_blank" onclick="LogClickCount(this,336);">智能硬件</a>
+<a title="Docker" href="http://g.csdn.net/5272867" target="_blank" onclick="LogClickCount(this,336);">Docker</a>
+<a title="OpenStack" href="http://g.csdn.net/5272925" target="_blank" onclick="LogClickCount(this,336);">OpenStack</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Spark" href="http://g.csdn.net/5272924" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/tag/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+
+</div>
+  <script type="text/javascript">     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/langb2014/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='Caffe傻瓜系列(9)：训练和测试自己的图片';
+
+</script>
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/langb2014" target="_blank">
+    <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/1_langb2014.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/langb2014" class="user_name" target="_blank">langb2014</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=langb2014&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                         <div class="ico_expert" title="CSDN博客准专家" onclick="javascript:location=&#39;http://blog.csdn.net/experts/rule.html&#39;" style=" cursor:pointer;width:54px;height:60px;background:url(&#39;http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhunzhuanjiamiddle.png&#39;) no-repeat"></div>
+                <div id="bms_box">
+                                            <a target="_blank">
+                                                    <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/chizhiyiheng.png" onmouseover="m_over_m(this,4)" onmouseout="m_out_m()" alt="3">
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>701755次</span></li>
+    <li>积分：<span>10701</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/blog7.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：10701 </div>
+        </span>  </li>
+    <li>排名：<span>第1392名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>338篇</span></li>
+    <li>转载：<span>166篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>243条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_41273132" class="panel">
+<ul class="panel_head"><span>About me</span></ul>
+<ul class="panel_body">
+
+在读研究生，关注计算机视觉，机器学习，算法研究，医学病理图像，GPU编程等方向，努力学习C++、Matlab、Python、Opencv等语言中，希望结识更多同道中人，提升自己。
+
+</ul>
+</div><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495399" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Computer Vision</a><span>(30)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495391" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Machine Learning</a><span>(33)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495415" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Deep Learning</a><span>(38)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5998589" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">caffe</a><span>(92)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495427" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">数学知识</a><span>(13)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5760991" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">C++（STL）</a><span>(55)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495413" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">C++设计模式</a><span>(25)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5760989" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">C++(Boost)</a><span>(12)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495397" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Mxnet</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/6465366" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Torch</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/6465367" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Keras</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/6667932" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">TF</a><span>(18)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/6219832" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">CUDA编程</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495395" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Matlab点滴</a><span>(46)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495393" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">图像处理</a><span>(10)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5601861" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">UFLDL</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495417" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Linux</a><span>(43)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495405" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">C/C++</a><span>(82)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495471" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">openCV</a><span>(21)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/6384370" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">MatConvNet</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495435" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">MFC小项目</a><span>(18)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495401" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Python</a><span>(44)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5772811" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">论文阅读</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5841827" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">gnuplot（画图）</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5600163" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">windows</a><span>(7)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5836035" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">LaTeX</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/2495425" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">问题集锦</a><span>(51)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/langb2014/article/category/5772819" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">XML</a><span>(2)</span>
+                </li>
+</ul>
+</div><div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/51166782" title="Ubuntu14.04安装PyCharm">Ubuntu14.04安装PyCharm</a><span>(9198)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/50988275" title="梳理caffe代码layer(五)">梳理caffe代码layer(五)</a><span>(8524)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/50482150" title="caffe训练模型输出到log.txt">caffe训练模型输出到log.txt</a><span>(7850)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/50986678" title="梳理caffe代码math_functions(一)">梳理caffe代码math_functions(一)</a><span>(7633)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/51546208" title="梳理caffe代码im2col（十七）">梳理caffe代码im2col（十七）</a><span>(7586)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/47860937" title="linux记录系统中常用重要的log记录和用户的所有操作精确命令记录">linux记录系统中常用重要的log记录和用户的所有操作精确命令记录</a><span>(7057)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/45674725" title="特征提取-----HOG">特征提取-----HOG</a><span>(6952)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/50987145" title="梳理caffe代码blob(三)">梳理caffe代码blob(三)</a><span>(6725)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/51379326" title="OpenCV笔记大集锦">OpenCV笔记大集锦</a><span>(6412)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/langb2014/article/details/48467727" title="matlab函数 bsxfun（高效代码）">matlab函数 bsxfun（高效代码）</a><span>(6278)</span>
+</li>
+</ul>
+</div>
+
+
+<div id="custom_column_41273086" class="panel">
+<ul class="panel_head"><span>友情链接</span></ul>
+<ul class="panel_body">
+
+<a title="楼燚(yì)航" href="http://www.cnblogs.com/louyihang-loves-baiyan/" target="_blank">楼燚(yì)航</a><br>
+<a title="Rachel Zhang" href="http://blog.csdn.net/abcjennifer?viewmode=contents" target="_blank">Rachel Zhang</a><br>
+<a title="handong1587" href="http://handong1587.github.io/index.html" target="_blank">handong1587</a><br>
+<a title="大胖" href="http://blog.csdn.net/liyaohhh?viewmode=contents" target="_blank">大胖</a><br>
+<a title="视觉机器人新浪" href="http://weibo.com/cvrobot?is_hot=1" target="_blank">视觉机器人新浪</a><br>
+<a title="视觉机器人" href="http://www.cvrobot.net/" target="_blank">视觉机器人</a><br>
+<a title="wjmishuai" href="http://blog.csdn.net/wjmishuai?viewmode=contents" target="_blank">wjmishuai</a><br>
+<a title="Deep_Learner" href="http://blog.csdn.net/chenriwei2?viewmode=contents" target="_blank">Deep_Learner</a><br>
+<a title="山在岭就在" href="http://blog.csdn.net/u013088062?viewmode=contents" target="_blank">山在岭就在</a><br>
+<a title="我爱机器学习" href="https://www.52ml.net/" target="_blank">我爱机器学习</a><br>
+<a title="Augusdi" href="http://blog.csdn.net/augusdi?viewmode=contents" target="_blank">Augusdi</a><br>
+<a title="菜鸡一枚" href="http://www.cnblogs.com/yymn/" target="_blank">菜鸡一枚</a><br>
+<a title="hjimce" href="http://blog.csdn.net/hjimce?viewmode=contents" target="_blank">hjimce</a><br>
+<a title="machinelearningmastery" href="http://machinelearningmastery.com/start-here/" target="_blank">machinelearningmastery</a><br>
+<a title="liumaolincycle" href="http://blog.csdn.net/liumaolincycle?viewmode=contents" target="_blank">liumaolincycle</a><br>
+<a title="凌风探梅" href="http://blog.csdn.net/real_myth?viewmode=contents" target="_blank">凌风探梅</a><br>
+<a title="无涯" href="http://www.cnblogs.com/xrwang/category/231541.html" target="_blank">无涯</a><br>
+<a title="xyy199201" href="http://blog.csdn.net/xyy19920105?viewmode=contents" target="_blank">xyy199201</a><br>
+<a title="iamzhangzhuping" href="http://blog.csdn.net/iamzhangzhuping?viewmode=contents" target="_blank">iamzhangzhuping</a><br>
+
+</ul>
+</div><div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/53082704#comments">Caffe-Python接口常用API参考</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/langb2014" class="user_name">langb2014</a>:
+@qqrsqqq:编译python接口了么？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/52995349#comments">Caffe中图像写入LMDB（以及多标签）和读取LMDB数据</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/langb2014" class="user_name">langb2014</a>:
+@qq_25439959:map_size的尺寸好像可以不设置的，这个好像不是直接将两个map_si...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/52995349#comments">Caffe-Python接口常用API参考</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/qqrsqqq" class="user_name">qqrsqqq</a>:
+请问为什么我运行的时候报错Check failed: registry.count(type) ==...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/52995349#comments">Caffe中图像写入LMDB（以及多标签）和读取LMDB数据</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/qq_25439959" class="user_name">B-Kalasiky</a>:
+博主你好，我请教个问题，我在做数据扩增的时候用原始的lmdb生成新的lmdb，但是不知道map_si...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/51348425#comments">CUDA学习笔记一</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/fouduo2893" class="user_name">fouduo2893</a>:
+写的很棒，很容易懂。之前有一定opencl知识，看了一遍你的文章，很快就了解了cuda
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/50998135#comments">梳理caffe代码image_data_layer、data_layer、window_data_layer(七)</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/langb2014" class="user_name">langb2014</a>:
+@zj15939317693:换成你自己处理的方法
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/50998135#comments">梳理caffe代码image_data_layer、data_layer、window_data_layer(七)</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/langb2014" class="user_name">langb2014</a>:
+@zj15939317693:恩
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/50998135#comments">梳理caffe代码image_data_layer、data_layer、window_data_layer(七)</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/zj15939317693" class="user_name">Main Theme</a>:
+@langb2014:因为我注意到在DataLayerSetUp函数和load_batch函数里都有...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/50998135#comments">梳理caffe代码image_data_layer、data_layer、window_data_layer(七)</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/zj15939317693" class="user_name">Main Theme</a>:
+@langb2014:具体的是加在load_batch函数的这一部分吧？把CV：：Mat以后的部分换...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/langb2014/article/details/53005482#comments">caffe中带权重的softmaxloss实现（一）</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/langb2014" class="user_name">langb2014</a>:
+@nzzfsw:你caffe是新版还是老版？
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 -->                    <!-- 广告位结束 -->
+                   <div class="tracking-ad" data-view="true" data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 200px;">
+                         <div id="nav_show_top_stop" style="width: 200px; height: 200px; z-index: 1000; position: fixed; top: 0px;"><div id="cpro_u2734128"><iframe id="iframeu2734128_0" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/hcgm(3).html" width="200" height="200" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:200px;height:200px" allowtransparency="true"></iframe></div></div>
+                   </div>
+    <script type="text/javascript">    
+        setTimeout(function () {
+            var naviga_offsetTop = 0;
+            function naviga_stay_top() { var scrollTop = jQuery(document).scrollTop(); if (scrollTop > naviga_offsetTop) { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": "0px" }); } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); } }
+            function onload_function() { naviga_offsetTop = jQuery("#nav_show_top_stop").position().top; jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top); jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top); } jQuery(document).ready(onload_function);
+               
+        }, 200);    
+    </script>
+<script type="text/javascript">(window.cproArray = window.cproArray || []).push({ id: "u2734128" });  </script> 
+                    <script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script> 
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/login.js.下载"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+
+     
+
+   
+   
+     <!--new top-->
+   
+   
+
+    
+    
+    
+   
+
+   
+
+
+       <script type="text/javascript" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/MathJax.js.下载"></script>
+          <script type="text/javascript">
+              //$(function () {
+              //    setTimeout(function () {
+              //        var searchtitletags = articletitle + ',' + $("#tags").html();
+              //        searchService({
+              //            index: 'blog',
+              //            query: searchtitletags,
+              //            from: 5,
+              //            size: 5,
+              //            appendTo: '#res',
+              //            url: 'recommend',
+              //            his: 2,
+              //            client: "blog_cf_enhance",
+              //            tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+              //        });
+              //    }, 1000);
+              //});
+
+         </script>
+    
+    <script src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.js.下载" type="text/javascript"></script><link rel="stylesheet" type="text/css" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-660-0108</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2017, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="display:none; position:absolute; z-index:9990; width:170px">  <iframe src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>0</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/notify.js.下载"></script><input type="hidden" id="aa_g_data_ids">
+        
+    <script type="text/javascript" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.js.下载"></script>
+
+    <script type="text/javascript" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+
+     
+    
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   <div><iframe src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/skip.html" style="width: 1px; height: 1px; position: absolute; visibility: hidden;"></iframe></div></div>
+
+    
+    
+        
+     
+
+    
+          
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no"></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+           
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            $(".toc a[target='_blank']").attr("target", "");
+
+        </script>
+
+
+   
+ <div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="Caffe傻瓜系列(9)：训练和测试自己的图片" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="Caffe傻瓜系列(9)：训练和测试自己的图片： http://blog.csdn.net/langb2014/article/details/50458520/"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value=""><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div><link rel="stylesheet" type="text/css" media="screen" href="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-reply" title="快速回复" style="top:289px"></a><a id="com-quick-collect" title="我要收藏" style="top:327px"></a><a id="com-d-top-a" style="top: 365px; display: block;" title="返回顶部" onclick=""></a> </div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/langb2014/article/details/50458520/#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/langb2014/article/details/50458520/#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"><iframe src="./Caffe傻瓜系列(9)：训练和测试自己的图片 - 从入门到放弃 - 博客频道 - CSDN.NET_files/upload.html"></iframe></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor" style="visibility: hidden;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="visibility: hidden;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/langb2014/article/details/50458520/#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div style="position:fixed; top:0; left:0; overflow:hidden;"><input style="position:absolute; left:-300px;" type="text" value="" id="focus_retriever" readonly="true"></div></body></html>
